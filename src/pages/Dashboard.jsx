@@ -23,13 +23,14 @@ const Dashboard = () => {
 
   const stats = [
     { 
-      icon: CheckSquare, 
+      icon:  CheckSquare, 
       label: 'Tasks Completed', 
       value: 24, 
       total: 30,
       trend: '+12%',
       trendUp: true,
-      color: 'blue'
+      color: 'blue',
+      bgGradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)'
     },
     { 
       icon: Clock, 
@@ -38,16 +39,18 @@ const Dashboard = () => {
       total: 200,
       trend: '+8%',
       trendUp: true,
-      color: 'green'
+      color: 'green',
+      bgGradient:  'linear-gradient(135deg, #10B981 0%, #34D399 100%)'
     },
     { 
       icon: Award, 
       label: 'Active Projects', 
-      value: 8, 
-      total: 10,
+      value:  8, 
+      total:  10,
       trend: '+2',
-      trendUp: true,
-      color: 'purple'
+      trendUp:  true,
+      color: 'purple',
+      bgGradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)'
     },
     { 
       icon: TrendingUp, 
@@ -56,13 +59,14 @@ const Dashboard = () => {
       total: 100,
       trend: '+5%',
       trendUp: true,
-      color: 'orange'
+      color: 'orange',
+      bgGradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)'
     },
   ];
 
   const quickActions = [
     { 
-      icon:  CheckSquare, 
+      icon: CheckSquare, 
       label:  'View Tasks', 
       desc: 'Manage your assignments', 
       path: '/tasks', 
@@ -77,7 +81,7 @@ const Dashboard = () => {
       color: 'green'
     },
     { 
-      icon: Camera, 
+      icon:  Camera, 
       label: 'Submit Proof', 
       desc: 'Upload work screenshots', 
       path: '/submit-proof', 
@@ -86,7 +90,7 @@ const Dashboard = () => {
     { 
       icon: FileText, 
       label: 'Reports', 
-      desc: 'View your analytics', 
+      desc:  'View your analytics', 
       path: '/reports', 
       color: 'orange'
     },
@@ -97,32 +101,32 @@ const Dashboard = () => {
       action: 'Completed task:  Website Redesign', 
       time: '2 hours ago', 
       icon: CheckSquare, 
-      color: 'blue'
+      color:  'blue'
     },
     { 
       action: 'Logged 8 hours of work', 
       time: '5 hours ago', 
       icon: Clock, 
-      color:  'green'
+      color: 'green'
     },
     { 
-      action: 'Submitted proof for project', 
+      action:  'Submitted proof for project', 
       time: 'Yesterday', 
-      icon:  Camera, 
+      icon: Camera, 
       color: 'purple'
     },
     { 
       action: 'Received performance award', 
       time: '2 days ago', 
       icon: Award, 
-      color:  'orange'
+      color: 'orange'
     },
   ];
 
   const performanceMetrics = [
-    { label: 'Task Completion', value: 94, color: 'blue', icon: '✓' },
-    { label:  'Quality Score', value: 88, color: 'green', icon: '★' },
-    { label: 'Time Management', value: 92, color: 'purple', icon: '⏱' },
+    { label: 'Task Completion', value: 94, color: 'blue', icon: '✓', bgGradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)' },
+    { label:  'Quality Score', value: 88, color: 'green', icon: '★', bgGradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)' },
+    { label: 'Time Management', value: 92, color:  'purple', icon: '⏱', bgGradient:  'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)' },
   ];
 
   return (
@@ -135,38 +139,42 @@ const Dashboard = () => {
         <div className="grid-pattern"></div>
       </div>
 
-      <main className="pro-main" style={{ padding: '2rem' }}>
-        {/* Welcome Banner */}
+      <main className="pro-main">
+        {/* Welcome Banner with Glassmorphism */}
         <motion.div
-          className="welcome-card"
-          initial={{ scale: 0.95, opacity: 0 }}
+          className="welcome-card glass-card"
+          initial={{ scale:  0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay:  0.1 }}
+          whileHover={{ scale: 1.01 }}
         >
           <div className="welcome-content">
             <motion.div 
               className="welcome-icon"
-              animate={{ rotate: [0, 10, -10, 0] }}
+              animate={{ 
+                rotate: [0, 10, -10, 0],
+                scale: [1, 1.1, 1]
+              }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
             >
-              <Zap size={24} />
+              <Zap size={28} />
             </motion.div>
             <div className="welcome-text">
-              <h2>Hi {user?.name}, Ready to be productive today?  🚀</h2>
+              <h2>Hi {user?. name || 'there'}, Ready to be productive today?  🚀</h2>
               <p>You have 6 pending tasks and 3 meetings scheduled</p>
             </div>
           </div>
           <motion.div 
-            className="welcome-decoration"
+            className="welcome-glow"
             animate={{ 
               scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3]
+              opacity:  [0.2, 0.4, 0.2]
             }}
             transition={{ duration: 4, repeat: Infinity }}
           />
         </motion. div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid with Enhanced Glassmorphism */}
         <motion.div 
           className="stats-container"
           initial="hidden"
@@ -179,43 +187,64 @@ const Dashboard = () => {
             }
           }}
         >
-          {stats. map((stat, index) => (
+          {stats.map((stat, index) => (
             <motion.div
               key={index}
-              className={`stat-box stat-${stat.color}`}
+              className="stat-box glass-card"
+              style={{ '--stat-gradient': stat.bgGradient }}
               variants={{
-                hidden:  { y: 20, opacity: 0 },
+                hidden: { y: 20, opacity: 0 },
                 visible: { y: 0, opacity: 1 }
               }}
-              whileHover={{ y: -5, scale: 1.02 }}
+              whileHover={{ y: -8, scale: 1.02 }}
             >
               <div className="stat-header">
                 <motion.div 
                   className={`stat-icon icon-${stat.color}`}
-                  whileHover={{ rotate: 360 }}
+                  style={{ background: stat.bgGradient }}
+                  whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <stat. icon size={24} />
-                </motion.div>
-                <span className={`stat-trend ${stat.trendUp ? 'up' : 'down'}`}>
-                  {stat.trend}
-                </span>
+                  <stat.icon size={24} strokeWidth={2.5} />
+                </motion. div>
+                <motion.span 
+                  className={`stat-trend ${stat.trendUp ? 'up' : 'down'}`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
+                >
+                  {stat. trend}
+                </motion.span>
               </div>
               <div className="stat-body">
                 <h3 className="stat-number">
-                  {stat.value}
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + index * 0.1 }}
+                  >
+                    {stat.value}
+                  </motion.span>
                   <span className="stat-max">/{stat.total}</span>
                 </h3>
                 <p className="stat-title">{stat.label}</p>
               </div>
               <div className="stat-progress-container">
                 <motion.div
-                  className={`stat-progress-fill fill-${stat.color}`}
+                  className="stat-progress-fill"
+                  style={{ background: stat.bgGradient }}
                   initial={{ width: 0 }}
                   animate={{ width: `${(stat.value / stat.total) * 100}%` }}
-                  transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
-                />
+                  transition={{ duration: 1, delay: index * 0.1 + 0.4, ease: 'easeOut' }}
+                >
+                  <motion.div
+                    className="progress-shine"
+                    animate={{ x:  [-100, 300] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  />
+                </motion. div>
               </div>
+              <div className="stat-glow" style={{ background: stat.bgGradient }} />
             </motion.div>
           ))}
         </motion.div>
@@ -223,15 +252,15 @@ const Dashboard = () => {
         <div className="content-wrapper">
           {/* Left Column */}
           <div className="left-column">
-            {/* Quick Actions */}
-            <motion. div 
-              className="pro-card"
-              initial={{ x:  -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
+            {/* Quick Actions with Glassmorphism */}
+            <motion.div 
+              className="pro-card glass-card"
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x:  0, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
               <div className="card-header">
-                <Activity size={22} />
+                <Activity size={22} strokeWidth={2.5} />
                 <h3>Quick Actions</h3>
               </div>
               <div className="actions-container">
@@ -239,19 +268,19 @@ const Dashboard = () => {
                   <motion.button
                     key={index}
                     onClick={() => navigate(action.path)}
-                    className={`action-button action-${action.color}`}
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    whileTap={{ scale:  0.98 }}
-                    initial={{ opacity: 0, x:  -20 }}
-                    animate={{ opacity: 1, x:  0 }}
+                    className="action-button glass-button"
+                    whileHover={{ scale: 1.02, x: 8 }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 + 0.3 }}
                   >
                     <motion.div 
                       className={`action-icon-wrapper icon-${action.color}`}
-                      whileHover={{ rotate: 360 }}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.6 }}
                     >
-                      <action.icon size={20} />
+                      <action.icon size={20} strokeWidth={2.5} />
                     </motion.div>
                     <div className="action-text">
                       <span className="action-title">{action.label}</span>
@@ -273,15 +302,15 @@ const Dashboard = () => {
               </div>
             </motion. div>
 
-            {/* Profile Card */}
+            {/* Profile Card with Enhanced Glassmorphism */}
             <motion.div 
-              className="pro-card profile-card"
+              className="pro-card glass-card profile-card"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y:  0, opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
               <div className="card-header">
-                <User size={22} />
+                <User size={22} strokeWidth={2.5} />
                 <h3>Profile Information</h3>
               </div>
               <div className="profile-section">
@@ -290,7 +319,7 @@ const Dashboard = () => {
                     className="profile-avatar-large"
                     whileHover={{ scale: 1.05, rotate: 5 }}
                   >
-                    {user?.name?.charAt(0).toUpperCase()}
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
                     <motion.div 
                       className="avatar-ring"
                       animate={{ rotate: 360 }}
@@ -298,7 +327,7 @@ const Dashboard = () => {
                     />
                   </motion.div>
                   <div className="profile-details">
-                    <h4>{user?.name}</h4>
+                    <h4>{user?.name || 'User'}</h4>
                     <p className="profile-role">Senior Developer</p>
                     <div className="profile-rating">
                       {[...Array(5)].map((_, i) => (
@@ -319,18 +348,18 @@ const Dashboard = () => {
                 
                 <div className="profile-info-grid">
                   {[
-                    { icon: '📧', label: 'Email', value: user?.email },
+                    { icon: '📧', label: 'Email', value: user?.email || 'N/A' },
                     { icon: '📱', label: 'Phone', value: '+1 234 567 890' },
-                    { icon: '🏢', label: 'Department', value: 'Engineering' },
+                    { icon:  '🏢', label: 'Department', value: 'Engineering' },
                     { icon: '📅', label: 'Join Date', value: '2025-01-01' },
                   ].map((item, index) => (
                     <motion.div
                       key={index}
-                      className="profile-info-item"
+                      className="profile-info-item glass-light"
                       initial={{ opacity:  0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 + index * 0.1 }}
-                      whileHover={{ scale: 1.02, x: 3 }}
+                      whileHover={{ scale: 1.03, x: 5 }}
                     >
                       <span className="info-icon">{item.icon}</span>
                       <div className="info-text">
@@ -346,34 +375,34 @@ const Dashboard = () => {
 
           {/* Right Column */}
           <div className="right-column">
-            {/* Recent Activity */}
+            {/* Recent Activity with Glassmorphism */}
             <motion.div 
-              className="pro-card"
+              className="pro-card glass-card"
               initial={{ x: 50, opacity: 0 }}
-              animate={{ x:  0, opacity: 1 }}
+              animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
               <div className="card-header">
-                <Calendar size={22} />
+                <Calendar size={22} strokeWidth={2.5} />
                 <h3>Recent Activity</h3>
               </div>
               <div className="activity-timeline">
                 {recentActivities.map((activity, index) => (
                   <motion.div
                     key={index}
-                    className="timeline-item"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    whileHover={{ x: 5 }}
+                    className="timeline-item glass-light"
+                    initial={{ opacity:  0, x: 20 }}
+                    animate={{ opacity:  1, x: 0 }}
+                    transition={{ delay:  0.4 + index * 0.1 }}
+                    whileHover={{ x: 8, scale: 1.02 }}
                   >
                     <motion.div 
                       className={`timeline-icon icon-${activity.color}`}
-                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      whileHover={{ rotate: 360, scale: 1.2 }}
                       transition={{ duration: 0.6 }}
                     >
-                      <activity.icon size={16} />
-                    </motion. div>
+                      <activity.icon size={16} strokeWidth={2.5} />
+                    </motion.div>
                     <div className="timeline-content">
                       <p className="timeline-action">{activity.action}</p>
                       <span className="timeline-time">{activity.time}</span>
@@ -383,42 +412,57 @@ const Dashboard = () => {
               </div>
             </motion.div>
 
-            {/* Performance Metrics */}
+            {/* Performance Metrics with Enhanced Glassmorphism */}
             <motion.div 
-              className="pro-card"
+              className="pro-card glass-card"
               initial={{ y: 50, opacity: 0 }}
-              animate={{ y:  0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
               <div className="card-header">
-                <BarChart3 size={22} />
+                <BarChart3 size={22} strokeWidth={2.5} />
                 <h3>Performance Metrics</h3>
               </div>
               <div className="metrics-list">
                 {performanceMetrics.map((metric, index) => (
-                  <div key={index} className="metric-item">
+                  <motion.div 
+                    key={index} 
+                    className="metric-item"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                  >
                     <div className="metric-header">
                       <span className="metric-label">
                         <span className="metric-emoji">{metric.icon}</span>
                         {metric.label}
                       </span>
-                      <span className="metric-value">{metric.value}%</span>
+                      <motion.span 
+                        className="metric-value"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8 + index * 0.1 }}
+                      >
+                        {metric.value}%
+                      </motion.span>
                     </div>
                     <div className="metric-bar-container">
-                      <motion.div
-                        className={`metric-bar-fill fill-${metric.color}`}
-                        initial={{ width:  0 }}
+                      <motion. div
+                        className="metric-bar-fill"
+                        style={{ background: metric.bgGradient }}
+                        initial={{ width: 0 }}
                         animate={{ width: `${metric.value}%` }}
-                        transition={{ duration: 1, delay:  0.6 + index * 0.2 }}
+                        transition={{ duration: 1, delay: 0.7 + index * 0.2, ease: 'easeOut' }}
                       >
                         <motion.div
                           className="metric-shine"
-                          animate={{ x: [-100, 200] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: 1 + index * 0.2 }}
+                          animate={{ x: [-100, 300] }}
+                          transition={{ duration: 2, repeat: Infinity, delay: 1.5 + index * 0.2 }}
                         />
                       </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

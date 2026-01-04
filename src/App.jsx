@@ -12,27 +12,101 @@ import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Layout from './components/Layout';
+import './App.css';
+
+// Protected Route Wrapper Component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return children;
+};
+
+// Public Route Wrapper (redirects to dashboard if already logged in)
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  return children;
+};
 
 function App() {
-  const { isAuthenticated } = useAuthStore();
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={! isAuthenticated ? <Login /> :  <Navigate to="/dashboard" />} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-        <Route path="/profile-setup" element={isAuthenticated ? <ProfileSetup /> : <Navigate to="/" />} />
+        {/* Public Routes */}
+        <Route 
+          path="/" 
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } 
+        />
+        
+        <Route 
+          path="/register" 
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          } 
+        />
+        
+        {/* Profile Setup (requires authentication) */}
+        <Route 
+          path="/profile-setup" 
+          element={
+            <ProtectedRoute>
+              <ProfileSetup />
+            </ProtectedRoute>
+          } 
+        />
         
         {/* Protected Routes with Layout */}
-        <Route element={isAuthenticated ? <Layout /> : <Navigate to="/" />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/time-tracker" element={<TimeTracker />} />
-          <Route path="/submit-proof" element={<SubmitProof />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/settings" element={<Settings />} />
+        <Route 
+          path="/*" 
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Dashboard */}
+          <Route path="dashboard" element={<Dashboard />} />
+          
+          {/* Teams */}
+          <Route path="teams" element={<Teams />} />
+          
+          {/* Tasks */}
+          <Route path="tasks" element={<Tasks />} />
+          
+          {/* Time Tracker */}
+          <Route path="time-tracker" element={<TimeTracker />} />
+          
+          {/* Submit Proof */}
+          <Route path="submit-proof" element={<SubmitProof />} />
+          
+          {/* Reports */}
+          <Route path="reports" element={<Reports />} />
+          
+          {/* Analytics */}
+          <Route path="analytics" element={<Analytics />} />
+          
+          {/* Settings */}
+          <Route path="settings" element={<Settings />} />
+          
+          {/* Redirect root to dashboard */}
+          <Route path="" element={<Navigate to="/dashboard" replace />} />
+          
+          {/* 404 Fallback - redirect to dashboard */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
     </Router>
