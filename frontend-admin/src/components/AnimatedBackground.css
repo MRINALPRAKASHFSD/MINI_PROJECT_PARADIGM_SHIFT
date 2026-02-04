@@ -1,0 +1,271 @@
+.animated-background {
+  position:  fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+.animated-background.light {
+  background: linear-gradient(135deg, 
+    #667eea 0%, 
+    #764ba2 25%, 
+    #f093fb 50%, 
+    #4facfe 75%, 
+    #667eea 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.animated-background.dark {
+  background: linear-gradient(135deg, 
+    #0f0f1e 0%, 
+    #1a1a2e 25%, 
+    #16213e 50%, 
+    #0f3460 75%, 
+    #0f0f1e 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Gradient Orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.light .orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, transparent 70%);
+  top: 10%;
+  left: 20%;
+}
+
+.light .orb-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.8) 0%, transparent 70%);
+  bottom: 10%;
+  right: 15%;
+}
+
+.light .orb-3 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.6) 0%, transparent 70%);
+  top: 50%;
+  right: 30%;
+}
+
+.dark .orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
+  top: 10%;
+  left: 20%;
+}
+
+.dark .orb-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  bottom: 10%;
+  right: 15%;
+}
+
+.dark .orb-3 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+  top: 50%;
+  right: 30%;
+}
+
+/* Floating Particles */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.dark .particle {
+  background: rgba(102, 126, 234, 0.6);
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+}
+
+/* Grid Pattern */
+.grid-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Gradient Waves */
+.gradient-waves {
+  position: absolute;
+  bottom: 0;
+  left:  0;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  bottom: 0;
+}
+
+.light .wave-1 {
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+}
+
+.light .wave-2 {
+  background: linear-gradient(90deg, transparent, rgba(244, 114, 182, 0.2), transparent);
+  bottom: 50px;
+}
+
+.light .wave-3 {
+  background:  linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.2), transparent);
+  bottom: 100px;
+}
+
+.dark .wave-1 {
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+}
+
+.dark .wave-2 {
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.15), transparent);
+  bottom: 50px;
+}
+
+.dark .wave-3 {
+  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.15), transparent);
+  bottom: 100px;
+}
+
+/* Geometric Shapes */
+.geometric-shapes {
+  position: absolute;
+  top: 0;
+  left:  0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  opacity: 0.1;
+}
+
+.light .shape-1 {
+  width: 100px;
+  height: 100px;
+  border:  3px solid rgba(102, 126, 234, 0.5);
+  border-radius: 20px;
+}
+
+.light .shape-2 {
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(244, 114, 182, 0.5);
+  border-radius: 50%;
+}
+
+.light .shape-3 {
+  width:  120px;
+  height: 120px;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.3), transparent);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.dark .shape-1 {
+  width: 100px;
+  height: 100px;
+  border: 3px solid rgba(102, 126, 234, 0.3);
+  border-radius: 20px;
+}
+
+.dark .shape-2 {
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(139, 92, 246, 0.3);
+  border-radius: 50%;
+}
+
+.dark .shape-3 {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), transparent);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Spotlight Effect */
+.spotlight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.dark .spotlight {
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+}
+
+/* Noise Overlay */
+.noise-overlay {
+  position:  absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .orb {
+    width: 300px ! important;
+    height: 300px !important;
+  }
+  
+  .geometric-shapes .shape {
+    width: 60px !important;
+    height:  60px !important;
+  }
+}
