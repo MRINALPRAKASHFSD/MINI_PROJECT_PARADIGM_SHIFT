@@ -1,0 +1,12 @@
+// friend15_schedulerDemo.js
+// Author: Devesh Tripathi
+// Demonstrates a simple job scheduler using JavaScript's setInterval.
+
+function scheduledJob() {
+    console.log("[Scheduler] Job executed at", new Date().toLocaleTimeString());
+}
+
+// Uncomment to test locally:
+// setInterval(scheduledJob, 3000);
+
+console.log("Scheduler demo file loaded. Uncomment setInterval to run the job every 3 seconds.");
