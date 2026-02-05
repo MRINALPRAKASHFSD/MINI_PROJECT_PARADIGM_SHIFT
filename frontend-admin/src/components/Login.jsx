@@ -5,7 +5,7 @@ import './Login.css';
 function Login() {
   const [credentials, setCredentials] = useState({
     email: '',
-    password:  ''
+    password: ''
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function Login() {
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
-      [e. target.name]: e.target. value
+      [e.target.name]: e.target.value
     });
   };
 
@@ -21,9 +21,13 @@ function Login() {
     e.preventDefault();
     setError('');
 
-    if (credentials.email === 'admin@paradigmshift.com' && credentials.password === 'admin123') {
+    // Hardcoded admin credentials for demo
+    if (
+      credentials.email.trim().toLowerCase() === 'admin@paradigmshift.com' &&
+      credentials.password === 'admin123'
+    ) {
       localStorage.setItem('adminToken', 'admin-token-123');
-      localStorage. setItem('adminEmail', credentials. email);
+      localStorage.setItem('adminEmail', credentials.email);
       navigate('/dashboard');
     } else {
       setError('Invalid email or password');
@@ -48,6 +52,7 @@ function Login() {
               onChange={handleChange}
               placeholder="admin@paradigmshift.com"
               required
+              autoComplete="username"
             />
           </div>
 
@@ -56,10 +61,11 @@ function Login() {
             <input
               type="password"
               name="password"
-              value={credentials. password}
+              value={credentials.password}
               onChange={handleChange}
               placeholder="Enter your password"
               required
+              autoComplete="current-password"
             />
           </div>
 
