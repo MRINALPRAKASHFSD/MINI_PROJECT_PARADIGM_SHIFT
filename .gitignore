@@ -1,7 +1,7 @@
 # Create .gitignore
 echo "# Dependencies
 node_modules/
-/. pnp
+/.pnp
 .pnp.js
 
 # Testing
@@ -13,7 +13,7 @@ node_modules/
 
 # Vite
 .vite/
-*. local
+*.local
 
 # Misc
 .DS_Store
@@ -34,9 +34,9 @@ lerna-debug.log*
 .vscode/
 .idea/
 *.swp
-*. swo
+*.swo
 *~
 
 # OS
 Thumbs.db
-. cache/" > .gitignore
+.cache/" > .gitignore
