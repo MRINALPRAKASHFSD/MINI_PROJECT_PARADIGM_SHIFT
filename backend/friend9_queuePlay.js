@@ -11,7 +11,7 @@ class TaskQueue {
     }
     runAll() {
         this.tasks.forEach((task, i) => {
-            console.log(⁠ Running task #${i + 1}: ⁠);
+            console.log(`Running task #${i + 1}:`);
             task();
         });
     }
