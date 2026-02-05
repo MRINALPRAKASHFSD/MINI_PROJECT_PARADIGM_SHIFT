@@ -6,7 +6,7 @@ function connectToFakeDb() {
     console.log("Connecting to fake database...");
     return {
         query: (sql) => {
-            console.log(⁠ Executing SQL query: ${sql} ⁠);
+            console.log(`Executing SQL query: ${sql}`);
             return [{ id: 1, username: 'fake_user' }];
         }
     };
