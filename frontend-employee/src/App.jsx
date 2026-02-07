@@ -1,118 +1,144 @@
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from './store/authStore';
-import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import ToastContainer from './components/Toast';
+import { useToast } from './hooks/useToast';
+
+// Pages
 import Dashboard from './pages/Dashboard';
-import ProfileSetup from './pages/ProfileSetup';
-import Teams from './pages/Teams';
+import Profile from './pages/Profile';
 import Tasks from './pages/Tasks';
-import TimeTracker from './pages/TimeTracker';
-import SubmitProof from './pages/SubmitProof';
+import Calendar from './pages/Calendar';
 import Reports from './pages/Reports';
-import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
-import Layout from './components/Layout';
+import Login from './pages/Login';
+
 import './App.css';
 
-// Protected Route Wrapper Component
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  return children;
-};
-
-// Public Route Wrapper (redirects to dashboard if already logged in)
-const PublicRoute = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
-  
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  
-  return children;
-};
-
 function App() {
+  const { toasts, showToast, removeToast } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('employeeToken') ? true : false;
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem('employeeToken');
+    localStorage.removeItem('employeeEmail');
+    setIsAuthenticated(false);
+    showToast('Logged out successfully', 'success');
+  };
+
+  // Protected Route Component
+  const ProtectedRoute = ({ children }) => {
+    if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
+  };
+
+  // Login Page Route (redirect if already authenticated)
+  const LoginRoute = ({ children }) => {
+    if (isAuthenticated) {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return children;
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <Router>
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
+        <Routes>
+          <Route 
+            path="/login" 
+            element={
+              <LoginRoute>
+                <Login setIsAuthenticated={setIsAuthenticated} showToast={showToast} />
+              </LoginRoute>
+            } 
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    );
+  }
+
   return (
     <Router>
-      <Routes>
-        {/* Landing Page (Public - Always Accessible) */}
-        <Route path="/" element={<LandingPage />} />
+      <div className="app-container">
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
         
-        {/* Public Routes */}
-        <Route 
-          path="/login" 
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          } 
+        <Sidebar 
+          isOpen={sidebarOpen} 
+          onClose={() => setSidebarOpen(false)} 
+          showToast={showToast}
         />
         
-        <Route 
-          path="/register" 
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          } 
-        />
-        
-        {/* Profile Setup (requires authentication) */}
-        <Route 
-          path="/profile-setup" 
-          element={
-            <ProtectedRoute>
-              <ProfileSetup />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Protected Routes with Layout */}
-        <Route 
-          path="/*" 
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
-          {/* Dashboard */}
-          <Route path="dashboard" element={<Dashboard />} />
+        <div className={`main-content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+          <Navbar 
+            onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+            onLogout={handleLogout}
+            showToast={showToast}
+          />
           
-          {/* Teams */}
-          <Route path="teams" element={<Teams />} />
-          
-          {/* Tasks */}
-          <Route path="tasks" element={<Tasks />} />
-          
-          {/* Time Tracker */}
-          <Route path="time-tracker" element={<TimeTracker />} />
-          
-          {/* Submit Proof */}
-          <Route path="submit-proof" element={<SubmitProof />} />
-          
-          {/* Reports */}
-          <Route path="reports" element={<Reports />} />
-          
-          {/* Analytics */}
-          <Route path="analytics" element={<Analytics />} />
-          
-          {/* Settings */}
-          <Route path="settings" element={<Settings />} />
-          
-          {/* Redirect empty path to dashboard */}
-          <Route path="" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* 404 Fallback - redirect to dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Route>
-      </Routes>
+          <div className="page-content">
+            <Routes>
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <Profile showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/tasks" 
+                element={
+                  <ProtectedRoute>
+                    <Tasks showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/calendar" 
+                element={
+                  <ProtectedRoute>
+                    <Calendar showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/reports" 
+                element={
+                  <ProtectedRoute>
+                    <Reports showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings showToast={showToast} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
     </Router>
   );
 }
