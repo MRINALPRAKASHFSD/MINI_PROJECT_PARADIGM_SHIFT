@@ -559,3 +559,36 @@ npm run dev
    ├── Error Tracking (Sentry)
    ├── Security Alerts
    └── Activity Monitoring
+
+
+
+
+
+
+   ┌───────────────────────────────────────────────────────────┐
+│              CLOUD DEPLOYMENT (AWS/Azure/GCP)              │
+└───────────────────────────────────────────────────────────┘
+
+                    Load Balancer
+                          │
+         ┌────────────────┼────────────────┐
+         │                │                │
+    ┌────▼────┐     ┌─────▼────┐    ┌─────▼────┐
+    │  API    │     │   API    │    │   API    │
+    │ Server 1│     │ Server 2 │    │ Server 3 │
+    └────┬────┘     └─────┬────┘    └─────┬────��
+         │                │                │
+         └────────────────┼────────────────┘
+                          │
+         ┌────────────────┼────────────────┐
+         │                │                │
+    ┌────▼────┐     ┌─────▼────┐    ┌─────▼────┐
+    │ MongoDB │     │  Redis   │    │   S3     │
+    │ Cluster │     │  Cache   │    │ Storage  │
+    └─────────┘     └──────────┘    └──────────┘
+
+Monitoring & Logging
+    ├── CloudWatch / Azure Monitor
+    ├── ELK Stack (Logs)
+    ├── Prometheus + Grafana (Metrics)
+    └── Sentry (Error Tracking)
