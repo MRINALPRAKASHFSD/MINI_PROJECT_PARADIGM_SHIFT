@@ -224,3 +224,338 @@ npm run dev
 │  │  (Payment)  │  │  (Realtime) │  │   (Images)  │             │
 │  └─────────────┘  └───────��─────┘  └─────────────┘             │
 └──────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+
+
+┌───────────────────────────────────────────────────────────┐
+│                 AUTHENTICATION FLOW                        │
+└───────────────────────────────────────────────────────────┘
+
+    User Request (Login/Register)
+            │
+            ▼
+    ┌───────────────┐
+    │ API Gateway   │
+    └───────┬───────┘
+            │
+            ▼
+    ┌───────────────────┐
+    │ Auth Controller   │
+    └───────┬───────────┘
+            │
+            ├──► Validate Input
+            │
+            ├──► Hash Password (bcrypt)
+            │
+            ├──► Check Database
+            │         │
+            ▼         ▼
+    ┌─────────────────────┐
+    │   User Database     │
+    └─────────┬───────────┘
+              │
+              ├──► User Found?
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Generate JWT Token │
+    │  - Access Token     │
+    │  - Refresh Token    │
+    └─────────┬───────────┘
+              │
+              ├──► Store in Redis (Session)
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Return Response    │
+    │  - tokens           │
+    │  - user data        │
+    └─────────────────────┘
+
+
+
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│                 TASK MANAGEMENT FLOW                       │
+└───────��───────────────────────────────────────────────────┘
+
+    Create/Update Task Request
+            │
+            ▼
+    ┌───────────────────┐
+    │ Auth Middleware   │
+    └───────┬───────────┘
+            │
+            ▼
+    ┌───────────────────┐
+    │ Task Controller   │
+    └───────┬───────────┘
+            │
+            ├──► Validate Task Data
+            │
+            ├──► Check Permissions
+            │
+            ▼
+    ┌─────────────────────────┐
+    │  Business Rules         │
+    │  - Priority validation  │
+    │  - Deadline validation  │
+    │  - Assignment rules     │
+    └─────────┬───────────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │   Save to DB        │
+    └─────────┬───────────┘
+              │
+              ├──► Trigger Events
+              │    │
+              │    ├──► Notification Service
+              │    ├──► Analytics Service
+              │    └──► Audit Log
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Return Response    │
+    └────────��────────────┘
+
+
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│                TIME TRACKING FLOW                          │
+└───────────────────────────────────────────────────────────┘
+
+    Start/Stop Timer
+            │
+            ▼
+    ┌───────────────────┐
+    │ Auth Middleware   │
+    └───────┬───────────┘
+            │
+            ▼
+    ┌───────────────────────┐
+    │ Time Track Controller │
+    └───────┬───────────────┘
+            │
+            ├──► Start Timer
+            │    └──► Create Time Entry
+            │         └──► Store in Redis (Active)
+            │
+            ├──► Stop Timer
+            │    ├──► Calculate Duration
+            │    ├──► Move to MongoDB
+            │    └──► Clear Redis Entry
+            │
+            ├──► Pause/Resume
+            │
+            ▼
+    ┌─────────────────────┐
+    │   Data Processing   │
+    │  - Calculate hours  │
+    │  - Generate reports │
+    └─────────┬───────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Store & Respond    │
+    └─────────────────────┘
+
+
+
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│              PROOF SUBMISSION FLOW                         │
+└───────────────────────────────────────────────────────────��
+
+    Upload Proof (Screenshot/File)
+            │
+            ▼
+    ┌───────────────────┐
+    │ Multer Middleware │
+    │ - File validation │
+    │ - Size limit      │
+    └───────┬───────────┘
+            │
+            ▼
+    ┌───────────────────────┐
+    │ Proof Controller      │
+    └───────┬───────────────┘
+            │
+            ├──► Validate File Type
+            ├──► Compress Image
+            │
+            ▼
+    ┌─────────────────────┐
+    │  Upload to Cloud    │
+    │  (AWS S3/Cloudinary)│
+    └─────────┬───────────┘
+              │
+              ├──► Get URL
+              │
+              ▼
+    ┌─────────────────────────┐
+    │  Save Metadata to DB    │
+    │  - file URL             │
+    │  - task ID              │
+    │  - user ID              │
+    │  - timestamp            │
+    └─────────┬───────────────┘
+              │
+              ├──► Notify Manager
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Return Response    │
+    └─────────────────────┘
+
+
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│              TEAM MANAGEMENT FLOW                          │
+└───────────────────────────────────────────────────────────┘
+
+    Team Operation Request
+            │
+            ▼
+    ┌───────────────────────┐
+    │ RBAC Middleware       │
+    │ - Check admin/manager │
+    └───────┬───────────────┘
+            │
+            ▼
+    ┌───────────────────────┐
+    │ Team Controller       │
+    └───────┬───────────────┘
+            │
+            ├──► Create Team
+            ├──► Add Member
+            ├──► Remove Member
+            ├──► Update Roles
+            │
+            ▼
+    ┌─────────────────────────┐
+    │  Business Logic         │
+    │  - Validate hierarchy   │
+    │  - Check permissions    │
+    └─────────┬───────────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │   Update Database   │
+    └─────────┬───────────┘
+              │
+              ├──► Send Invites
+              ├──► Update Cache
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Return Response    │
+    └─────────────────────┘
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│            ANALYTICS & REPORTING FLOW                      │
+└───────────────────────────────────────────────────────────┘
+
+    Request Analytics Data
+            │
+            ▼
+    ┌───────────────────────┐
+    │ Auth Middleware       │
+    └───────┬───────────────┘
+            │
+            ▼
+    ┌───────────────────────┐
+    │ Analytics Controller  │
+    └───────┬───────────────┘
+            │
+            ├──► Parse Query Parameters
+            │    └──► Date range, filters
+            │
+            ▼
+    ┌─────────────────────────────┐
+    │  Data Aggregation           │
+    │  - MongoDB Aggregation      │
+    │  - Redis for real-time data │
+    └─────────┬───────────────────┘
+              │
+              ▼
+    ┌─────────────────────────┐
+    │  Data Processing        │
+    │  - Calculate metrics    │
+    │  - Generate charts data │
+    │  - Format response      │
+    └─────────┬───────────────┘
+              │
+              ├──► Cache Results (Redis)
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Return Analytics   │
+    └─────────────────────┘
+
+
+
+
+
+    ┌───────────────────────────────────────────────────────────┐
+│                  SECURITY LAYERS                           │
+└───────────────────────────────────────────────────────────┘
+
+1. Transport Security
+   ├── HTTPS/TLS 1.3
+   ├── Certificate Pinning
+   └── HSTS Headers
+
+2. Authentication
+   ├── JWT (Access & Refresh Tokens)
+   ├── Password Hashing (bcrypt, cost: 12)
+   ├── Email Verification
+   └── 2FA (Optional)
+
+3. Authorization
+   ├── Role-Based Access Control (RBAC)
+   ├── Permission Matrix
+   └── Resource-level permissions
+
+4. Data Protection
+   ├── Input Validation (Joi/Yup)
+   ├── SQL Injection Prevention
+   ├── XSS Protection
+   ├── CSRF Tokens
+   └── Data Encryption at Rest
+
+5. API Security
+   ├── Rate Limiting (Redis)
+   ├── API Key Management
+   ├── CORS Configuration
+   └── Request Sanitization
+
+6. Monitoring & Logging
+   ├── Audit Logs
+   ├── Error Tracking (Sentry)
+   ├── Security Alerts
+   └── Activity Monitoring
