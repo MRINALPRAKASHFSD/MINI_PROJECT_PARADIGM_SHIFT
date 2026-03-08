@@ -43,3 +43,14 @@ lerna-debug.log*
 
 # OS
 Thumbs.db
+node_modules
+node_modules
+node_modules
+node_modules
+node_modules
+node_modules
+
+# Backend
+backend/node_modules/
+backend/.env
+backend/.env.*
