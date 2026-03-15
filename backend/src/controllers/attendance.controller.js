@@ -41,4 +41,20 @@ const checkOut = asyncHandler(async (req, res) => {
 });
 
 
+const myAttendance = asyncHandler(async (req, res) => {
+  const userId = req.user?.id || req.user?.sub;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  const { from, to } = req.query;
+
+  const q = { user: userId };
+  if (from || to) q.day = {};
+  if (from) q.day.$gte = String(from);
+  if (to) q.day.$lte = String(to);
+
+  const items = await Attendance.find(q).sort({ day: -1 }).limit(366);
+
+  res.json({ items });
+});
+
 module.exports = { checkIn, checkOut, myAttendance };
