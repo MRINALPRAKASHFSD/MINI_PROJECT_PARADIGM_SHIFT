@@ -5,3 +5,4 @@ const { requireAuth } = require("../middleware/requireAuth");
 router.get("/me", requireAuth, me);
 
 module.exports = router;
+
