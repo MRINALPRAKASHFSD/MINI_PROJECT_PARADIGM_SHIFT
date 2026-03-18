@@ -592,3 +592,450 @@ Monitoring & Logging
     ├── ELK Stack (Logs)
     ├── Prometheus + Grafana (Metrics)
     └── Sentry (Error Tracking)
+
+
+
+
+# ParadigmShift HRMS (Admin Console + Employee Portal)
+
+A modern HRMS-style project with:
+- **Admin Console (frontend-admin):** manage Employees, Departments, Leaves, Attendance, Payroll, Reports, Announcements.
+- **Employee Portal (frontend-employee):** employees can view profile, attendance, payslips, apply for leave, read announcements, etc.
+- **Backend (recommended):** REST API + DB + Auth to connect both apps reliably.
+
+> **Current date reference:** This README assumes development around **2026-03-18**.
+
+---
+
+## Table of Contents
+- [Project Goals](#project-goals)
+- [Architecture Overview](#architecture-overview)
+- [Monorepo Layout](#monorepo-layout)
+- [Local Development Workflow](#local-development-workflow)
+- [Data Flow & Storage](#data-flow--storage)
+- [How Admin & Employee Portal Connect](#how-admin--employee-portal-connect)
+- [Backend Structure (Recommended)](#backend-structure-recommended)
+- [Database Schema (Recommended)](#database-schema-recommended)
+- [API Endpoints (Proposed)](#api-endpoints-proposed)
+- [Auth & Roles](#auth--roles)
+- [Reports & Downloads](#reports--downloads)
+- [Deployment Workflow](#deployment-workflow)
+- [Roadmap](#roadmap)
+- [Conventions](#conventions)
+
+---
+
+## Project Goals
+1. **Professional UI** (dark-only modern design, glassmorphism, animations via Framer Motion).
+2. **Fully working CRUD** for all modules (Employees, Departments, Announcements, Payroll, etc.).
+3. **Single source of truth**: backend database (no reliance on localStorage in production).
+4. **Two experiences**:
+   - Admin Console for HR/Finance/Admin roles
+   - Employee Portal for employees
+
+---
+
+## Architecture Overview
+### Current (Frontend-only / Prototype)
+- Admin Console stores data in `localStorage` keys such as:
+  - `ps_admin_employees_v1`
+  - `ps_admin_departments_v1`
+  - `ps_admin_announcements_v1`
+  - `ps_admin_payroll_v1`
+
+This is great for demos and fast iteration, but **not multi-user safe**.
+
+### Target (Production)
+- **Backend API** with database + JWT auth.
+- Admin Console and Employee Portal both talk to the same API.
+- Reports/payslips generated on backend (CSV/PDF) and downloaded securely.
+
+---
+
+## Monorepo Layout
+Recommended structure:
+
+```text
+/
+├─ frontend-admin/              # Admin Console (React)
+├─ frontend-employee/           # Employee Portal (React)
+└─ backend/                     # API Server (Node/Nest/Express)
+   ├─ src/
+   ├─ prisma/ (or migrations/)
+   └─ ...
+```
+
+---
+
+## Local Development Workflow
+
+### 1) Install dependencies
+Run from each app directory:
+
+```bash
+cd frontend-admin
+npm i
+npm run dev
+```
+
+```bash
+cd frontend-employee
+npm i
+npm run dev
+```
+
+When backend exists:
+
+```bash
+cd backend
+npm i
+npm run dev
+```
+
+### 2) Environment variables
+Use `.env` files:
+
+**frontend-admin/.env**
+```bash
+VITE_API_BASE_URL=http://localhost:4000/api
+```
+
+**frontend-employee/.env**
+```bash
+VITE_API_BASE_URL=http://localhost:4000/api
+```
+
+**backend/.env**
+```bash
+PORT=4000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hrms
+JWT_SECRET=super_secret_change_me
+CORS_ORIGINS=http://localhost:5173,http://localhost:5174
+```
+
+> Ports: your Vite apps might run on different ports (ex: 5173 and 5174).
+
+---
+
+## Data Flow & Storage
+
+### Prototype mode (localStorage)
+Each module reads/writes a localStorage key.
+
+Example:
+- Employees page saves to `ps_admin_employees_v1`
+- Departments page saves to `ps_admin_departments_v1`
+
+### Production mode (backend)
+Replace localStorage logic with API calls:
+- `GET /api/employees`
+- `POST /api/employees`
+- `PATCH /api/employees/:id`
+- `DELETE /api/employees/:id`
+
+> You can keep localStorage as an offline cache, but backend should be the source of truth.
+
+---
+
+## How Admin & Employee Portal Connect
+Both apps connect to the same backend.
+
+### Admin Console does:
+- creates employees
+- assigns department + designation
+- processes payroll
+- publishes announcements
+- approves leaves
+
+### Employee Portal does:
+- login as employee
+- sees their own profile
+- applies for leave
+- views attendance history
+- downloads payslips
+- reads announcements
+
+### Shared Entities
+- **Employee** is the core entity connecting everything.
+- Leaves, Attendance, Payroll, Announcements reference employees or departments.
+
+---
+
+## Backend Structure (Recommended)
+
+You can implement backend using:
+- **Node + Express** (simple)
+- **NestJS** (enterprise structure)
+- **Fastify** (performance)
+- **Django / Spring Boot** (also fine)
+
+Below is a recommended Node structure.
+
+### Backend folder layout
+```text
+backend/
+├─ src/
+│  ├─ main.ts (or server.ts)
+│  ├─ config/
+│  │  ├─ env.ts
+│  │  └─ cors.ts
+│  ├─ middleware/
+│  │  ├─ auth.ts              # verifies JWT
+│  │  ├─ roles.ts             # role-based access
+│  │  └─ validate.ts          # request validation
+│  ├─ modules/
+│  │  ├─ auth/
+│  │  │  ├─ auth.controller.ts
+│  │  │  ├─ auth.service.ts
+│  │  │  └─ auth.routes.ts
+│  │  ├─ employees/
+│  │  ├─ departments/
+│  │  ├─ announcements/
+│  │  ├─ leaves/
+│  │  ├─ attendance/
+│  │  ├─ payroll/
+│  │  └─ reports/
+│  ├─ db/
+│  │  ├─ prisma.ts (or db.ts)
+│  │  └─ migrations/
+│  └─ utils/
+│     ├─ csv.ts
+│     ├─ pdf.ts
+│     └─ logger.ts
+├─ prisma/
+│  ├─ schema.prisma
+│  └─ migrations/
+└─ package.json
+```
+
+### Recommended backend tech
+- DB: **PostgreSQL**
+- ORM: **Prisma**
+- Auth: **JWT** + refresh tokens
+- Validation: **zod** or **joi**
+- Reports: CSV generation + PDF generation for payslips (later)
+
+---
+
+## Database Schema (Recommended)
+
+### Core tables
+- `users`
+- `employees`
+- `departments`
+- `announcements`
+- `leaves`
+- `attendance`
+- `payroll_runs` (batch payroll)
+- `payslips` (per employee per payroll run)
+
+### Minimal schema idea (high-level)
+```text
+users
+- id (uuid)
+- email (unique)
+- password_hash
+- role: ADMIN | HR | FINANCE | EMPLOYEE
+- employee_id (nullable, FK employees.id)
+
+employees
+- id (uuid)
+- employee_code (EMP001)
+- name
+- email (unique)
+- phone
+- department_id
+- designation
+- joining_date
+- status
+
+departments
+- id (uuid)
+- name
+- short_name
+- head_employee_id (nullable)
+- budget
+- performance
+
+announcements
+- id (uuid)
+- title
+- content
+- type
+- priority
+- created_by_user_id
+- publish_date
+- views_count
+
+leaves
+- id (uuid)
+- employee_id
+- type (CASUAL/SICK/etc.)
+- start_date
+- end_date
+- reason
+- status (PENDING/APPROVED/REJECTED)
+- reviewed_by_user_id
+- reviewed_at
+
+attendance
+- id (uuid)
+- employee_id
+- date
+- status (PRESENT/ABSENT/LATE/WFH)
+- check_in_time
+- check_out_time
+
+payroll_runs
+- id (uuid)
+- month (YYYY-MM)
+- processed_by_user_id
+- processed_at
+- status
+
+payslips
+- id (uuid)
+- payroll_run_id
+- employee_id
+- basic
+- allowances
+- deductions
+- net
+- payment_date
+- status
+```
+
+---
+
+## API Endpoints (Proposed)
+
+### Auth
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
+
+### Employees
+- `GET /api/employees` (Admin/HR)
+- `POST /api/employees` (Admin/HR)
+- `GET /api/employees/:id` (Admin/HR; Employee can access self)
+- `PATCH /api/employees/:id` (Admin/HR)
+- `DELETE /api/employees/:id` (Admin only)
+
+### Departments
+- `GET /api/departments`
+- `POST /api/departments` (Admin)
+- `PATCH /api/departments/:id` (Admin)
+- `DELETE /api/departments/:id` (Admin)
+
+### Announcements
+- `GET /api/announcements` (All authenticated)
+- `POST /api/announcements` (Admin/HR)
+- `PATCH /api/announcements/:id` (Admin/HR)
+- `DELETE /api/announcements/:id` (Admin)
+- `POST /api/announcements/:id/view` (increments view count)
+
+### Leaves
+- `GET /api/leaves` (Admin/HR)
+- `POST /api/leaves` (Employee)
+- `PATCH /api/leaves/:id/approve` (HR)
+- `PATCH /api/leaves/:id/reject` (HR)
+
+### Attendance
+- `GET /api/attendance` (Admin/HR)
+- `GET /api/attendance/me` (Employee)
+- `POST /api/attendance/checkin` (Employee)
+- `POST /api/attendance/checkout` (Employee)
+
+### Payroll
+- `GET /api/payroll/runs` (Finance/Admin)
+- `POST /api/payroll/runs` (Finance)  # create payroll run for month
+- `POST /api/payroll/runs/:runId/process` (Finance) # process pending
+- `GET /api/payslips/me` (Employee)
+- `GET /api/payslips/:id/download` (Employee/Admin/Finance) # PDF or CSV
+
+### Reports
+- `GET /api/reports/payroll?month=YYYY-MM&format=csv`
+- `GET /api/reports/departments?format=csv`
+- `GET /api/reports/employees?format=csv`
+
+---
+
+## Auth & Roles
+
+### Roles
+- **ADMIN**: full access
+- **HR**: employees + leaves + announcements
+- **FINANCE**: payroll + payslips + payroll reports
+- **EMPLOYEE**: self profile + leaves + attendance + payslips + announcements
+
+### JWT Flow
+1. User logs in → gets `accessToken` + `refreshToken`
+2. Frontend stores:
+   - access token in memory (recommended) or localStorage (simple)
+   - refresh token in httpOnly cookie (recommended)
+3. Frontend calls APIs with `Authorization: Bearer <token>`
+
+---
+
+## Reports & Downloads
+
+### Prototype (Frontend)
+- CSV generation happens inside UI modules and downloads directly.
+
+### Production (Backend)
+- CSV/PDF generation should be done on backend:
+  - ensures correct data
+  - enforces permissions
+  - supports audit logs
+
+Recommended:
+- CSV: generate server-side and return as `text/csv`
+- PDF: generate using a template and return as `application/pdf`
+
+---
+
+## Deployment Workflow
+
+### Recommended
+- Host backend on:
+  - Render / Railway / Fly.io / AWS
+- Host frontends on:
+  - Vercel / Netlify
+
+### Steps
+1. Deploy backend (Postgres + API)
+2. Configure `VITE_API_BASE_URL` for both frontends
+3. Deploy both frontends
+
+---
+
+## Roadmap
+
+### Phase 1 (Demo-ready)
+- [x] CRUD modules using localStorage
+- [x] Downloads (CSV)
+- [x] UI polish + animations
+
+### Phase 2 (Backend integration)
+- [ ] Build backend + DB
+- [ ] Replace localStorage with API
+- [ ] Proper login roles
+- [ ] Employee portal integration
+
+### Phase 3 (Enterprise features)
+- [ ] Audit logs
+- [ ] PDF payslips
+- [ ] Command palette (Cmd+K)
+- [ ] Dashboards with charts
+- [ ] Notifications + undo
+
+---
+
+## Conventions
+- **Storage keys**: `ps_admin_<module>_v1`
+- **Dates**: use ISO `YYYY-MM-DD`
+- **Currency**: INR formatting `en-IN`
+- **Animations**: Framer Motion; respect reduced motion where possible
+
+---
+If you want, next we can create the backend folder with Prisma + Express/Nest skeleton and connect Admin Console to API (starting with Employees).
