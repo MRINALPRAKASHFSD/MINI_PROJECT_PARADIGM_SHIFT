@@ -43,10 +43,11 @@ All built with ❤️ using **ReactJS + Firebase**.
 | Name/ID               | Role         |
 |-----------------------|-------------|
 | 👑 MRINALPRAKASHFSD   | Maintainer / Lead Developer |
-| 🧑‍💻 AdiT0015         | Collaborator |
-| 🧑‍💻 IshaanParashar2025 | Collaborator |
-| 🧑‍💻 Mahin            | Collaborator |
-| 🧑‍💻 Prarock83        | Collaborator |
+| 🧑‍💻 AdiT0015         | Frontend Devloper & Admin Portal manager|
+| 🧑‍💻 IshaanParashar2025 | Backend Integration & Database Manager |
+| 🧑‍💻 Mahin            | UI/UX & Software Testing|
+| 🧑‍💻 Prarock83        | Lead Backend Developer & Employee and Admin Portal Manager |
+| 👩 Diyagoel08       | Documentation & Testing|
 
 > _Contributions welcome from all!_
 
