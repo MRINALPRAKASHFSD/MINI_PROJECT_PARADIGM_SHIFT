@@ -471,48 +471,84 @@ flowchart TB
 
 
 
-    ┌───────────────────────────────────────────────────────────┐
-│                  SECURITY LAYERS                           │
-└───────────────────────────────────────────────────────────┘
+## Security Layers (Advanced)
 
-1. Transport Security
-   ├── HTTPS/TLS 1.3
-   ├── Certificate Pinning
-   └── HSTS Headers
+```mermaid
+flowchart TB
+  %% ===== Clients =====
+  subgraph C[Clients]
+    A1[Employee Portal]
+    A2[Admin Portal]
+    A3[Mobile App (optional)]
+  end
 
-2. Authentication
-   ├── JWT (Access & Refresh Tokens)
-   ├── Password Hashing (bcrypt, cost: 12)
-   ├── Email Verification
-   └── 2FA (Optional)
+  %% ===== Edge / Transport =====
+  subgraph T[Transport & Edge Security]
+    T1[TLS 1.3 / HTTPS]
+    T2[HSTS]
+    T3[WAF / DDoS Protection]
+    T4[Certificate Management]
+  end
 
-3. Authorization
-   ├── Role-Based Access Control (RBAC)
-   ├── Permission Matrix
-   └── Resource-level permissions
+  %% ===== Gateway =====
+  subgraph G[API Gateway]
+    G1[Rate Limiting]
+    G2[Request Validation]
+    G3[CORS Policy]
+    G4[API Versioning]
+    G5[Request Sanitization]
+  end
 
-4. Data Protection
-   ├── Input Validation (Joi/Yup)
-   ├── SQL Injection Prevention
-   ├── XSS Protection
-   ├── CSRF Tokens
-   └── Data Encryption at Rest
+  %% ===== AuthN/AuthZ =====
+  subgraph A[Authentication & Authorization]
+    A1a[Firebase Auth / Identity]
+    A2a[JWT Access Tokens]
+    A3a[Refresh Tokens]
+    A4a[RBAC Roles: ADMIN/HR/FINANCE/EMPLOYEE]
+    A5a[Resource-level Permissions]
+    A6a[MFA (Optional)]
+  end
 
-5. API Security
-   ├── Rate Limiting (Redis)
-   ├── API Key Management
-   ├── CORS Configuration
-   └── Request Sanitization
+  %% ===== App Layer =====
+  subgraph S[Application Services]
+    S1[Employees Service]
+    S2[Departments Service]
+    S3[Attendance Service]
+    S4[Leaves Service]
+    S5[Announcements Service]
+    S6[Payroll Service]
+    S7[Reports Service]
+  end
 
-6. Monitoring & Logging
-   ├── Audit Logs
-   ├── Error Tracking (Sentry)
-   ├── Security Alerts
-   └── Activity Monitoring
+  %% ===== Data Security =====
+  subgraph D[Data Protection]
+    D1[Encryption at Rest]
+    D2[Secrets Management]
+    D3[Audit Logs]
+    D4[Backup & Restore]
+  end
 
+  %% ===== Monitoring =====
+  subgraph M[Monitoring & Logging]
+    M1[Centralized Logs (ELK)]
+    M2[Metrics (Prometheus/Grafana)]
+    M3[Error Tracking (Sentry)]
+    M4[Security Alerts]
+  end
 
+  %% ===== Relationships =====
+  A1 --> T
+  A2 --> T
+  A3 --> T
+  T --> G
+  G --> A
+  A --> S
 
-
+  S --> D
+  S --> M
+  G --> M
+  A --> M
+```
 
 
    ┌───────────────────────────────────────────────────────────┐
