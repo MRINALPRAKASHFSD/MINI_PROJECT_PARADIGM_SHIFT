@@ -476,70 +476,68 @@ flowchart TB
 ```mermaid
 flowchart TB
   %% ===== Clients =====
-  subgraph C[Clients]
-    A1[Employee Portal]
-    A2[Admin Portal]
-    A3[Mobile App (optional)]
+  subgraph C["Clients"]
+    A1["Employee Portal"]
+    A2["Admin Portal"]
+    A3["Mobile App (Optional)"]
   end
 
   %% ===== Edge / Transport =====
-  subgraph T[Transport & Edge Security]
-    T1[TLS 1.3 / HTTPS]
-    T2[HSTS]
-    T3[WAF / DDoS Protection]
-    T4[Certificate Management]
+  subgraph T["Transport & Edge Security"]
+    T1["TLS 1.3 / HTTPS"]
+    T2["HSTS"]
+    T3["WAF / DDoS Protection"]
+    T4["Certificate Management"]
   end
 
   %% ===== Gateway =====
-  subgraph G[API Gateway]
-    G1[Rate Limiting]
-    G2[Request Validation]
-    G3[CORS Policy]
-    G4[API Versioning]
-    G5[Request Sanitization]
+  subgraph G["API Gateway"]
+    G1["Rate Limiting"]
+    G2["Request Validation"]
+    G3["CORS Policy"]
+    G4["API Versioning"]
+    G5["Request Sanitization"]
   end
 
   %% ===== AuthN/AuthZ =====
-  subgraph A[Authentication & Authorization]
-    A1a[Firebase Auth / Identity]
-    A2a[JWT Access Tokens]
-    A3a[Refresh Tokens]
-    A4a[RBAC Roles: ADMIN/HR/FINANCE/EMPLOYEE]
-    A5a[Resource-level Permissions]
-    A6a[MFA (Optional)]
+  subgraph A["Authentication & Authorization"]
+    A1a["Firebase Auth / Identity"]
+    A2a["JWT Access Tokens"]
+    A3a["Refresh Tokens"]
+    A4a["RBAC Roles: ADMIN | HR | FINANCE | EMPLOYEE"]
+    A5a["Resource-level Permissions"]
+    A6a["MFA (Optional)"]
   end
 
   %% ===== App Layer =====
-  subgraph S[Application Services]
-    S1[Employees Service]
-    S2[Departments Service]
-    S3[Attendance Service]
-    S4[Leaves Service]
-    S5[Announcements Service]
-    S6[Payroll Service]
-    S7[Reports Service]
+  subgraph S["Application Services"]
+    S1["Employees Service"]
+    S2["Departments Service"]
+    S3["Attendance Service"]
+    S4["Leaves Service"]
+    S5["Announcements Service"]
+    S6["Payroll Service"]
+    S7["Reports Service"]
   end
 
   %% ===== Data Security =====
-  subgraph D[Data Protection]
-    D1[Encryption at Rest]
-    D2[Secrets Management]
-    D3[Audit Logs]
-    D4[Backup & Restore]
+  subgraph D["Data Protection"]
+    D1["Encryption at Rest"]
+    D2["Secrets Management"]
+    D3["Audit Logs"]
+    D4["Backup & Restore"]
   end
 
   %% ===== Monitoring =====
-  subgraph M[Monitoring & Logging]
-    M1[Centralized Logs (ELK)]
-    M2[Metrics (Prometheus/Grafana)]
-    M3[Error Tracking (Sentry)]
-    M4[Security Alerts]
+  subgraph M["Monitoring & Logging"]
+    M1["Centralized Logs (ELK)"]
+    M2["Metrics (Prometheus/Grafana)"]
+    M3["Error Tracking (Sentry)"]
+    M4["Security Alerts"]
   end
 
   %% ===== Relationships =====
-  A1 --> T
-  A2 --> T
-  A3 --> T
+  C --> T
   T --> G
   G --> A
   A --> S
@@ -549,8 +547,6 @@ flowchart TB
   G --> M
   A --> M
 ```
-
-
    ┌───────────────────────────────────────────────────────────┐
 │              CLOUD DEPLOYMENT (AWS/Azure/GCP)              │
 └───────────────────────────────────────────────────────────┘
