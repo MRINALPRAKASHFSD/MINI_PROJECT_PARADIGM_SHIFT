@@ -181,53 +181,50 @@ flowchart TB
 
 
 
-┌───────────────────────────────────────────────────────────┐
-│                 AUTHENTICATION FLOW                        │
-└───────────────────────────────────────────────────────────┘
+## Authentication Flow (Firebase + JWT + RBAC)
 
-    User Request (Login/Register)
-            │
-            ▼
-    ┌───────────────┐
-    │ API Gateway   │
-    └───────┬───────┘
-            │
-            ▼
-    ┌───────────────────┐
-    │ Auth Controller   │
-    └───────┬───────────┘
-            │
-            ├──► Validate Input
-            │
-            ├──► Hash Password (bcrypt)
-            │
-            ├──► Check Database
-            │         │
-            ▼         ▼
-    ┌─────────────────────┐
-    │   User Database     │
-    └─────────┬───────────┘
-              │
-              ├──► User Found?
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Generate JWT Token │
-    │  - Access Token     │
-    │  - Refresh Token    │
-    └─────────┬───────────┘
-              │
-              ├──► Store in Redis (Session)
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Return Response    │
-    │  - tokens           │
-    │  - user data        │
-    └─────────────────────┘
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as "User (Admin/Employee)"
+  participant FE as "Frontend (React)"
+  participant FB as "Firebase Auth"
+  participant API as "Backend API"
+  participant DB as "Database"
+  participant RBAC as "RBAC Middleware"
 
+  Note over U,FE: User opens Admin Portal / Employee Portal
 
+  U->>FE: Enter email + password\nClick Login
+  FE->>FB: signInWithEmailAndPassword()
+  FB-->>FE: Firebase ID Token (JWT) + user identity
+  FE->>API: POST /api/auth/firebase\nAuthorization: Bearer <firebaseIdToken>
 
+  API->>FB: Verify Firebase ID token
+  FB-->>API: Token valid + uid/email
+
+  API->>DB: Find user by firebaseUid/email
+  DB-->>API: User record + role\n(ADMIN/HR/FINANCE/EMPLOYEE)
+
+  API-->>FE: App Access Token (JWT) + Refresh Token\n+ role + basic profile
+
+  Note over FE: Store access token (memory/localStorage)\nStore refresh token (httpOnly cookie recommended)
+
+  FE->>API: GET /api/users/me\nAuthorization: Bearer <accessToken>
+  API->>RBAC: Validate JWT + role permissions
+  RBAC-->>API: Allowed
+  API->>DB: Load profile data
+  DB-->>API: Profile
+  API-->>FE: Profile JSON
+  FE-->>U: Redirect to dashboard (protected route)
+
+  Note over FE,API: Access Token Expired (later)
+  FE->>API: POST /api/auth/refresh\n(with refresh token)
+  API->>DB: Validate refresh token/session
+  DB-->>API: OK
+  API-->>FE: New Access Token (JWT)
+  FE-->>U: Continue session without re-login
+```
 
 
 
