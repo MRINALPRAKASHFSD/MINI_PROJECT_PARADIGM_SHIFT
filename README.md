@@ -382,27 +382,110 @@ flowchart TB
   G --> M
   A --> M
 ```
-   ┌───────────────────────────────────────────────────────────┐
-│              CLOUD DEPLOYMENT (AWS/Azure/GCP)              │
-└───────────────────────────────────────────────────────────┘
+  ## Cloud Deployment (AWS / Azure / GCP) — Reference Architecture
 
-                    Load Balancer
-                          │
-         ┌────────────────┼────────────────┐
-         │                │                │
-    ┌────▼────┐     ┌─────▼────┐    ┌─────▼────┐
-    │  API    │     │   API    │    │   API    │
-    │ Server 1│     │ Server 2 │    │ Server 3 │
-    └────┬────┘     └─────┬────┘    └─────┬────��
-         │                │                │
-         └────────────────┼────────────────┘
-                          │
-         ┌────────────────┼────────────────┐
-         │                │                │
-    ┌────▼────┐     ┌─────▼────┐    ┌─────▼────┐
-    │ MongoDB │     │  Redis   │    │   S3     │
-    │ Cluster │     │  Cache   │    │ Storage  │
-    └─────────┘     └──────────┘    └──────────┘
+```mermaid
+flowchart TB
+  %% =========================
+  %% Users + Frontend Hosting
+  %% =========================
+  U["Users (Browser/Mobile)"]
+
+  subgraph FE["Frontend Hosting"]
+    CDN["CDN / Static Hosting<br/>(Vercel / Netlify / CloudFront)"]
+    ADMIN["Admin Portal (React)"]
+    EMP["Employee Portal (React)"]
+  end
+
+  U -->|HTTPS| CDN
+  CDN --> ADMIN
+  CDN --> EMP
+
+  %% =========================
+  %% Edge + Load Balancing
+  %% =========================
+  subgraph EDGE["Edge / Traffic Management"]
+    WAF["WAF + DDoS Protection"]
+    LB["Load Balancer / Ingress"]
+  end
+
+  U -->|HTTPS| WAF
+  WAF --> LB
+
+  %% =========================
+  %% Backend API Cluster
+  %% =========================
+  subgraph API["Backend API Cluster"]
+    S1["API Server 1"]
+    S2["API Server 2"]
+    S3["API Server 3"]
+  end
+
+  LB --> S1
+  LB --> S2
+  LB --> S3
+
+  %% =========================
+  %% Data Layer
+  %% =========================
+  subgraph DATA["Data Layer"]
+    DB["Database<br/>(MongoDB Cluster / Postgres)"]
+    REDIS["Redis Cache<br/>(sessions, rate limit, analytics cache)"]
+    OBJ["Object Storage<br/>(S3 / Blob Storage)<br/>(payslips, exports, proofs)"]
+  end
+
+  S1 --> DB
+  S2 --> DB
+  S3 --> DB
+
+  S1 --> REDIS
+  S2 --> REDIS
+  S3 --> REDIS
+
+  S1 --> OBJ
+  S2 --> OBJ
+  S3 --> OBJ
+
+  %% =========================
+  %% Monitoring & Logging
+  %% =========================
+  subgraph OBS["Monitoring & Logging"]
+    CW["CloudWatch / Azure Monitor"]
+    ELK["ELK / Cloud Logging"]
+    PROM["Prometheus + Grafana"]
+    SENTRY["Sentry (Error Tracking)"]
+  end
+
+  S1 --> CW
+  S2 --> CW
+  S3 --> CW
+
+  S1 --> ELK
+  S2 --> ELK
+  S3 --> ELK
+
+  S1 --> PROM
+  S2 --> PROM
+  S3 --> PROM
+
+  S1 --> SENTRY
+  S2 --> SENTRY
+  S3 --> SENTRY
+
+  %% =========================
+  %% CI/CD
+  %% =========================
+  subgraph CICD["CI/CD Pipeline"]
+    GH["GitHub Repo"]
+    ACT["GitHub Actions"]
+  end
+
+  GH --> ACT
+  ACT --> CDN
+  ACT --> S1
+  ACT --> S2
+  ACT --> S3
+```
 
 Monitoring & Logging
     ├── CloudWatch / Azure Monitor
