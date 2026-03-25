@@ -273,46 +273,34 @@ flowchart TB
 
 
 
-    ┌───────────────────────────────────────────────────────────┐
-│            ANALYTICS & REPORTING FLOW                      │
-└───────────────────────────────────────────────────────────┘
+ ## Analytics & Reporting Flow 
 
-    Request Analytics Data
-            │
-            ▼
-    ┌───────────────────────┐
-    │ Auth Middleware       │
-    └───────┬───────────────┘
-            │
-            ▼
-    ┌───────────────────────┐
-    │ Analytics Controller  │
-    └───────┬───────────────┘
-            │
-            ├──► Parse Query Parameters
-            │    └──► Date range, filters
-            │
-            ▼
-    ┌─────────────────────────────┐
-    │  Data Aggregation           │
-    │  - MongoDB Aggregation      │
-    │  - Redis for real-time data │
-    └─────────┬───────────────────┘
-              │
-              ▼
-    ┌─────────────────────────┐
-    │  Data Processing        │
-    │  - Calculate metrics    │
-    │  - Generate charts data │
-    │  - Format response      │
-    └─────────┬───────────────┘
-              │
-              ├──► Cache Results (Redis)
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Return Analytics   │
-    └─────────────────────┘
+```mermaid
+flowchart TB
+  U["User"] --> FE["Frontend (React)\nSelect date range + filters"]
+  FE -->|"GET /api/analytics?from&to&filters\nBearer token"| API["Backend API"]
+
+  API --> AUTH["Auth Middleware\nVerify JWT"]
+  AUTH --> RBAC["RBAC\nview_analytics / export_reports"]
+  RBAC --> CTRL["Analytics Controller\nParse query params"]
+
+  CTRL --> CACHE{"Redis Cache Hit?"}
+
+  CACHE -- "Yes" --> RESP["Return cached analytics JSON"]
+  CACHE -- "No" --> AGG["Aggregation Layer\nMongo Aggregation / SQL Grouping"]
+  AGG --> DB["Database\nAttendance/Leaves/Payroll/Tasks"]
+  DB --> METRICS["Compute metrics + chart series"]
+  METRICS --> CACHESET["Cache results (TTL)"]
+  CACHESET --> RESP
+  RESP --> FE
+  FE --> UI["Render charts/widgets"]
+
+  UI -->|"Download CSV/PDF"| EXPORT["Export Endpoint"]
+  EXPORT --> GEN["Report Generator\nCSV/PDF"]
+  GEN --> STORE["Object Storage\nS3/Cloudinary"]
+  STORE --> LINK["Return download URL"]
+  LINK --> FE
+```
 
 
 
