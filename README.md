@@ -229,101 +229,26 @@ sequenceDiagram
 
 
 
-## Task Management Flow 
+## Task Management Flow (Flowchart)
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  actor U as "User (Admin/Employee)"
-  participant FE as "Frontend (React)"
-  participant API as "Backend API"
-  participant AUTH as "Auth Middleware (JWT)"
-  participant RBAC as "RBAC / Permissions"
-  participant VAL as "Validation Layer"
-  participant TASK as "Task Service"
-  participant DB as "Database"
-  participant EVT as "Event Bus / Queue (Optional)"
-  participant NOTIF as "Notification Service (Optional)"
-  participant AUD as "Audit Log Service (Optional)"
+flowchart TB
+  U["User"] --> FE["Frontend (React)"]
+  FE -->|"POST /api/tasks\nPATCH /api/tasks/:id\nBearer token"| API["Backend API"]
 
-  Note over U,FE: Create / Update Task
+  API --> AUTH["Auth Middleware\nVerify JWT"]
+  AUTH --> RBAC["RBAC / Permissions\ncreate_task / update_task"]
+  RBAC --> VAL["Validate Task Payload\n(zod/joi)"]
+  VAL --> RULES["Business Rules\nPriority/Due date/Assignee rules"]
+  RULES --> DB["Save to Database"]
+  DB --> EVT["Emit Events (Optional)\nTASK_CREATED / TASK_UPDATED"]
+  EVT --> NOTIF["Notification Service (Optional)"]
+  EVT --> AUD["Audit Log (Optional)"]
 
-  U->>FE: Fill task form (title, assignee, priority, due date)
-  FE->>API: POST /api/tasks (or PATCH /api/tasks/:id)\nAuthorization: Bearer <accessToken>
-
-  API->>AUTH: Verify JWT
-  AUTH-->>API: Token valid + userId + role
-
-  API->>RBAC: Check permissions\n(create_task / update_task)
-  RBAC-->>API: Allowed
-
-  API->>VAL: Validate payload (schema)\n(title, status, dueDate, priority)
-  VAL-->>API: OK
-
-  API->>TASK: Apply business rules\n(priority rules, deadline rules, assignment rules)
-  TASK->>DB: Insert/Update task record
-  DB-->>TASK: Saved task
-
-  opt Emit events (optional)
-    TASK->>EVT: Publish TASK_CREATED / TASK_UPDATED
-    EVT->>NOTIF: Notify assignee / watchers
-    EVT->>AUD: Write audit event
-  end
-
-  TASK-->>API: Return task DTO
-  API-->>FE: 200 OK + task JSON
-  FE-->>U: UI updates (task list / board refreshed)
+  DB --> RESP["Return Task JSON"]
+  RESP --> FE
+  FE --> UI["Update UI\n(list / kanban / details)"]
 ```
-
-
-    ## Task Management Flow (Advanced)
-
-```mermaid
-sequenceDiagram
-  autonumber
-  actor U as "User (Admin/Employee)"
-  participant FE as "Frontend (React)"
-  participant API as "Backend API"
-  participant AUTH as "Auth Middleware (JWT)"
-  participant RBAC as "RBAC / Permissions"
-  participant VAL as "Validation Layer"
-  participant TASK as "Task Service"
-  participant DB as "Database"
-  participant EVT as "Event Bus / Queue (Optional)"
-  participant NOTIF as "Notification Service (Optional)"
-  participant AUD as "Audit Log Service (Optional)"
-
-  Note over U,FE: Create / Update Task
-
-  U->>FE: Fill task form (title, assignee, priority, due date)
-  FE->>API: POST /api/tasks (or PATCH /api/tasks/:id)\nAuthorization: Bearer <accessToken>
-
-  API->>AUTH: Verify JWT
-  AUTH-->>API: Token valid + userId + role
-
-  API->>RBAC: Check permissions\n(create_task / update_task)
-  RBAC-->>API: Allowed
-
-  API->>VAL: Validate payload (schema)\n(title, status, dueDate, priority)
-  VAL-->>API: OK
-
-  API->>TASK: Apply business rules\n(priority rules, deadline rules, assignment rules)
-  TASK->>DB: Insert/Update task record
-  DB-->>TASK: Saved task
-
-  opt Emit events (optional)
-    TASK->>EVT: Publish TASK_CREATED / TASK_UPDATED
-    EVT->>NOTIF: Notify assignee / watchers
-    EVT->>AUD: Write audit event
-  end
-
-  TASK-->>API: Return task DTO
-  API-->>FE: 200 OK + task JSON
-  FE-->>U: UI updates (task list / board refreshed)
-```
-
-
-
 
 
 
