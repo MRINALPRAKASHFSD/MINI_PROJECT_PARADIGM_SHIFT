@@ -226,7 +226,7 @@ flowchart TB
 
 
 
-## Proof Submission Flow (Flowchart)
+## Proof Submission Flow 
 
 ```mermaid
 flowchart TB
@@ -248,47 +248,26 @@ flowchart TB
 
 
 
-    ┌───────────────────────────────────────────────────────────┐
-│              TEAM MANAGEMENT FLOW                          │
-└───────────────────────────────────────────────────────────┘
+ ## Task Management Flow 
 
-    Team Operation Request
-            │
-            ▼
-    ┌───────────────────────┐
-    │ RBAC Middleware       │
-    │ - Check admin/manager │
-    └───────┬───────────────┘
-            │
-            ▼
-    ┌───────────────────────┐
-    │ Team Controller       │
-    └───────┬───────────────┘
-            │
-            ├──► Create Team
-            ├──► Add Member
-            ├──► Remove Member
-            ├──► Update Roles
-            │
-            ▼
-    ┌─────────────────────────┐
-    │  Business Logic         │
-    │  - Validate hierarchy   │
-    │  - Check permissions    │
-    └─────────┬───────────────┘
-              │
-              ▼
-    ┌─────────────────────┐
-    │   Update Database   │
-    └─────────┬───────────┘
-              │
-              ├──► Send Invites
-              ├──► Update Cache
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Return Response    │
-    └─────────────────────┘
+```mermaid
+flowchart TB
+  U["User"] --> FE["Frontend (React)"]
+  FE -->|"POST /api/tasks\nPATCH /api/tasks/:id\nBearer token"| API["Backend API"]
+
+  API --> AUTH["Auth Middleware\nVerify JWT"]
+  AUTH --> RBAC["RBAC / Permissions\ncreate_task / update_task"]
+  RBAC --> VAL["Validate Task Payload\n(zod/joi)"]
+  VAL --> RULES["Business Rules\nPriority/Due date/Assignee rules"]
+  RULES --> DB["Save to Database"]
+  DB --> EVT["Emit Events (Optional)\nTASK_CREATED / TASK_UPDATED"]
+  EVT --> NOTIF["Notification Service (Optional)"]
+  EVT --> AUD["Audit Log (Optional)"]
+
+  DB --> RESP["Return Task JSON"]
+  RESP --> FE
+  FE --> UI["Update UI\n(list / kanban / details)"]
+```
 
 
 
