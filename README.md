@@ -229,7 +229,7 @@ sequenceDiagram
 
 
 
-## Task Management Flow (Advanced)
+## Task Management Flow 
 
 ```mermaid
 sequenceDiagram
@@ -276,45 +276,51 @@ sequenceDiagram
 ```
 
 
-    ┌───────────────────────────────────────────────────────────┐
-│                TIME TRACKING FLOW                          │
-└───────────────────────────────────────────────────────────┘
+    ## Task Management Flow (Advanced)
 
-    Start/Stop Timer
-            │
-            ▼
-    ┌───────────────────┐
-    │ Auth Middleware   │
-    └───────┬───────────┘
-            │
-            ▼
-    ┌───────────────────────┐
-    │ Time Track Controller │
-    └───────┬───────────────┘
-            │
-            ├──► Start Timer
-            │    └──► Create Time Entry
-            │         └──► Store in Redis (Active)
-            │
-            ├──► Stop Timer
-            │    ├──► Calculate Duration
-            │    ├──► Move to MongoDB
-            │    └──► Clear Redis Entry
-            │
-            ├──► Pause/Resume
-            │
-            ▼
-    ┌─────────────────────┐
-    │   Data Processing   │
-    │  - Calculate hours  │
-    │  - Generate reports │
-    └─────────┬───────────┘
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Store & Respond    │
-    └─────────────────────┘
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as "User (Admin/Employee)"
+  participant FE as "Frontend (React)"
+  participant API as "Backend API"
+  participant AUTH as "Auth Middleware (JWT)"
+  participant RBAC as "RBAC / Permissions"
+  participant VAL as "Validation Layer"
+  participant TASK as "Task Service"
+  participant DB as "Database"
+  participant EVT as "Event Bus / Queue (Optional)"
+  participant NOTIF as "Notification Service (Optional)"
+  participant AUD as "Audit Log Service (Optional)"
 
+  Note over U,FE: Create / Update Task
+
+  U->>FE: Fill task form (title, assignee, priority, due date)
+  FE->>API: POST /api/tasks (or PATCH /api/tasks/:id)\nAuthorization: Bearer <accessToken>
+
+  API->>AUTH: Verify JWT
+  AUTH-->>API: Token valid + userId + role
+
+  API->>RBAC: Check permissions\n(create_task / update_task)
+  RBAC-->>API: Allowed
+
+  API->>VAL: Validate payload (schema)\n(title, status, dueDate, priority)
+  VAL-->>API: OK
+
+  API->>TASK: Apply business rules\n(priority rules, deadline rules, assignment rules)
+  TASK->>DB: Insert/Update task record
+  DB-->>TASK: Saved task
+
+  opt Emit events (optional)
+    TASK->>EVT: Publish TASK_CREATED / TASK_UPDATED
+    EVT->>NOTIF: Notify assignee / watchers
+    EVT->>AUD: Write audit event
+  end
+
+  TASK-->>API: Return task DTO
+  API-->>FE: 200 OK + task JSON
+  FE-->>U: UI updates (task list / board refreshed)
+```
 
 
 
