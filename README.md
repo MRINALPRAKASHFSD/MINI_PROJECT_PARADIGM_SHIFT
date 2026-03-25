@@ -124,7 +124,7 @@ npm run dev
 
 ---
 
-## Architecture (High Level)
+## Architecture 
 
 ```mermaid
 flowchart TB
