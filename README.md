@@ -327,53 +327,23 @@ sequenceDiagram
 
 
 
+## Proof Submission Flow (Flowchart)
 
-    ┌───────────────────────────────────────────────────────────┐
-│              PROOF SUBMISSION FLOW                         │
-└───────────────────────────────────────────────────────────��
+```mermaid
+flowchart TB
+  U["User"] --> FE["Frontend: pick file + comment"]
+  FE -->|"POST /api/proofs\nmultipart/form-data\nBearer token"| API["Backend API"]
 
-    Upload Proof (Screenshot/File)
-            │
-            ▼
-    ┌───────────────────┐
-    │ Multer Middleware │
-    │ - File validation │
-    │ - Size limit      │
-    └───────┬───────────┘
-            │
-            ▼
-    ┌───────────────────────┐
-    │ Proof Controller      │
-    └───────┬───────────────┘
-            │
-            ├──► Validate File Type
-            ├──► Compress Image
-            │
-            ▼
-    ┌─────────────────────┐
-    │  Upload to Cloud    │
-    │  (AWS S3/Cloudinary)│
-    └─────────┬───────────┘
-              │
-              ├──► Get URL
-              │
-              ▼
-    ┌─────────────────────────┐
-    │  Save Metadata to DB    │
-    │  - file URL             │
-    │  - task ID              │
-    │  - user ID              │
-    │  - timestamp            │
-    └─────────┬───────────────┘
-              │
-              ├──► Notify Manager
-              │
-              ▼
-    ┌─────────────────────┐
-    │  Return Response    │
-    └─────────────────────┘
-
-
+  API --> AUTH["Auth Middleware\nVerify JWT"]
+  AUTH --> UP["Multer Upload Middleware\nType + Size validation"]
+  UP --> RULES["Business Rules\nOwnership + taskId + time window"]
+  RULES --> OPT["(Optional) Compress/Resize"]
+  OPT --> STORE["Upload to Cloud Storage\nS3 / Cloudinary"]
+  STORE --> META["Save Metadata to DB\nuserId, taskId, fileUrl, mime, size"]
+  META --> EVT["(Optional) Events\nNotify + Audit Log"]
+  META --> RESP["Return 201 + proof JSON"]
+  RESP --> FE
+```
 
 
 
