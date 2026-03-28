@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera,
@@ -13,43 +13,73 @@ import {
   Download,
   Trash2
 } from 'lucide-react';
-
-import { storage, auth, realtimeDb } from '../config/firebase';
-import { ref as dbRef, onValue, push, remove } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-
 import './SubmitProof.css';
 
+// ============================================================
+// Static data
+// ============================================================
+const INITIAL_PROOFS = [
+  {
+    id: 1,
+    task: 'Dashboard UI Redesign',
+    description: 'Completed glassmorphism dashboard layout for Priya Sharma',
+    files: [{ name: 'dashboard_v2.png', url: '#' }],
+    status: 'approved',
+    date: '2026-03-28',
+    time: '02:30 PM',
+    submittedAt: Date.now() - 86400000,
+  },
+  {
+    id: 2,
+    task: 'Razorpay Integration Testing',
+    description: 'All payment endpoints tested and verified with ₹1 test transactions',
+    files: [{ name: 'razorpay_tests.png', url: '#' }, { name: 'coverage.png', url: '#' }],
+    status: 'pending',
+    date: '2026-03-27',
+    time: '11:15 AM',
+    submittedAt: Date.now() - 172800000,
+  },
+  {
+    id: 3,
+    task: 'Code Review - Aadhaar KYC Module',
+    description: 'Reviewed OTP verification and eKYC flow implementation',
+    files: [{ name: 'review_notes.png', url: '#' }],
+    status: 'approved',
+    date: '2026-03-26',
+    time: '04:45 PM',
+    submittedAt: Date.now() - 259200000,
+  },
+  {
+    id: 4,
+    task: 'Bug Fix - UPI Payment Gateway',
+    description: 'Fixed INR currency rounding issue in checkout flow',
+    files: [{ name: 'bugfix_proof.png', url: '#' }],
+    status: 'rejected',
+    date: '2026-03-25',
+    time: '09:30 AM',
+    submittedAt: Date.now() - 345600000,
+  },
+];
+
+// ============================================================
+// SubmitProof Component
+// ============================================================
 const SubmitProof = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [description, setDescription] = useState('');
   const [taskName, setTaskName] = useState('');
-  const [submittedProofs, setSubmittedProofs] = useState([]);
-  const [stats, setStats] = useState({
-    total: 0, approved: 0, pending: 0, rejected: 0
-  });
+  const [submittedProofs, setSubmittedProofs] = useState(INITIAL_PROOFS);
   const [uploading, setUploading] = useState(false);
-  const currentUser = auth.currentUser;
 
-  // ---- LIVE DB: Fetch proofs and stats for the current user ----
-  useEffect(() => {
-    if (!currentUser) return;
-    const proofsRef = dbRef(realtimeDb, `users/${currentUser.uid}/proofs`);
-    onValue(proofsRef, snap => {
-      const val = snap.val() || {};
-      const arr = Object.values(val).sort((a, b) => b.submittedAt - a.submittedAt);
-      setSubmittedProofs(arr);
-      setStats({
-        total: arr.length,
-        approved: arr.filter(p => p.status === 'approved').length,
-        pending: arr.filter(p => p.status === 'pending').length,
-        rejected: arr.filter(p => p.status === 'rejected').length
-      });
-    });
-  }, [currentUser]);
+  const stats = {
+    total: submittedProofs.length,
+    approved: submittedProofs.filter(p => p.status === 'approved').length,
+    pending: submittedProofs.filter(p => p.status === 'pending').length,
+    rejected: submittedProofs.filter(p => p.status === 'rejected').length,
+  };
 
-  // --- Drag & drop logic (no changes) ---
+  // --- Drag & drop logic ---
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -84,45 +114,35 @@ const SubmitProof = () => {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // --- Submit and upload files ---
-  const handleSubmit = async () => {
+  // --- Submit (local state only) ---
+  const handleSubmit = () => {
     if (!taskName || selectedFiles.length === 0) {
       alert("Task name and file(s) required");
       return;
     }
     setUploading(true);
-    const proofDownloads = [];
-    for (const fileObj of selectedFiles) {
-      const file = fileObj.file;
-      const proofStorageRef = storageRef(
-        storage,
-        `proofs/${currentUser.uid}/${Date.now()}_${file.name}`
-      );
-      await uploadBytes(proofStorageRef, file);
-      const url = await getDownloadURL(proofStorageRef);
-      proofDownloads.push({ name: file.name, url });
-    }
 
-    // Compose proof entry
-    const proofData = {
-      id: Date.now(),
-      task: taskName,
-      description,
-      files: proofDownloads, // array of {name, url}
-      status: 'pending',
-      submittedAt: Date.now(),
-      date: new Date().toISOString().split('T')[0],
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+    // Simulate upload delay
+    setTimeout(() => {
+      const proofData = {
+        id: Date.now(),
+        task: taskName,
+        description,
+        files: selectedFiles.map(f => ({ name: f.name, url: f.preview })),
+        status: 'pending',
+        submittedAt: Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
 
-    await push(dbRef(realtimeDb, `users/${currentUser.uid}/proofs`), proofData);
-    setTaskName('');
-    setDescription('');
-    setSelectedFiles([]);
-    setUploading(false);
+      setSubmittedProofs(prev => [proofData, ...prev]);
+      setTaskName('');
+      setDescription('');
+      setSelectedFiles([]);
+      setUploading(false);
+    }, 800);
   };
 
-  // --- Status color for cards ---
   const getStatusColor = (status) => {
     switch (status) {
       case 'approved': return '#10b981';
@@ -132,20 +152,9 @@ const SubmitProof = () => {
     }
   };
 
-  // --- Delete proof ---
-  const handleDeleteProof = async (proofId) => {
-    // Find the Firebase key of the proof
-    const proofsRef = dbRef(realtimeDb, `users/${currentUser.uid}/proofs`);
-    onValue(proofsRef, snap => {
-      snap.forEach(childSnap => {
-        if (childSnap.val().id === proofId) {
-          remove(dbRef(realtimeDb, `users/${currentUser.uid}/proofs/${childSnap.key}`));
-        }
-      });
-    }, { onlyOnce: true });
+  const handleDeleteProof = (proofId) => {
+    setSubmittedProofs(prev => prev.filter(p => p.id !== proofId));
   };
-
-  if (!currentUser) return <div>Loading user...</div>;
 
   return (
     <div className="submit-proof-container dark">
@@ -167,40 +176,28 @@ const SubmitProof = () => {
 
       {/* Stats */}
       <div className="proof-stats">
-        <motion.div
-          className="stat-card"
-          style={{ color: '#3b82f6' }}
-        >
+        <motion.div className="stat-card" style={{ color: '#3b82f6' }}>
           <Check size={24} />
           <div className="stat-info">
             <span className="stat-value">{stats.total}</span>
             <span className="stat-label">Total Submitted</span>
           </div>
         </motion.div>
-        <motion.div
-          className="stat-card"
-          style={{ color: '#10b981' }}
-        >
+        <motion.div className="stat-card" style={{ color: '#10b981' }}>
           <Check size={24} />
           <div className="stat-info">
             <span className="stat-value">{stats.approved}</span>
             <span className="stat-label">Approved</span>
           </div>
         </motion.div>
-        <motion.div
-          className="stat-card"
-          style={{ color: '#eab308' }}
-        >
+        <motion.div className="stat-card" style={{ color: '#eab308' }}>
           <Check size={24} />
           <div className="stat-info">
             <span className="stat-value">{stats.pending}</span>
             <span className="stat-label">Pending</span>
           </div>
         </motion.div>
-        <motion.div
-          className="stat-card"
-          style={{ color: '#ef4444' }}
-        >
+        <motion.div className="stat-card" style={{ color: '#ef4444' }}>
           <Check size={24} />
           <div className="stat-info">
             <span className="stat-value">{stats.rejected}</span>
@@ -251,7 +248,7 @@ const SubmitProof = () => {
             </motion.div>
             <h4>Drag & Drop files here</h4>
             <p>or click to browse</p>
-            <span className="upload-hint">Supports:  JPG, PNG, GIF (Max 10MB)</span>
+            <span className="upload-hint">Supports: JPG, PNG, GIF (Max 10MB)</span>
           </label>
         </div>
 
@@ -261,8 +258,8 @@ const SubmitProof = () => {
             <motion.div 
               className="selected-files"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height:  'auto' }}
-              exit={{ opacity: 0, height:  0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
             >
               <h4>Selected Files ({selectedFiles.length})</h4>
               <div className="files-grid">
@@ -270,9 +267,9 @@ const SubmitProof = () => {
                   <motion.div
                     key={index}
                     className="file-preview"
-                    initial={{ opacity:  0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale:  0.8 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ delay: index * 0.1 }}
                   >
                     <img src={file.preview} alt={file.name} />
@@ -323,8 +320,8 @@ const SubmitProof = () => {
               key={proof.id}
               className="proof-card"
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity:  1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + index * 0.05 }}
               whileHover={{ y: -5 }}
             >
               <div className="proof-header-card">
@@ -358,14 +355,10 @@ const SubmitProof = () => {
               </div>
               <div className="proof-actions">
                 <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                  <a href={proof.files[0]?.url} target="_blank" rel="noopener noreferrer">
-                    <Eye size={16} />
-                  </a>
+                  <Eye size={16} />
                 </motion.button>
                 <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                  <a href={proof.files[0]?.url} target="_blank" rel="noopener noreferrer" download>
-                    <Download size={16} />
-                  </a>
+                  <Download size={16} />
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.1 }} 
@@ -382,4 +375,5 @@ const SubmitProof = () => {
     </div>
   );
 };
+
 export default SubmitProof;
