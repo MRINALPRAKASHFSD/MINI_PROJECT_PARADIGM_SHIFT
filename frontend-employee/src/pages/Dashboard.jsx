@@ -1,9 +1,7 @@
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ref, onValue } from 'firebase/database';
-import { realtimeDb } from '../config/firebase'; // Make sure realtimeDb is exported from firebase.js
 
 import { 
   CheckSquare, 
@@ -21,59 +19,85 @@ import {
 } from 'lucide-react';
 import './Dashboardpro.css';
 
+// ============================================================
+// Static data (no Firebase dependency)
+// ============================================================
+const STATIC_STATS = [
+  {
+    label: 'Tasks Completed',
+    value: 24,
+    total: 30,
+    trend: '+12%',
+    trendUp: true,
+    color: 'blue',
+    bgGradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)',
+    icon: CheckSquare
+  },
+  {
+    label: 'Hours Logged',
+    value: 156,
+    total: 176,
+    trend: '+8%',
+    trendUp: true,
+    color: 'green',
+    bgGradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+    icon: Clock
+  },
+  {
+    label: 'Awards Earned',
+    value: 7,
+    total: 10,
+    trend: '+3',
+    trendUp: true,
+    color: 'purple',
+    bgGradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)',
+    icon: Award
+  },
+  {
+    label: 'Performance',
+    value: 92,
+    total: 100,
+    trend: '+5%',
+    trendUp: true,
+    color: 'orange',
+    bgGradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+    icon: TrendingUp
+  }
+];
+
+const STATIC_QUICK_ACTIONS = [
+  { icon: CheckSquare, label: 'View Tasks', desc: 'Manage your assignments', path: '/tasks', color: 'blue', count: 6 },
+  { icon: Clock, label: 'Track Time', desc: 'Log your working hours', path: '/time-tracker', color: 'green' },
+  { icon: Camera, label: 'Submit Proof', desc: 'Upload work screenshots', path: '/submit-proof', color: 'purple' },
+  { icon: FileText, label: 'Reports', desc: 'View your analytics', path: '/reports', color: 'orange' }
+];
+
+const STATIC_ACTIVITIES = [
+  { action: 'Completed "Dashboard Redesign" task for Priya Sharma', time: '2 hours ago', color: 'blue', icon: CheckSquare },
+  { action: 'Logged 4h 30m for Razorpay Integration', time: '3 hours ago', color: 'green', icon: Clock },
+  { action: 'Submitted work proof reviewed by Vikram Patel', time: '5 hours ago', color: 'purple', icon: Camera },
+  { action: 'Earned "Star Performer" badge from Arjun Reddy', time: 'Yesterday', color: 'orange', icon: Award },
+  { action: 'Reviewed Sneha Iyer\'s code for Payment Module', time: 'Yesterday', color: 'blue', icon: CheckSquare },
+];
+
+const STATIC_METRICS = [
+  { label: 'Code Quality', value: 94, icon: '🎯', bgGradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)' },
+  { label: 'Task Completion', value: 88, icon: '✅', bgGradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)' },
+  { label: 'Communication', value: 92, icon: '💬', bgGradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)' },
+  { label: 'Punctuality', value: 96, icon: '⏰', bgGradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
+];
+
+// ============================================================
+// Dashboard Component
+// ============================================================
 const Dashboard = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
-  // All dashboard data now comes from realtime DB!
-  const [stats, setStats] = useState([]);
-  const [quickActions, setQuickActions] = useState([]);
-  const [recentActivities, setRecentActivities] = useState([]);
-  const [performanceMetrics, setPerformanceMetrics] = useState([]);
-
-  // Load dashboard data from Realtime Database
-  useEffect(() => {
-    // Stats
-    const statsRef = ref(realtimeDb, 'dashboard/stats');
-    onValue(statsRef, snapshot => {
-      const data = snapshot.val();
-      if (data) {
-        // Enhance data to attach icons and gradients
-        const iconMap = [CheckSquare, Clock, Award, TrendingUp];
-        data.forEach((stat,i) => stat.icon = iconMap[i] || CheckSquare);
-        setStats(data);
-      }
-    });
-
-    // Quick Actions (if you want these from DB, otherwise can stay static)
-    setQuickActions([
-      { icon: CheckSquare, label:  'View Tasks', desc: 'Manage your assignments', path: '/tasks', color: 'blue', count: 6 },
-      { icon: Clock, label: 'Track Time', desc: 'Log your working hours', path: '/time-tracker', color: 'green' },
-      { icon:  Camera, label: 'Submit Proof', desc: 'Upload work screenshots', path: '/submit-proof', color:  'purple' },
-      { icon: FileText, label: 'Reports', desc:  'View your analytics', path: '/reports', color: 'orange' }
-    ]);
-
-    // Recent Activities
-    const activityRef = ref(realtimeDb, 'dashboard/activities');
-    onValue(activityRef, snapshot => {
-      const data = snapshot.val();
-      if (data) {
-        // Enhance data to include component icons/colors
-        const iconMap = { CheckSquare, Clock, Camera, Award };
-        setRecentActivities(Object.values(data).map(item => ({
-          ...item,
-          icon: iconMap[item.icon] || CheckSquare
-        })));
-      }
-    });
-
-    // Performance Metrics
-    const metricsRef = ref(realtimeDb, 'dashboard/metrics');
-    onValue(metricsRef, snapshot => {
-      const data = snapshot.val();
-      if (data) setPerformanceMetrics(Object.values(data));
-    });
-  }, []);
+  const [stats] = useState(STATIC_STATS);
+  const [quickActions] = useState(STATIC_QUICK_ACTIONS);
+  const [recentActivities] = useState(STATIC_ACTIVITIES);
+  const [performanceMetrics] = useState(STATIC_METRICS);
 
   return (
     <div className="dashboard-pro dark">
@@ -89,9 +113,9 @@ const Dashboard = () => {
         {/* Welcome Banner with Glassmorphism */}
         <motion.div
           className="welcome-card glass-card"
-          initial={{ scale:  0.95, opacity: 0 }}
+          initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay:  0.1 }}
+          transition={{ delay: 0.1 }}
           whileHover={{ scale: 1.01 }}
         >
           <div className="welcome-content">
@@ -103,13 +127,13 @@ const Dashboard = () => {
               <Zap size={28} />
             </motion.div>
             <div className="welcome-text">
-              <h2>Hi {user?.name || 'there'}, Ready to be productive today?  🚀</h2>
-              <p>You have {stats[0]?.total - stats[0]?.value ?? '...'} pending tasks and 3 meetings scheduled</p>
+              <h2>Hi {user?.displayName || user?.name || 'there'}, Ready to be productive today?  🚀</h2>
+              <p>You have {stats[0]?.total - stats[0]?.value} pending tasks and 3 meetings scheduled</p>
             </div>
           </div>
           <motion.div 
             className="welcome-glow"
-            animate={{ scale: [1, 1.2, 1], opacity:  [0.2, 0.4, 0.2] }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 4, repeat: Infinity }}
           />
         </motion.div>
@@ -120,7 +144,7 @@ const Dashboard = () => {
           initial="hidden"
           animate="visible"
           variants={{
-            hidden:  { opacity: 0 },
+            hidden: { opacity: 0 },
             visible: {
               opacity: 1,
               transition: { staggerChildren: 0.1 }
@@ -179,7 +203,7 @@ const Dashboard = () => {
                 >
                   <motion.div
                     className="progress-shine"
-                    animate={{ x:  [-100, 300] }}
+                    animate={{ x: [-100, 300] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                   />
                 </motion.div>
@@ -196,7 +220,7 @@ const Dashboard = () => {
             <motion.div 
               className="pro-card glass-card"
               initial={{ x: -50, opacity: 0 }}
-              animate={{ x:  0, opacity: 1 }}
+              animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
               <div className="card-header">
@@ -246,7 +270,7 @@ const Dashboard = () => {
             <motion.div 
               className="pro-card glass-card profile-card"
               initial={{ y: 50, opacity: 0 }}
-              animate={{ y:  0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
               <div className="card-header">
@@ -259,7 +283,7 @@ const Dashboard = () => {
                     className="profile-avatar-large"
                     whileHover={{ scale: 1.05, rotate: 5 }}
                   >
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    {(user?.displayName || user?.name || 'U').charAt(0).toUpperCase()}
                     <motion.div 
                       className="avatar-ring"
                       animate={{ rotate: 360 }}
@@ -267,7 +291,7 @@ const Dashboard = () => {
                     />
                   </motion.div>
                   <div className="profile-details">
-                    <h4>{user?.name || 'User'}</h4>
+                    <h4>{user?.displayName || user?.name || 'User'}</h4>
                     <p className="profile-role">Senior Developer</p>
                     <div className="profile-rating">
                       {[...Array(5)].map((_, i) => (
@@ -289,14 +313,14 @@ const Dashboard = () => {
                 <div className="profile-info-grid">
                   {[
                     { icon: '📧', label: 'Email', value: user?.email || 'N/A' },
-                    { icon: '📱', label: 'Phone', value: '+1 234 567 890' },
-                    { icon:  '🏢', label: 'Department', value: 'Engineering' },
-                    { icon: '📅', label: 'Join Date', value: '2025-01-01' },
+                    { icon: '📱', label: 'Phone', value: '+91 98765 43210' },
+                    { icon: '🏢', label: 'Department', value: 'Engineering' },
+                    { icon: '📅', label: 'Join Date', value: '15 Jan 2024' },
                   ].map((item, index) => (
                     <motion.div
                       key={index}
                       className="profile-info-item glass-light"
-                      initial={{ opacity:  0, y: 10 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 + index * 0.1 }}
                       whileHover={{ scale: 1.03, x: 5 }}
@@ -331,9 +355,9 @@ const Dashboard = () => {
                   <motion.div
                     key={index}
                     className="timeline-item glass-light"
-                    initial={{ opacity:  0, x: 20 }}
-                    animate={{ opacity:  1, x: 0 }}
-                    transition={{ delay:  0.4 + index * 0.1 }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
                     whileHover={{ x: 8, scale: 1.02 }}
                   >
                     <motion.div 
