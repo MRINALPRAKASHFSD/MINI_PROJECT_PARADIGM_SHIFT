@@ -1,29 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Toast.css';
 
-function Toast({ message, type = 'info', onClose, duration = 3000 }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
-
-  const icons = {
-    success: '✓',
-    error: '✕',
-    warning: '⚠',
-    info: 'ℹ'
-  };
+function ToastContainer({ toasts, removeToast }) {
+  if (!toasts || toasts.length === 0) return null;
 
   return (
-    <div className={`toast toast-${type} fade-in`}>
-      <span className="toast-icon">{icons[type]}</span>
-      <span className="toast-message">{message}</span>
-      <button className="toast-close" onClick={onClose}>×</button>
+    <div className="toast-container">
+      {toasts.map((toast) => (
+        <div key={toast.id} className={'toast-item toast-' + toast.type}>
+          <div className="toast-content">
+            <span className="toast-message">{toast.message}</span>
+          </div>
+          <button className="toast-close" onClick={() => removeToast(toast.id)}>
+            ×
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
 
-export default Toast;
+export default ToastContainer;

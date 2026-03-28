@@ -1,5 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuthStore } from './store/authStore';
+import { useToast } from './hooks/useToast';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import ToastContainer from './components/Toast';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -36,16 +41,53 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+// Enhanced Layout Wrapper with Sidebar, Navbar, and Toast
+const EnhancedLayout = ({ children, showToast }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    showToast('Logged out successfully', 'success');
+  };
+
+  return (
+    <div className="app-container">
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        showToast={showToast}
+      />
+      
+      <div className={`main-content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+        <Navbar 
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onLogout={handleLogout}
+          showToast={showToast}
+        />
+        
+        <div className="page-content">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function App() {
+  const { toasts, showToast, removeToast } = useToast();
+
   return (
     <Router>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      
       <Routes>
         {/* Public Routes */}
         <Route 
           path="/" 
           element={
             <PublicRoute>
-              <Login />
+              <Login showToast={showToast} />
             </PublicRoute>
           } 
         />
@@ -54,7 +96,7 @@ function App() {
           path="/register" 
           element={
             <PublicRoute>
-              <Register />
+              <Register showToast={showToast} />
             </PublicRoute>
           } 
         />
@@ -64,50 +106,52 @@ function App() {
           path="/profile-setup" 
           element={
             <ProtectedRoute>
-              <ProfileSetup />
+              <ProfileSetup showToast={showToast} />
             </ProtectedRoute>
           } 
         />
         
-        {/* Protected Routes with Layout */}
+        {/* Protected Routes with Enhanced Layout */}
         <Route 
           path="/*" 
           element={
             <ProtectedRoute>
-              <Layout />
+              <EnhancedLayout showToast={showToast}>
+                <Routes>
+                  {/* Dashboard */}
+                  <Route path="dashboard" element={<Dashboard showToast={showToast} />} />
+                  
+                  {/* Teams */}
+                  <Route path="teams" element={<Teams showToast={showToast} />} />
+                  
+                  {/* Tasks */}
+                  <Route path="tasks" element={<Tasks showToast={showToast} />} />
+                  
+                  {/* Time Tracker */}
+                  <Route path="time-tracker" element={<TimeTracker showToast={showToast} />} />
+                  
+                  {/* Submit Proof */}
+                  <Route path="submit-proof" element={<SubmitProof showToast={showToast} />} />
+                  
+                  {/* Reports */}
+                  <Route path="reports" element={<Reports showToast={showToast} />} />
+                  
+                  {/* Analytics */}
+                  <Route path="analytics" element={<Analytics showToast={showToast} />} />
+                  
+                  {/* Settings */}
+                  <Route path="settings" element={<Settings showToast={showToast} />} />
+                  
+                  {/* Redirect root to dashboard */}
+                  <Route path="" element={<Navigate to="/dashboard" replace />} />
+                  
+                  {/* 404 Fallback - redirect to dashboard */}
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </EnhancedLayout>
             </ProtectedRoute>
           }
-        >
-          {/* Dashboard */}
-          <Route path="dashboard" element={<Dashboard />} />
-          
-          {/* Teams */}
-          <Route path="teams" element={<Teams />} />
-          
-          {/* Tasks */}
-          <Route path="tasks" element={<Tasks />} />
-          
-          {/* Time Tracker */}
-          <Route path="time-tracker" element={<TimeTracker />} />
-          
-          {/* Submit Proof */}
-          <Route path="submit-proof" element={<SubmitProof />} />
-          
-          {/* Reports */}
-          <Route path="reports" element={<Reports />} />
-          
-          {/* Analytics */}
-          <Route path="analytics" element={<Analytics />} />
-          
-          {/* Settings */}
-          <Route path="settings" element={<Settings />} />
-          
-          {/* Redirect root to dashboard */}
-          <Route path="" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* 404 Fallback - redirect to dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Route>
+        />
       </Routes>
     </Router>
   );
