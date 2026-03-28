@@ -29,12 +29,13 @@ const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [showPassword, setShowPassword] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [saveStatus, setSaveStatus] = useState('');
 
   // Profile Information State
   const [profile, setProfile] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email:  'john.doe@company. com',
+    firstName: 'Rajesh',
+    lastName: 'Kumar',
+    email: 'rajesh.kumar@techsolutions.in',
     phone: '+91 98765 43210',
     dateOfBirth: '1990-05-15',
     gender: 'Male',
@@ -52,7 +53,7 @@ const Settings = () => {
     department: 'Engineering',
     joiningDate: '2022-01-15',
     employmentType: 'Full-time',
-    reportingManager: 'Jane Smith',
+    reportingManager: 'Vikram Patel',
     workLocation: 'Mumbai Office',
     salary: '₹12,00,000'
   });
@@ -75,16 +76,16 @@ const Settings = () => {
     ifscCode: 'HDFC0001234',
     bankName: 'HDFC Bank',
     branch: 'Mumbai Branch',
-    accountHolderName: 'John Doe',
+    accountHolderName: 'Rajesh Kumar',
     accountType: 'Savings'
   });
 
   // Emergency Contact State
   const [emergencyContact, setEmergencyContact] = useState({
-    name: 'Jane Doe',
+    name: 'Sunita Kumar',
     relationship: 'Spouse',
     phone: '+91 98765 12345',
-    address: '123 Main Street, Mumbai'
+    address: '42 Andheri West, Mumbai'
   });
 
   // Notification Settings
@@ -132,7 +133,11 @@ const Settings = () => {
   };
 
   const handleSaveProfile = () => {
-    alert('Profile updated successfully!');
+    setSaveStatus('saving');
+    setTimeout(() => {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus(''), 2000);
+    }, 800);
   };
 
   return (
@@ -151,6 +156,12 @@ const Settings = () => {
             <p>Manage your profile and preferences</p>
           </div>
         </div>
+        {saveStatus && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            style={{ padding: '10px 20px', borderRadius: '12px', background: saveStatus === 'saved' ? 'rgba(16,185,129,0.15)' : 'rgba(59,130,246,0.15)', color: saveStatus === 'saved' ? '#10b981' : '#3b82f6', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {saveStatus === 'saving' ? '⏳ Saving...' : '✅ Changes saved successfully!'}
+          </motion.div>
+        )}
       </div>
 
       <div className="settings-content">
