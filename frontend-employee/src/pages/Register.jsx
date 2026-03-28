@@ -14,7 +14,7 @@ import {
   Shield,
   Zap
 } from 'lucide-react';
-import { registerWithEmail } from '../config/firebase'; // <---- IMPORTANT
+import { registerWithEmail } from '../config/firebase';
 import './Auth.css';
 
 const Register = () => {
@@ -50,12 +50,11 @@ const Register = () => {
 
     setIsLoading(true);
 
-    // Firebase register with email/password
     const result = await registerWithEmail(formData.email, formData.password, formData.name);
 
     if (result.success) {
       setUser(result.user);
-      navigate('/profile-setup');
+      navigate('/dashboard');
     } else {
       setError(result.error);
     }
@@ -89,7 +88,7 @@ const Register = () => {
         <div className="gradient-orb orb-3"></div>
         <div className="grid-pattern"></div>
         
-        {[... Array(20)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
             className="floating-particle"
@@ -114,7 +113,7 @@ const Register = () => {
         <motion.div 
           className="auth-branding"
           initial={{ x: -100, opacity: 0 }}
-          animate={{ x:  0, opacity: 1 }}
+          animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
           <motion.div 
@@ -157,13 +156,13 @@ const Register = () => {
             {[
               { icon: Shield, text: 'Enterprise-grade security' },
               { icon: Zap, text: 'Lightning-fast performance' },
-              { icon:  Briefcase, text: 'Professional tools' }
+              { icon: Briefcase, text: 'Professional tools' }
             ].map((feature, index) => (
               <motion.div
                 key={index}
                 className="feature-item"
                 initial={{ x: -20, opacity: 0 }}
-                animate={{ x:  0, opacity: 1 }}
+                animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
                 whileHover={{ x: 10 }}
               >
@@ -199,7 +198,7 @@ const Register = () => {
             <form onSubmit={handleSubmit}>
               <motion.div 
                 className="form-group"
-                initial={{ y:  20, opacity: 0 }}
+                initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
@@ -220,7 +219,7 @@ const Register = () => {
                     <motion.div
                       className="input-check"
                       initial={{ scale: 0 }}
-                      animate={{ scale:  1 }}
+                      animate={{ scale: 1 }}
                     >
                       <CheckCircle2 size={18} />
                     </motion.div>
@@ -230,7 +229,7 @@ const Register = () => {
 
               <motion.div 
                 className="form-group"
-                initial={{ y: 20, opacity:  0 }}
+                initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
@@ -263,7 +262,7 @@ const Register = () => {
                 className="form-group"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay:  0.6 }}
+                transition={{ delay: 0.6 }}
               >
                 <label>
                   <Lock size={18} />
@@ -296,7 +295,7 @@ const Register = () => {
                       {[...Array(5)].map((_, i) => (
                         <div
                           key={i}
-                          className={`strength-segment ${i < strength. strength ? 'active' : ''}`}
+                          className={`strength-segment ${i < strength.strength ? 'active' : ''}`}
                           style={{ backgroundColor: i < strength.strength ? strength.color : undefined }}
                         />
                       ))}
@@ -354,7 +353,7 @@ const Register = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ y: 20, opacity: 0 }}
-                animate={{ y:  0, opacity: 1 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8 }}
               >
                 {isLoading ? (
@@ -375,7 +374,7 @@ const Register = () => {
             <motion.div 
               className="form-footer"
               initial={{ y: 20, opacity: 0 }}
-              animate={{ y:  0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9 }}
             >
               <p>
