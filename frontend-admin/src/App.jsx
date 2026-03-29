@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useAuthStore } from './store/authStore';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -14,27 +14,21 @@ import Announcements from './components/Announcements';
 import VideoBackground from './components/VideoBackground';
 import './App.css';
 
+function ProtectedRoute({ children }) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/" replace />;
+}
+
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  const ProtectedRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/" />;
-  };
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return (
     <Router>
       <div className="app">
-        {! isAuthenticated ? (
+        {!isAuthenticated ? (
           <Routes>
-            <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/" element={<Login />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         ) : (
           <>
@@ -52,8 +46,8 @@ function App() {
                   <Route path="/payroll" element={<ProtectedRoute><Payroll /></ProtectedRoute>} />
                   <Route path="/departments" element={<ProtectedRoute><Departments /></ProtectedRoute>} />
                   <Route path="/announcements" element={<ProtectedRoute><Announcements /></ProtectedRoute>} />
-                  <Route path="/" element={<Navigate to="/dashboard" />} />
-                  <Route path="*" element={<Navigate to="/dashboard" />} />
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
               </div>
             </div>
