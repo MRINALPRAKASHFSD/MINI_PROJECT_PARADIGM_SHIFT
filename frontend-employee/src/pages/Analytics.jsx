@@ -1,368 +1,241 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  CheckSquare,
-  Target,
-  Award,
-  Activity,
-  Zap
-} from 'lucide-react';
+import { useDataStore } from '../store/dataStore';
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import { BarChart3, TrendingUp, Clock, CheckSquare, Target, Award, Activity, Zap } from 'lucide-react';
 import './AnalyticsSimple.css';
 
+const CHART_COLORS = ['#3b82f6', '#10b981', '#a855f7', '#f59e0b', '#ec4899', '#06b6d4'];
+
 const Analytics = () => {
+  const { tasks, timeEntries } = useDataStore();
   const [timeRange, setTimeRange] = useState('month');
 
+  // ── Computed stats ──────────────────────────────────────────
+  const completed = tasks.filter(t => t.status === 'completed').length;
+  const total = tasks.length;
+  const totalHours = Math.round(timeEntries.reduce((s, e) => s + e.seconds, 0) / 3600);
+
   const performanceStats = [
-    {
-      label: 'Productivity Score',
-      value: '94%',
-      change: '+5%',
-      trend: 'up',
-      icon: TrendingUp,
-      color:  '#10b981'
-    },
-    {
-      label: 'Tasks Efficiency',
-      value: '87%',
-      change: '+3%',
-      trend: 'up',
-      icon: CheckSquare,
-      color: '#3b82f6'
-    },
-    {
-      label:  'Goal Achievement',
-      value: '92%',
-      change: '+8%',
-      trend: 'up',
-      icon: Target,
-      color: '#a855f7'
-    },
-    {
-      label: 'Quality Score',
-      value: '96%',
-      change: '+2%',
-      trend: 'up',
-      icon: Award,
-      color: '#f97316'
-    }
+    { label: 'Productivity Score', value: `${total > 0 ? Math.round((completed / total) * 100) : 0}%`, change: '+5%', trend: 'up', icon: TrendingUp, color: '#10b981' },
+    { label: 'Tasks Efficiency', value: `${completed}/${total}`, change: `${completed} done`, trend: 'up', icon: CheckSquare, color: '#3b82f6' },
+    { label: 'Hours Logged', value: `${totalHours}h`, change: `${timeEntries.length} entries`, trend: 'up', icon: Clock, color: '#a855f7' },
+    { label: 'Quality Score', value: '96%', change: '+2%', trend: 'up', icon: Award, color: '#f97316' },
   ];
 
-  const weeklyData = [
-    { day: 'Mon', hours: 8, percentage: 89 },
-    { day: 'Tue', hours: 7.5, percentage: 83 },
-    { day: 'Wed', hours: 9, percentage: 100 },
-    { day: 'Thu', hours: 8.5, percentage: 94 },
-    { day: 'Fri', hours: 7, percentage: 78 },
-    { day: 'Sat', hours: 4, percentage: 44 },
-    { day: 'Sun', hours: 2, percentage: 22 }
-  ];
+  // ── Weekly hours chart (from real entries) ──────────────────
+  const weeklyData = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (6 - i));
+    const dateStr = d.toISOString().split('T')[0];
+    const hours = timeEntries.filter(e => e.date === dateStr).reduce((s, e) => s + e.seconds, 0) / 3600;
+    return { day: d.toLocaleDateString('en-IN', { weekday: 'short' }), hours: Math.round(hours * 10) / 10 };
+  });
 
-  const projectBreakdown = [
-    { name: 'Karmachari Portal', hours: 45, percentage: 30, color: '#3b82f6' },
-    { name: 'Razorpay Integration', hours: 38, percentage: 25, color: '#10b981' },
-    { name: 'Dashboard Redesign', hours: 32, percentage: 21, color: '#a855f7' },
-    { name: 'Aadhaar KYC Module', hours: 24, percentage: 16, color: '#f97316' },
-    { name: 'Technical Docs', hours: 12, percentage: 8, color: '#ec4899' }
-  ];
+  // ── Project breakdown (from real entries) ──────────────────
+  const projectMap = {};
+  timeEntries.forEach(e => {
+    projectMap[e.project] = (projectMap[e.project] || 0) + e.seconds;
+  });
+  const projectBreakdown = Object.entries(projectMap)
+    .map(([name, seconds], i) => ({ name, hours: Math.round(seconds / 3600 * 10) / 10, color: CHART_COLORS[i % CHART_COLORS.length] }))
+    .sort((a, b) => b.hours - a.hours);
+  const totalProjectHours = projectBreakdown.reduce((s, p) => s + p.hours, 0);
+  const projectPie = projectBreakdown.map(p => ({ ...p, percentage: totalProjectHours > 0 ? Math.round((p.hours / totalProjectHours) * 100) : 0 }));
+
+  // ── Productivity trend (last 14 days) ──────────────────────
+  const productivityTrend = Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (13 - i));
+    const dateStr = d.toISOString().split('T')[0];
+    const hours = timeEntries.filter(e => e.date === dateStr).reduce((s, e) => s + e.seconds, 0) / 3600;
+    const tasksCompleted = tasks.filter(t => t.status === 'completed' && t.dueDate === dateStr).length;
+    return {
+      date: d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }),
+      hours: Math.round(hours * 10) / 10,
+      tasks: tasksCompleted,
+      score: Math.min(100, Math.round(hours * 12 + tasksCompleted * 5 + 50)),
+    };
+  });
+
+  // ── Task status pie ────────────────────────────────────────
+  const taskStatusPie = [
+    { name: 'To Do', value: tasks.filter(t => t.status === 'todo').length, color: '#3b82f6' },
+    { name: 'In Progress', value: tasks.filter(t => t.status === 'inProgress').length, color: '#eab308' },
+    { name: 'Review', value: tasks.filter(t => t.status === 'review').length, color: '#a855f7' },
+    { name: 'Completed', value: tasks.filter(t => t.status === 'completed').length, color: '#10b981' },
+  ].filter(s => s.value > 0);
 
   const skillsData = [
     { skill: 'Coding', score: 95, color: '#3b82f6' },
     { skill: 'Problem Solving', score: 88, color: '#10b981' },
     { skill: 'Communication', score: 92, color: '#a855f7' },
-    { skill: 'Time Management', score: 85, color: '#f97316' },
+    { skill: 'Time Mgmt', score: 85, color: '#f97316' },
     { skill: 'Teamwork', score: 90, color: '#ec4899' },
-    { skill: 'Leadership', score: 78, color: '#eab308' }
+    { skill: 'Leadership', score: 78, color: '#eab308' },
   ];
 
-  const monthlyTrend = [
-    { month: 'Jul', value: 75 },
-    { month: 'Aug', value: 78 },
-    { month: 'Sep', value: 82 },
-    { month: 'Oct', value: 85 },
-    { month: 'Nov', value: 88 },
-    { month: 'Dec', value: 91 },
-    { month: 'Jan', value: 94 }
-  ];
+  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
 
   return (
-    <div className="analytics-simple dark">
-      <div className="analytics-header">
-        <div className="header-left">
-          <motion.div 
-            className="header-icon"
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.6 }}
-          >
-            <BarChart3 size={28} />
-          </motion.div>
+    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #6366f1, #818cf8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <BarChart3 size={28} color="#fff" />
+          </div>
           <div>
-            <h1>Analytics Dashboard</h1>
-            <p>Track your performance and productivity metrics</p>
+            <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Analytics</h1>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Your performance insights</p>
           </div>
         </div>
-        <div className="time-range-selector">
-          <button 
-            className={timeRange === 'week' ? 'active' : ''}
-            onClick={() => setTimeRange('week')}
-          >
-            Week
-          </button>
-          <button 
-            className={timeRange === 'month' ? 'active' : ''}
-            onClick={() => setTimeRange('month')}
-          >
-            Month
-          </button>
-          <button 
-            className={timeRange === 'year' ? 'active' : ''}
-            onClick={() => setTimeRange('year')}
-          >
-            Year
-          </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {['week', 'month', 'year'].map(r => (
+            <button key={r} onClick={() => setTimeRange(r)}
+              style={{ padding: '8px 20px', borderRadius: '10px', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: timeRange === r ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'rgba(255,255,255,0.05)', color: timeRange === r ? '#fff' : '#94a3b8', textTransform: 'capitalize', transition: 'all 0.2s' }}>
+              {r}
+            </button>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Performance Stats */}
-      <div className="performance-stats">
-        {performanceStats.map((stat, index) => (
-          <motion.div
-            key={index}
-            className="performance-card"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5, scale: 1.02 }}
-          >
-            <div className="performance-icon" style={{ backgroundColor: `${stat.color}20`, color: stat.color }}>
-              <stat.icon size={24} />
-            </div>
-            <div className="performance-info">
-              <span className="performance-label">{stat.label}</span>
-              <div className="performance-value-row">
-                <span className="performance-value">{stat.value}</span>
-                <span className={`performance-change ${stat.trend}`}>
-                  {stat.trend === 'up' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                  {stat.change}
-                </span>
+      {/* Stats Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '24px' }}>
+        {performanceStats.map((stat, i) => (
+          <div key={i} style={{ ...cardStyle, padding: '22px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: `${stat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: stat.color }}>
+                <stat.icon size={22} />
               </div>
+              <span style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '8px', fontWeight: '600', background: 'rgba(16,185,129,0.15)', color: '#10b981' }}>{stat.change}</span>
             </div>
-          </motion.div>
+            <div style={{ fontSize: '28px', fontWeight: '700' }}>{stat.value}</div>
+            <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>{stat.label}</div>
+          </div>
         ))}
       </div>
 
-      {/* Charts Grid */}
-      <div className="charts-grid">
-        {/* Weekly Bar Chart */}
-        <motion.div 
-          className="chart-card"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x:  0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="chart-header">
-            <div className="chart-title">
-              <Activity size={22} />
-              <h3>Weekly Activity</h3>
-            </div>
-          </div>
-          <div className="bar-chart-container">
-            {weeklyData.map((data, index) => (
-              <div key={index} className="bar-item">
-                <motion.div 
-                  className="bar-fill"
-                  initial={{ height: 0 }}
-                  animate={{ height: `${data.percentage}%` }}
-                  transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                >
-                  <span className="bar-value">{data.hours}h</span>
-                </motion.div>
-                <span className="bar-label">{data.day}</span>
+      {/* Charts Row 1: Trend + Weekly */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', marginBottom: '24px' }}>
+        <div style={cardStyle}>
+          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <TrendingUp size={20} style={{ color: '#10b981' }} /> Productivity Trend (14 days)
+          </h3>
+          <ResponsiveContainer width="100%" height={260}>
+            <AreaChart data={productivityTrend}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }} />
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area type="monotone" dataKey="score" stroke="#10b981" fill="url(#areaGrad)" strokeWidth={2} name="Score" />
+              <Area type="monotone" dataKey="hours" stroke="#3b82f6" fill="none" strokeWidth={2} strokeDasharray="4 4" name="Hours" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div style={cardStyle}>
+          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Activity size={20} style={{ color: '#3b82f6' }} /> Weekly Hours
+          </h3>
+          <ResponsiveContainer width="100%" height={260}>
+            <BarChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
+              <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }}
+                formatter={(v) => [`${v}h`, 'Hours']} />
+              <Bar dataKey="hours" radius={[6, 6, 0, 0]}>
+                {weeklyData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Charts Row 2: Project Pie + Task Status + Skills */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px' }}>
+        {/* Project Breakdown */}
+        <div style={cardStyle}>
+          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600' }}>Project Time</h3>
+          {projectPie.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie data={projectPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="hours" nameKey="name" paddingAngle={2}>
+                    {projectPie.map((p, i) => <Cell key={i} fill={p.color} />)}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }}
+                    formatter={(v) => [`${v}h`, 'Hours']} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
+                {projectPie.map((p, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: p.color }} />
+                      <span>{p.name}</span>
+                    </div>
+                    <span style={{ color: '#94a3b8', fontWeight: '600' }}>{p.hours}h ({p.percentage}%)</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : <p style={{ color: '#64748b', textAlign: 'center', padding: '40px' }}>No data yet</p>}
+        </div>
+
+        {/* Task Status */}
+        <div style={cardStyle}>
+          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600' }}>Task Status</h3>
+          {taskStatusPie.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie data={taskStatusPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name" paddingAngle={2}>
+                    {taskStatusPie.map((s, i) => <Cell key={i} fill={s.color} />)}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
+                {taskStatusPie.map((s, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: s.color }} />
+                      <span>{s.name}</span>
+                    </div>
+                    <span style={{ color: '#94a3b8', fontWeight: '600' }}>{s.value} tasks</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : <p style={{ color: '#64748b', textAlign: 'center', padding: '40px' }}>No tasks</p>}
+        </div>
+
+        {/* Skills Radar (as bars) */}
+        <div style={cardStyle}>
+          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Zap size={20} style={{ color: '#f59e0b' }} /> Skills
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {skillsData.map((skill, i) => (
+              <div key={i}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px' }}>
+                  <span>{skill.skill}</span>
+                  <span style={{ color: skill.color, fontWeight: '600' }}>{skill.score}%</span>
+                </div>
+                <div style={{ height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', borderRadius: '4px', background: skill.color, width: `${skill.score}%`, transition: 'width 1s ease' }} />
+                </div>
               </div>
             ))}
           </div>
-        </motion.div>
-
-        {/* Project Breakdown */}
-        <motion.div 
-          className="chart-card"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity:  1, x: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="chart-header">
-            <div className="chart-title">
-              <Target size={22} />
-              <h3>Project Breakdown</h3>
-            </div>
-          </div>
-          <div className="project-list">
-            {projectBreakdown.map((project, index) => (
-              <motion.div
-                key={index}
-                className="project-item"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay:  0.4 + index * 0.1 }}
-              >
-                <div className="project-info">
-                  <div className="project-color" style={{ backgroundColor: project.color }} />
-                  <span className="project-name">{project.name}</span>
-                  <span className="project-hours">{project.hours}h</span>
-                </div>
-                <div className="project-progress">
-                  <div className="progress-bar">
-                    <motion.div
-                      className="progress-fill"
-                      style={{ backgroundColor: project.color }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${project.percentage}%` }}
-                      transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                    />
-                  </div>
-                  <span className="progress-percentage">{project.percentage}%</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Skills Radar (Circular) */}
-        <motion. div 
-          className="chart-card"
-          initial={{ opacity:  0, y: 20 }}
-          animate={{ opacity: 1, y:  0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="chart-header">
-            <div className="chart-title">
-              <Zap size={22} />
-              <h3>Skills Performance</h3>
-            </div>
-          </div>
-          <div className="skills-grid">
-            {skillsData. map((skill, index) => (
-              <motion.div
-                key={index}
-                className="skill-item"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-              >
-                <div className="skill-circle">
-                  <svg viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" className="skill-bg" />
-                    <motion.circle 
-                      cx="50" 
-                      cy="50" 
-                      r="45" 
-                      className="skill-progress"
-                      style={{ stroke: skill.color }}
-                      initial={{ strokeDashoffset: 283 }}
-                      animate={{ strokeDashoffset: 283 - (283 * skill.score) / 100 }}
-                      transition={{ duration: 1, delay: 0.6 + index * 0.1 }}
-                    />
-                  </svg>
-                  <div className="skill-score">{skill.score}%</div>
-                </div>
-                <span className="skill-name">{skill.skill}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Monthly Trend Line */}
-        <motion.div 
-          className="chart-card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y:  0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="chart-header">
-            <div className="chart-title">
-              <TrendingUp size={22} />
-              <h3>Productivity Trend</h3>
-            </div>
-          </div>
-          <div className="line-chart-container">
-            <svg viewBox="0 0 700 200" className="line-chart">
-              <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#667eea" stopOpacity="0.5" />
-                  <stop offset="100%" stopColor="#667eea" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              
-              {/* Grid lines */}
-              {[0, 25, 50, 75, 100].map((y) => (
-                <line 
-                  key={y}
-                  x1="0" 
-                  y1={200 - (y * 2)} 
-                  x2="700" 
-                  y2={200 - (y * 2)}
-                  stroke="rgba(255,255,255,0.05)"
-                  strokeWidth="1"
-                />
-              ))}
-              
-              {/* Area fill */}
-              <motion.path
-                d={`M 0 ${200 - monthlyTrend[0].value * 2} ${monthlyTrend. map((d, i) => 
-                  `L ${(i * 100) + 50} ${200 - d.value * 2}`
-                ).join(' ')} L 700 200 L 0 200 Z`}
-                fill="url(#gradient)"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.6 }}
-              />
-              
-              {/* Line */}
-              <motion.path
-                d={`M 0 ${200 - monthlyTrend[0].value * 2} ${monthlyTrend.map((d, i) => 
-                  `L ${(i * 100) + 50} ${200 - d.value * 2}`
-                ).join(' ')}`}
-                stroke="#667eea"
-                strokeWidth="3"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, delay: 0.7 }}
-              />
-              
-              {/* Points */}
-              {monthlyTrend.map((d, i) => (
-                <motion.circle
-                  key={i}
-                  cx={(i * 100) + 50}
-                  cy={200 - d.value * 2}
-                  r="5"
-                  fill="#667eea"
-                  initial={{ scale: 0 }}
-                  animate={{ scale:  1 }}
-                  transition={{ delay: 0.8 + i * 0.1 }}
-                />
-              ))}
-              
-              {/* Labels */}
-              {monthlyTrend.map((d, i) => (
-                <text
-                  key={i}
-                  x={(i * 100) + 50}
-                  y="195"
-                  fill="#9ca3af"
-                  fontSize="12"
-                  textAnchor="middle"
-                >
-                  {d.month}
-                </text>
-              ))}
-            </svg>
-          </div>
-        </motion. div>
+        </div>
       </div>
     </div>
   );
