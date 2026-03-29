@@ -62,11 +62,11 @@ const Analytics = () => {
   ];
 
   const projectBreakdown = [
-    { name: 'Employee Portal', hours: 45, percentage:  30, color: '#3b82f6' },
-    { name: 'API Integration', hours: 38, percentage: 25, color:  '#10b981' },
+    { name: 'Karmachari Portal', hours: 45, percentage: 30, color: '#3b82f6' },
+    { name: 'Razorpay Integration', hours: 38, percentage: 25, color: '#10b981' },
     { name: 'Dashboard Redesign', hours: 32, percentage: 21, color: '#a855f7' },
-    { name: 'Bug Fixes', hours: 24, percentage: 16, color: '#f97316' },
-    { name: 'Documentation', hours: 12, percentage: 8, color:  '#ec4899' }
+    { name: 'Aadhaar KYC Module', hours: 24, percentage: 16, color: '#f97316' },
+    { name: 'Technical Docs', hours: 12, percentage: 8, color: '#ec4899' }
   ];
 
   const skillsData = [
