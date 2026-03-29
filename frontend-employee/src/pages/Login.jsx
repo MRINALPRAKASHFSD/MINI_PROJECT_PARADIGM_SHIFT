@@ -14,11 +14,7 @@ import {
   Zap,
   CheckCircle2
 } from 'lucide-react';
-import {
-  loginWithEmail,
-  loginWithGoogle
-} from '../config/firebase'; // <-- Import Firebase functions here!
-
+import { loginWithEmail, loginWithGoogle } from '../config/firebase';
 import './Auth.css';
 
 const Login = () => {
@@ -31,7 +27,6 @@ const Login = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
 
-  // Email+Password login handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -48,7 +43,6 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  // Google login handler
   const handleGoogleLogin = async () => {
     setError('');
     setIsLoading(true);
@@ -56,8 +50,10 @@ const Login = () => {
     const result = await loginWithGoogle();
 
     if (result.success) {
-      setUser(result.user);
-      navigate('/dashboard');
+      if (result.user) {
+        setUser(result.user);
+        navigate('/dashboard');
+      }
     } else {
       setError(result.error);
     }
@@ -65,9 +61,9 @@ const Login = () => {
   };
 
   const features = [
-    { icon:  Briefcase, text: 'Manage your tasks efficiently' },
-    { icon:  Shield, text: 'Secure and encrypted' },
-    { icon:  Zap, text: 'Real-time collaboration' }
+    { icon: Briefcase, text: 'Manage your tasks efficiently' },
+    { icon: Shield, text: 'Secure and encrypted' },
+    { icon: Zap, text: 'Real-time collaboration' }
   ];
 
   return (
@@ -134,7 +130,7 @@ const Login = () => {
           <motion.p 
             className="brand-subtitle"
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity:  1 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
             Streamline your workflow and boost productivity
@@ -143,7 +139,7 @@ const Login = () => {
           <motion.div 
             className="features-list"
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y:  0, opacity: 1 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
             {features.map((feature, index) => (
@@ -151,7 +147,7 @@ const Login = () => {
                 key={index}
                 className="feature-item"
                 initial={{ x: -20, opacity: 0 }}
-                animate={{ x:  0, opacity: 1 }}
+                animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
                 whileHover={{ x: 10 }}
               >
@@ -166,12 +162,12 @@ const Login = () => {
           <motion.div 
             className="stats-grid"
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y:  0, opacity: 1 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.7 }}
           >
             {[
               { value: '10K+', label: 'Active Users' },
-              { value:  '50K+', label: 'Tasks Completed' },
+              { value: '50K+', label: 'Tasks Completed' },
               { value: '99.9%', label: 'Uptime' }
             ].map((stat, index) => (
               <motion.div
@@ -230,7 +226,7 @@ const Login = () => {
                     <motion.div
                       className="input-check"
                       initial={{ scale: 0 }}
-                      animate={{ scale:  1 }}
+                      animate={{ scale: 1 }}
                     >
                       <CheckCircle2 size={18} />
                     </motion.div>
@@ -241,7 +237,7 @@ const Login = () => {
               <motion.div 
                 className="form-group"
                 initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity:  1 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
                 <label>
@@ -276,9 +272,6 @@ const Login = () => {
                   <input type="checkbox" />
                   <span>Remember me</span>
                 </label>
-                <span className="forgot-link" style={{ color: '#3b82f6', cursor: 'pointer' }}>
-                  {/* Add forgot password handler here if needed */}
-                </span>
               </motion.div>
 
               {error && (
@@ -297,7 +290,7 @@ const Login = () => {
                 disabled={isLoading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                initial={{ y: 20, opacity:  0 }}
+                initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
@@ -319,7 +312,7 @@ const Login = () => {
             <motion.div 
               className="form-footer"
               initial={{ y: 20, opacity: 0 }}
-              animate={{ y:  0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
               <p>
