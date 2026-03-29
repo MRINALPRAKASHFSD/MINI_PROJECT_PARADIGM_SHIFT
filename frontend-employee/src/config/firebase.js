@@ -1,289 +1,213 @@
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  OAuthProvider,
-  signOut,
-  sendPasswordResetEmail,
-  updateProfile
-} from 'firebase/auth';
-import { 
-  getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc,
-  updateDoc,
-  serverTimestamp 
-} from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-// 👉 ADD FOR REALTIME DATABASE!
-import { getDatabase } from 'firebase/database';
+// ============================================================
+// Firebase Configuration (graceful fallback when not configured)
+// ============================================================
 
-// 🔥 YOUR FIREBASE CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyCgkb1Lzk8eKLLOicMcKb4TlbaEcpomTqQ",
-  authDomain: "paradigmshift-f7332.firebaseapp.com",
-  projectId: "paradigmshift-f7332",
-  storageBucket: "paradigmshift-f7332.firebasestorage.app",
-  messagingSenderId: "578218611526",
-  appId: "1:578218611526:web:6654d7b717247bcb054b47",
-  measurementId: "G-8V31V133QV"
-};
+let app = null;
+let auth = null;
+let db = null;
+let storage = null;
+let realtimeDb = null;
+let googleProvider = null;
+let microsoftProvider = null;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// ⚡ DEMO MODE: Set to false to run with static data (no Firebase needed)
+// To re-enable Firebase, change this to check env vars:
+//   const FIREBASE_CONFIGURED = !!(import.meta.env.VITE_FIREBASE_API_KEY && ...);
+const FIREBASE_CONFIGURED = false;
 
-// Initialize services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-// 👉 REALTIME DB EXPORT (add this!)
-export const realtimeDb = getDatabase(app);
+if (FIREBASE_CONFIGURED) {
+  // --- Dynamic imports at module level for Firebase ---
+  const { initializeApp } = await import("firebase/app");
+  const firebaseAuth = await import("firebase/auth");
+  const firebaseFirestore = await import("firebase/firestore");
+  const { getStorage: _getStorage } = await import("firebase/storage");
+  const { getDatabase: _getDatabase } = await import("firebase/database");
 
-// Auth providers
-export const googleProvider = new GoogleAuthProvider();
-export const microsoftProvider = new OAuthProvider('microsoft.com');
+  const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  };
 
-googleProvider.setCustomParameters({
-  prompt: 'select_account'
-});
+  app = initializeApp(firebaseConfig);
+  auth = firebaseAuth.getAuth(app);
+  db = firebaseFirestore.getFirestore(app);
+  storage = _getStorage(app);
+  realtimeDb = _getDatabase(app);
 
-// ==================== AUTH FUNCTIONS ====================
+  googleProvider = new firebaseAuth.GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: "select_account" });
+  microsoftProvider = new firebaseAuth.OAuthProvider("microsoft.com");
 
-export const registerWithEmail = async (email, password, displayName) => {
+  console.log("[Firebase] initialized:", {
+    projectId: firebaseConfig.projectId,
+    authDomain: firebaseConfig.authDomain,
+  });
+} else {
+  console.warn(
+    "[Firebase] Not configured — running in STATIC/DEMO mode. " +
+    "To enable Firebase, create frontend-employee/.env with VITE_FIREBASE_* vars."
+  );
+}
+
+// --- Export services (may be null in demo mode) ---
+export { app, auth, db, storage, realtimeDb, googleProvider, microsoftProvider, FIREBASE_CONFIGURED };
+
+// ============================================================
+// Auth Functions (with graceful demo-mode fallbacks)
+// ============================================================
+
+// Helper: create a mock user object
+function createMockUser(email, name) {
+  return {
+    uid: "demo-user-" + Date.now(),
+    email: email || "demo@company.com",
+    displayName: name || "Demo User",
+    name: name || "Demo User",
+    photoURL: null,
+    providerData: [],
+  };
+}
+
+export async function handleAuthRedirectResult() {
+  if (!FIREBASE_CONFIGURED) return { success: true, user: null };
   try {
-    console.log('📝 Registering new user:', email);   
+    const { getRedirectResult } = await import("firebase/auth");
+    const result = await getRedirectResult(auth);
+    const user = result?.user;
+    if (!user) return { success: true, user: null };
+    return { success: true, user };
+  } catch (error) {
+    console.error("[handleAuthRedirectResult] error:", error);
+    return { success: false, error: "Redirect sign-in failed." };
+  }
+}
+
+export async function registerWithEmail(email, password, displayName) {
+  if (!FIREBASE_CONFIGURED) {
+    // Demo mode: instant success
+    return { success: true, user: createMockUser(email, displayName) };
+  }
+  try {
+    const { createUserWithEmailAndPassword, updateProfile } = await import("firebase/auth");
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    // Update profile with display name
     await updateProfile(user, { displayName });
-    // Create user document in Firestore
-    await setDoc(doc(db, 'users', user.uid), {
-      uid: user.uid,
-      email: user.email,
-      displayName: displayName,
-      role: 'employee',
-      createdAt: serverTimestamp(),
-      profileComplete: false,
-      authProvider: 'email'
-    });
-    console.log('✅ User registered successfully:', user.email);
     return { success: true, user };
   } catch (error) {
-    console.error('❌ Registration error:', error);  
-    let errorMessage = 'Registration failed. Please try again.';  
-    if (error.code === 'auth/email-already-in-use') {
-      errorMessage = 'This email is already registered. Please login instead.';
-    } else if (error.code === 'auth/weak-password') {
-      errorMessage = 'Password should be at least 6 characters.';
-    } else if (error.code === 'auth/invalid-email') {
-      errorMessage = 'Invalid email address.';
-    }
-    return { success: false, error: errorMessage };
+    console.error("[registerWithEmail] error:", error);
+    return { success: false, error: error?.message || "Registration failed." };
   }
-};
+}
 
-export const loginWithEmail = async (email, password, rememberMe = false) => {
+export async function loginWithEmail(email, password, rememberMe = false) {
+  if (!FIREBASE_CONFIGURED) {
+    // Demo mode: instant success
+    return { success: true, user: createMockUser(email, "Employee") };
+  }
   try {
-    console.log('🔑 Logging in with email:', email);  
-    const userCredential = await signInWithEmailAndPassword(auth, email, password); 
-    // Store remember me preference
-    if (rememberMe) {
-      localStorage.setItem('rememberMe', 'true');
-    }
-    console.log('✅ Email login successful:', userCredential.user.email);
+    const { setPersistence, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } = await import("firebase/auth");
+    await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return { success: true, user: userCredential.user };
   } catch (error) {
-    console.error('❌ Login error:', error);  
-    let errorMessage = 'Login failed. Please try again.';    
-    if (error.code === 'auth/user-not-found') {
-      errorMessage = 'No account found with this email.';
-    } else if (error.code === 'auth/wrong-password') {
-      errorMessage = 'Incorrect password.';
-    } else if (error.code === 'auth/invalid-email') {
-      errorMessage = 'Invalid email address.';
-    } else if (error.code === 'auth/invalid-credential') {
-      errorMessage = 'Invalid email or password.';
-    } else if (error.code === 'auth/too-many-requests') {
-      errorMessage = 'Too many failed attempts. Please try again later.';
-    }
-    return { success: false, error: errorMessage };
+    console.error("[loginWithEmail] error:", error);
+    return { success: false, error: error?.message || "Login failed." };
   }
-};
+}
 
-export const loginWithGoogle = async () => {
+export async function loginWithGoogle() {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true, user: createMockUser("google@demo.com", "Google User") };
+  }
   try {
-    console.log('🔵 Starting Google login...');
-    console.log('Auth provider configured:', googleProvider);
-    // Attempt popup sign-in
+    const { signInWithPopup } = await import("firebase/auth");
     const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;  
-    console.log('✅ Google authentication successful:', user.email);
-    console.log('User details:', {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL
-    });  
-    // Check if user document exists in Firestore
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDoc = await getDoc(userDocRef);  
-    if (!userDoc.exists()) {
-      console.log('📝 Creating new user document in Firestore...');
-      // Create new user document
-      await setDoc(userDocRef, {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        role: 'employee',
-        createdAt: serverTimestamp(),
-        profileComplete: false,
-        authProvider: 'google',
-        lastLogin: serverTimestamp()
-      });
-      console.log('✅ User document created successfully');
-    } else {
-      console.log('✅ User document exists, updating last login...');
-      // Update last login time
-      await updateDoc(userDocRef, {
-        lastLogin: serverTimestamp()
-      });
-      console.log('✅ Last login updated');
-    }
-    console.log('✅ Google login completed successfully');
-    return { success: true, user };
+    return { success: true, user: result.user };
   } catch (error) {
-    console.error('❌ Google login error:', error);  
-    let errorMessage = 'Google login failed. Please try again.';  
-    if (error.code === 'auth/popup-closed-by-user') {
-      errorMessage = 'Login cancelled. Please try again.';
-    } else if (error.code === 'auth/popup-blocked') {
-      errorMessage = 'Popup blocked by browser. Please allow popups and try again.';
-    } else if (error.code === 'auth/unauthorized-domain') {
-      errorMessage = 'This domain is not authorized. Please contact support.';
-    } else if (error.code === 'auth/cancelled-popup-request') {
-      errorMessage = 'Only one popup request is allowed at a time.';
-    } else if (error.code === 'auth/network-request-failed') {
-      errorMessage = 'Network error. Please check your internet connection.';
-    }
-    return { success: false, error: errorMessage };
+    console.error("[loginWithGoogle] error:", error);
+    return { success: false, error: error?.message || "Google login failed." };
   }
-};
+}
 
-export const loginWithMicrosoft = async () => {
+export async function loginWithMicrosoft() {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true, user: createMockUser("ms@demo.com", "Microsoft User") };
+  }
   try {
-    console.log('🔵 Starting Microsoft login...');
-    const result = await signInWithPopup(auth, microsoftProvider); 
-    const user = result.user;
-    console.log('✅ Microsoft authentication successful:', user.email); 
-    // Check if user document exists
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDoc = await getDoc(userDocRef);
-    if (!userDoc.exists()) {
-      console.log('📝 Creating new user document...');
-      // Create new user document
-      await setDoc(userDocRef, {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        role: 'employee',
-        createdAt: serverTimestamp(),
-        profileComplete: false,
-        authProvider: 'microsoft',
-        lastLogin: serverTimestamp()
-      });
-    } else {
-      // Update last login
-      await updateDoc(userDocRef, {
-        lastLogin: serverTimestamp()
-      });
-    }
-    console.log('✅ Microsoft login completed successfully');
-    return { success: true, user };
+    const { signInWithPopup } = await import("firebase/auth");
+    const result = await signInWithPopup(auth, microsoftProvider);
+    return { success: true, user: result.user };
   } catch (error) {
-    console.error('❌ Microsoft login error:', error); 
-    let errorMessage = 'Microsoft login failed. Please try again.'; 
-    if (error.code === 'auth/popup-closed-by-user') {
-      errorMessage = 'Login cancelled. Please try again.';
-    } else if (error.code === 'auth/popup-blocked') {
-      errorMessage = 'Popup blocked by browser. Please allow popups and try again.';
-    }
-    return { success: false, error: errorMessage };
+    console.error("[loginWithMicrosoft] error:", error);
+    return { success: false, error: error?.message || "Microsoft login failed." };
   }
-};
+}
 
-export const resetPassword = async (email) => {
+export async function resetPassword(email) {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true, message: "Password reset email sent! (demo mode)" };
+  }
   try {
-    console.log('📧 Sending password reset email to:', email);   
-    await sendPasswordResetEmail(auth, email);   
-    console.log('✅ Password reset email sent');
-    return { success: true, message: 'Password reset email sent! Check your inbox.' };
+    const { sendPasswordResetEmail } = await import("firebase/auth");
+    await sendPasswordResetEmail(auth, email);
+    return { success: true, message: "Password reset email sent! Check your inbox." };
   } catch (error) {
-    console.error('❌ Password reset error:', error);    
-    let errorMessage = 'Failed to send reset email. Please try again.';
-    if (error.code === 'auth/user-not-found') {
-      errorMessage = 'No account found with this email.';
-    } else if (error.code === 'auth/invalid-email') {
-      errorMessage = 'Invalid email address.';
-    }
-    return { success: false, error: errorMessage };
+    console.error("[resetPassword] error:", error);
+    return { success: false, error: error?.message || "Failed to send reset email." };
   }
-};
+}
 
-export const logout = async () => {
+export async function logout() {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true };
+  }
   try {
-    console.log('🚪 Logging out...');
+    const { signOut } = await import("firebase/auth");
     await signOut(auth);
-    localStorage.removeItem('rememberMe');
-    console.log('✅ Logged out successfully');
+    localStorage.removeItem("rememberMe");
     return { success: true };
   } catch (error) {
-    console.error('❌ Logout error:', error);
-    return { success: false, error: error.message };
+    console.error("[logout] error:", error);
+    return { success: false, error: "Logout failed." };
   }
-};
+}
 
-// ==================== FIRESTORE FUNCTIONS ====================
+// ============================================================
+// Firestore Functions
+// ============================================================
 
-export const getUserData = async (uid) => {
+export async function getUserData(uid) {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true, data: { uid, role: "employee", profileComplete: true } };
+  }
   try {
-    console.log('📖 Fetching user data for:', uid);
-    const userDoc = await getDoc(doc(db, 'users', uid));
-    if (userDoc.exists()) {
-      console.log('✅ User data found');
-      return { success: true, data: userDoc.data() };
-    } else {
-      console.log('❌ User not found in Firestore');
-      return { success: false, error: 'User not found' };
-    }
+    const { doc, getDoc } = await import("firebase/firestore");
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) return { success: true, data: userDoc.data() };
+    return { success: false, error: "User not found" };
   } catch (error) {
-    console.error('❌ Get user data error:', error);
-    return { success: false, error: error.message };
+    console.error("[getUserData] error:", error);
+    return { success: false, error: "Failed to fetch user data." };
   }
-};
+}
 
-export const updateUserProfile = async (uid, data) => {
+export async function updateUserProfile(uid, data) {
+  if (!FIREBASE_CONFIGURED) {
+    return { success: true };
+  }
   try {
-    console.log('📝 Updating user profile:', uid); 
-    await updateDoc(doc(db, 'users', uid), {
-      ...data,
-      updatedAt: serverTimestamp()
-    });
-    console.log('✅ Profile updated successfully');
+    const { doc, updateDoc, serverTimestamp } = await import("firebase/firestore");
+    await updateDoc(doc(db, "users", uid), { ...data, updatedAt: serverTimestamp() });
     return { success: true };
   } catch (error) {
-    console.error('❌ Update profile error:', error);
-    return { success: false, error: error.message };
+    console.error("[updateUserProfile] error:", error);
+    return { success: false, error: "Failed to update profile." };
   }
-};
-
-console.log('🔥 Firebase initialized successfully');
-console.log('Project ID:', firebaseConfig.projectId);
-console.log('Auth Domain:', firebaseConfig.authDomain);
+}
 
 export default app;
