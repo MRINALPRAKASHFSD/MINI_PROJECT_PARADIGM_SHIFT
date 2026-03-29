@@ -1,89 +1,58 @@
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuthStore } from '../store/authStore';
+import { logout as firebaseLogout } from '../config/firebase';
+import { LogOut, Sun, Moon, Shield } from 'lucide-react';
 import './Navbar.css';
 
 function Navbar() {
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { user, logout: storeLogout } = useAuthStore();
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+  const handleLogout = async () => {
+    await firebaseLogout();
+    storeLogout();
     navigate('/');
-    window.location.reload();
   };
 
+  const displayName = user?.displayName || user?.name || 'Admin';
+  const displayEmail = user?.email || 'admin@paradigmshift.com';
+
   return (
-    <motion.nav 
-      className="navbar"
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, type: 'spring', stiffness: 100 }}
-    >
-      <motion.div 
-        className="navbar-brand"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <motion.span 
-          className="brand-icon"
-          animate={{ 
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{ 
-            duration: 3,
-            repeat: Infinity,
-            repeatDelay: 2
-          }}
-        >
-          🏢
-        </motion. span>
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <span className="brand-icon">
+          <Shield size={22} />
+        </span>
         <span className="brand-text">Paradigm Shift Admin</span>
-      </motion. div>
+      </div>
 
       <div className="navbar-actions">
-        <motion.button
+        <button
           className="theme-toggle"
           onClick={toggleTheme}
-          whileHover={{ scale: 1.1, rotate: 180 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          {isDarkMode ? '☀️' : '🌙'}
-        </motion.button>
+          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
 
-        <motion.div 
-          className="user-info"
-          whileHover={{ scale: 1.02 }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x:  0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <motion. div 
-            className="user-avatar"
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.6 }}
-          >
-            👤
-          </motion.div>
-          <span className="user-email">admin@paradigmshift.com</span>
-        </motion.div>
+        <div className="user-info">
+          <div className="user-avatar">
+            {displayName.charAt(0).toUpperCase()}
+          </div>
+          <div className="user-details">
+            <span className="user-name">{displayName}</span>
+            <span className="user-email">{displayEmail}</span>
+          </div>
+        </div>
 
-        <motion.button
-          className="logout-btn glass-button"
-          onClick={handleLogout}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x:  0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <span className="logout-icon">🚪</span>
+        <button className="logout-btn glass-button" onClick={handleLogout}>
+          <LogOut size={16} />
           <span>Logout</span>
-        </motion.button>
+        </button>
       </div>
-    </motion. nav>
+    </nav>
   );
 }
 
