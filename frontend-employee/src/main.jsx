@@ -1,9 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+// ✅ Only handle Firebase redirect if Firebase is configured
+import { FIREBASE_CONFIGURED, handleAuthRedirectResult } from "./config/firebase";
+
+if (FIREBASE_CONFIGURED) {
+  handleAuthRedirectResult();
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
