@@ -24,6 +24,9 @@ import Profile from './pages/Profile';
 import Calendar from './pages/Calendar';
 import Notifications from './pages/Notifications';
 import LeaveManagement from './pages/LeaveManagement';
+import Payslips from './pages/Payslips';
+import Expenses from './pages/Expenses';
+import Documents from './pages/Documents';
 
 import './App.css';
 
@@ -77,6 +80,9 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/leave" element={<LeaveManagement />} />
+          <Route path="/payslips" element={<Payslips />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/documents" element={<Documents />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/calendar" element={<Calendar />} />
         </Route>
