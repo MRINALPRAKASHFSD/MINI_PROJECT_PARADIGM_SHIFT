@@ -1,44 +1,52 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { auth } from '../config/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { FIREBASE_CONFIGURED, auth } from '../config/firebase';
+
+const DEMO_USER = {
+  uid: 'demo-001',
+  email: 'rajesh.kumar@techsolutions.in',
+  displayName: 'Rajesh Kumar',
+  name: 'Rajesh Kumar',
+  photoURL: null,
+};
 
 export const useAuthStore = create(
   persist(
     (set) => ({
-      user: null,
-      isAuthenticated: false,
-      loading: true,
+      user: FIREBASE_CONFIGURED ? null : DEMO_USER,
+      isAuthenticated: !FIREBASE_CONFIGURED,
+      loading: FIREBASE_CONFIGURED,
 
       setUser: (user) => {
-        console.log('📝 Setting user in store:', user?.email || 'No user');
-        set({ 
-          user, 
-          isAuthenticated: !!user,
-          loading: false 
-        });
+        set({ user, isAuthenticated: !!user, loading: false });
       },
-
       setLoading: (loading) => set({ loading }),
-
       logout: () => {
-        console.log('📝 Clearing user from store');
-        set({ 
-          user: null, 
-          isAuthenticated: false 
-        });
+        set({ user: null, isAuthenticated: false });
       },
     }),
     {
       name: 'auth-storage',
+      merge: (persistedState, currentState) => {
+        if (!FIREBASE_CONFIGURED) {
+          return {
+            ...currentState,
+            ...persistedState,
+            user: persistedState?.user || DEMO_USER,
+            isAuthenticated: true,
+            loading: false,
+          };
+        }
+        return { ...currentState, ...persistedState };
+      },
     }
   )
 );
 
-// 🔥 IMPORTANT: Listen to Firebase auth state changes
-onAuthStateChanged(auth, (user) => {
-  console.log('🔔 Auth state changed:', user?.email || 'No user');
-  useAuthStore.getState().setUser(user);
-});
-
-console.log('✅ Auth store initialized');
+if (FIREBASE_CONFIGURED && auth) {
+  import('firebase/auth').then(({ onAuthStateChanged }) => {
+    onAuthStateChanged(auth, (user) => {
+      useAuthStore.getState().setUser(user);
+    });
+  });
+}
