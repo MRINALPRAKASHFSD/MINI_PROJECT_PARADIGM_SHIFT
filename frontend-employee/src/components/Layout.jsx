@@ -7,7 +7,7 @@ import { logout as firebaseLogout } from '../config/firebase';
 import {
   LayoutDashboard, Users, CheckSquare, Clock, Camera, FileText,
   BarChart3, Settings, LogOut, Menu, X, Bell, Sun, Moon,
-  Sparkles, Calendar, User, Palmtree
+  Sparkles, Calendar, User, Palmtree, IndianRupee, Receipt, FolderOpen
 } from 'lucide-react';
 import './Layout.css';
 
@@ -32,6 +32,9 @@ const Layout = () => {
     { path: '/leave', icon: Palmtree, label: 'Leave', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #6EE7B7 100%)' },
     { path: '/reports', icon: FileText, label: 'Reports', color: '#EC4899', gradient: 'linear-gradient(135deg, #EC4899 0%, #F472B6 100%)' },
     { path: '/analytics', icon: BarChart3, label: 'Analytics', color: '#6366F1', gradient: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)' },
+    { path: '/payslips', icon: IndianRupee, label: 'Payslips', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%)' },
+    { path: '/expenses', icon: Receipt, label: 'Expenses', color: '#F97316', gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)' },
+    { path: '/documents', icon: FolderOpen, label: 'Documents', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%)' },
   ];
 
   const handleLogout = async () => {
@@ -149,6 +152,11 @@ const Layout = () => {
             <div className="status-bar">
               <div className="status-dot" />
               <span>System Online</span>
+            </div>
+          )}
+          {sidebarOpen && (
+            <div style={{ textAlign: 'center', padding: '8px 0 4px', fontSize: '10px', color: '#334155', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              Paradigm Shift&trade;
             </div>
           )}
         </div>
