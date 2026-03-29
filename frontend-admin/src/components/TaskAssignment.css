@@ -1,0 +1,65 @@
+.task-assignment { padding: 10px 0; }
+
+.ta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+.ta-header h1 { font-size: 26px; font-weight: 800; color: #f1f5f9; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+.ta-header p { font-size: 14px; color: #64748b; margin: 0; }
+.ta-create-btn { display: flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; font-family: inherit; transition: box-shadow 0.2s; }
+.ta-create-btn:hover { box-shadow: 0 6px 20px rgba(79,70,229,0.4); }
+
+/* Stats */
+.ta-stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.ta-stat { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+.ta-stat.todo { color: #fbbf24; }
+.ta-stat.progress { color: #60a5fa; }
+.ta-stat.done { color: #34d399; }
+.ta-stat.total { color: #94a3b8; margin-left: auto; }
+
+/* Filters */
+.ta-filter-row { display: flex; gap: 6px; margin-bottom: 18px; }
+.ta-filter { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: #94a3b8; font-family: inherit; transition: all 0.2s; }
+.ta-filter.active { background: rgba(79,70,229,0.15); border-color: rgba(79,70,229,0.3); color: #c4b5fd; }
+
+/* Task List */
+.ta-list { display: flex; flex-direction: column; gap: 10px; }
+.ta-card { display: flex; justify-content: space-between; align-items: center; border-radius: 14px; background: rgba(15,23,42,0.5); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; transition: border-color 0.2s; }
+.ta-card:hover { border-color: rgba(79,70,229,0.2); }
+.ta-card-left { display: flex; flex: 1; min-width: 0; }
+.ta-priority-bar { width: 4px; flex-shrink: 0; }
+.ta-card-body { padding: 16px 18px; flex: 1; min-width: 0; }
+.ta-card-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.ta-card-top-row h3 { font-size: 15px; font-weight: 600; color: #e2e8f0; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ta-priority-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+.ta-card-desc { font-size: 12px; color: #64748b; margin: 0 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ta-card-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.ta-meta-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #94a3b8; }
+.ta-meta-item.urgent { color: #f87171; font-weight: 600; }
+
+.ta-card-right { display: flex; align-items: center; gap: 8px; padding: 16px; flex-shrink: 0; }
+.ta-status-select { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-size: 12px; font-family: inherit; cursor: pointer; outline: none; }
+.ta-status-select option { background: #1e293b; }
+.ta-delete-btn { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: rgba(239,68,68,0.1); color: #f87171; transition: background 0.15s; }
+.ta-delete-btn:hover { background: rgba(239,68,68,0.25); }
+
+.ta-empty { padding: 40px; text-align: center; color: #64748b; font-size: 14px; }
+
+/* Modal */
+.ta-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(4px); }
+.ta-modal { background: #1e293b; border-radius: 20px; padding: 32px; width: 90%; max-width: 520px; border: 1px solid rgba(255,255,255,0.1); }
+.ta-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.ta-modal-header h2 { font-size: 20px; font-weight: 700; color: #f1f5f9; margin: 0; }
+.ta-modal-close { background: none; border: none; color: #64748b; cursor: pointer; padding: 4px; }
+.ta-modal-close:hover { color: #e2e8f0; }
+
+.ta-form-field { margin-bottom: 16px; }
+.ta-form-field label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+.ta-form-field input, .ta-form-field select, .ta-form-field textarea { width: 100%; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; font-size: 13px; outline: none; font-family: inherit; box-sizing: border-box; }
+.ta-form-field input:focus, .ta-form-field select:focus, .ta-form-field textarea:focus { border-color: rgba(79,70,229,0.4); }
+.ta-form-field input::placeholder, .ta-form-field textarea::placeholder { color: #475569; }
+.ta-form-field select option { background: #1e293b; }
+.ta-form-field textarea { resize: vertical; }
+.ta-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.ta-modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.ta-cancel-btn { padding: 9px 18px; border-radius: 10px; background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 13px; font-family: inherit; }
+.ta-submit-btn { display: flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border: none; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
+.ta-submit-btn:hover { box-shadow: 0 4px 16px rgba(79,70,229,0.4); }
