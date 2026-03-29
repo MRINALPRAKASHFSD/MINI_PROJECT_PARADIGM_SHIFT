@@ -48,7 +48,7 @@ const SEED_NOTIFICATIONS = [
   { id: id(), type: 'achievement', title: 'Badge earned: Speed Demon 🏎️', message: 'You completed 5 tasks in a single day!', read: true, createdAt: ts() - 86400000, link: '/profile' },
   { id: id(), type: 'leave', title: 'Leave approved', message: 'Your casual leave (20-21 Mar) has been approved by Vikram Patel', read: true, createdAt: ts() - 86400000 * 2, link: '/leave' },
   { id: id(), type: 'task', title: 'Task deadline tomorrow', message: '"Aadhaar eKYC flow" is due tomorrow. Please update progress.', read: false, createdAt: ts() - 1800000, link: '/tasks' },
-  { id: id(), type: 'system', title: 'Payslip generated', message: 'Your payslip for March 2026 is ready to download.', read: false, createdAt: ts() - 14400000, link: '/reports' },
+  { id: id(), type: 'system', title: 'Payslip generated', message: 'Your payslip for March 2026 is ready to download.', read: false, createdAt: ts() - 14400000, link: '/payslips' },
   { id: id(), type: 'team', title: 'Sneha Iyer mentioned you', message: 'Mentioned you in the QA testing thread for Payment Module', read: true, createdAt: ts() - 86400000 * 3, link: '/teams' },
 ];
 
@@ -63,6 +63,38 @@ const SEED_ACTIVITIES = [
   { id: id(), action: 'Ananya Gupta completed "Aadhaar OTP" subtask', user: 'Ananya Gupta', createdAt: ts() - 86400000 * 3, icon: 'task', color: '#10b981' },
 ];
 
+const SEED_PAYSLIPS = [
+  { id: id(), month: 'March 2026', date: '2026-03-28', basic: 62000, hra: 24800, da: 6200, special: 12400, pf: 7440, tax: 8250, pt: 200, insurance: 1500, netPay: 88010, status: 'generated' },
+  { id: id(), month: 'February 2026', date: '2026-02-28', basic: 62000, hra: 24800, da: 6200, special: 12400, pf: 7440, tax: 8250, pt: 200, insurance: 1500, netPay: 88010, status: 'generated' },
+  { id: id(), month: 'January 2026', date: '2026-01-31', basic: 60000, hra: 24000, da: 6000, special: 12000, pf: 7200, tax: 7950, pt: 200, insurance: 1500, netPay: 85150, status: 'generated' },
+  { id: id(), month: 'December 2025', date: '2025-12-31', basic: 60000, hra: 24000, da: 6000, special: 12000, pf: 7200, tax: 7950, pt: 200, insurance: 1500, netPay: 85150, status: 'generated' },
+  { id: id(), month: 'November 2025', date: '2025-11-30', basic: 60000, hra: 24000, da: 6000, special: 12000, pf: 7200, tax: 7950, pt: 200, insurance: 1500, netPay: 85150, status: 'generated' },
+  { id: id(), month: 'October 2025', date: '2025-10-31', basic: 58000, hra: 23200, da: 5800, special: 11600, pf: 6960, tax: 7600, pt: 200, insurance: 1500, netPay: 82340, status: 'generated' },
+];
+
+const SEED_EXPENSES = [
+  { id: id(), title: 'Client meeting cab', category: 'Travel', amount: 850, date: '2026-03-27', description: 'Uber to Andheri client office and back', status: 'approved', approvedBy: 'Vikram Patel', receiptNo: 'EXP-2026-047' },
+  { id: id(), title: 'Team lunch - Sprint review', category: 'Food', amount: 3200, date: '2026-03-25', description: 'Team lunch at Mainland China after sprint review', status: 'approved', approvedBy: 'Vikram Patel', receiptNo: 'EXP-2026-045' },
+  { id: id(), title: 'Mechanical keyboard', category: 'Equipment', amount: 6500, date: '2026-03-20', description: 'Keychron K2 for office use', status: 'pending', approvedBy: null, receiptNo: 'EXP-2026-041' },
+  { id: id(), title: 'Figma Pro subscription', category: 'Software', amount: 1150, date: '2026-03-15', description: 'Monthly Figma Pro for design work', status: 'approved', approvedBy: 'Ananya Gupta', receiptNo: 'EXP-2026-038' },
+  { id: id(), title: 'Conference registration', category: 'Training', amount: 4500, date: '2026-03-10', description: 'React India 2026 online conference pass', status: 'approved', approvedBy: 'Vikram Patel', receiptNo: 'EXP-2026-033' },
+  { id: id(), title: 'AWS certification exam', category: 'Training', amount: 2600, date: '2026-03-05', description: 'AWS Solutions Architect Associate exam fee', status: 'rejected', approvedBy: null, receiptNo: 'EXP-2026-029' },
+  { id: id(), title: 'Airport transfer', category: 'Travel', amount: 1200, date: '2026-02-28', description: 'Cab to BOM airport for Bengaluru office visit', status: 'approved', approvedBy: 'Vikram Patel', receiptNo: 'EXP-2026-025' },
+];
+
+const SEED_DOCUMENTS = [
+  { id: id(), name: 'Offer Letter', category: 'Employment', fileName: 'OfferLetter_RajeshKumar_2024.pdf', size: '245 KB', uploadedAt: ts() - 86400000 * 400, verified: true },
+  { id: id(), name: 'Aadhaar Card', category: 'Identity', fileName: 'Aadhaar_XXXX_4521.pdf', size: '1.2 MB', uploadedAt: ts() - 86400000 * 390, verified: true },
+  { id: id(), name: 'PAN Card', category: 'Identity', fileName: 'PAN_ABCPK1234R.pdf', size: '380 KB', uploadedAt: ts() - 86400000 * 390, verified: true },
+  { id: id(), name: 'Cancelled Cheque', category: 'Banking', fileName: 'CancelledCheque_HDFC.pdf', size: '520 KB', uploadedAt: ts() - 86400000 * 385, verified: true },
+  { id: id(), name: 'B.Tech Degree Certificate', category: 'Education', fileName: 'BTech_VIT_2019.pdf', size: '3.8 MB', uploadedAt: ts() - 86400000 * 380, verified: true },
+  { id: id(), name: 'Experience Letter (Previous)', category: 'Employment', fileName: 'ExpLetter_TCS_2023.pdf', size: '190 KB', uploadedAt: ts() - 86400000 * 375, verified: true },
+  { id: id(), name: 'Form 16 (FY 2024-25)', category: 'Tax', fileName: 'Form16_FY2024-25.pdf', size: '890 KB', uploadedAt: ts() - 86400000 * 90, verified: false },
+  { id: id(), name: 'Medical Insurance Card', category: 'Insurance', fileName: 'MedInsurance_Star_2026.pdf', size: '410 KB', uploadedAt: ts() - 86400000 * 60, verified: true },
+  { id: id(), name: 'AWS Certificate', category: 'Certification', fileName: 'AWS_SAA_Certificate.pdf', size: '1.5 MB', uploadedAt: ts() - 86400000 * 30, verified: true },
+  { id: id(), name: 'Passport', category: 'Identity', fileName: 'Passport_RK_2025.pdf', size: '2.1 MB', uploadedAt: ts() - 86400000 * 15, verified: false },
+];
+
 // ── store ────────────────────────────────────────────────────
 export const useDataStore = create(
   persist(
@@ -73,6 +105,9 @@ export const useDataStore = create(
       leaves: SEED_LEAVES,
       notifications: SEED_NOTIFICATIONS,
       activities: SEED_ACTIVITIES,
+      payslips: SEED_PAYSLIPS,
+      expenses: SEED_EXPENSES,
+      documents: SEED_DOCUMENTS,
 
       leaveBalances: { casual: 10, sick: 7, earned: 15, wfh: 24 },
 
@@ -120,12 +155,26 @@ export const useDataStore = create(
       markAllRead: () => set(s => ({ notifications: s.notifications.map(n => ({ ...n, read: true })) })),
       clearNotification: (notifId) => set(s => ({ notifications: s.notifications.filter(n => n.id !== notifId) })),
 
+      // ── expenses ─────────────
+      addExpense: (expense) => set(s => ({
+        expenses: [{ ...expense, id: id(), status: 'pending', approvedBy: null, receiptNo: `EXP-2026-${String(s.expenses.length + 50).padStart(3, '0')}` }, ...s.expenses],
+        activities: [{ id: id(), action: `Submitted expense claim: ₹${expense.amount.toLocaleString('en-IN')}`, user: 'Rajesh Kumar', createdAt: ts(), icon: 'expense', color: '#f97316' }, ...s.activities],
+      })),
+      deleteExpense: (expId) => set(s => ({ expenses: s.expenses.filter(e => e.id !== expId) })),
+
+      // ── documents ────────────
+      addDocument: (doc) => set(s => ({
+        documents: [{ ...doc, id: id(), uploadedAt: ts(), verified: false }, ...s.documents],
+        activities: [{ id: id(), action: `Uploaded document: ${doc.name}`, user: 'Rajesh Kumar', createdAt: ts(), icon: 'doc', color: '#06b6d4' }, ...s.activities],
+      })),
+      deleteDocument: (docId) => set(s => ({ documents: s.documents.filter(d => d.id !== docId) })),
+
       // ── computed ─────────────
       get unreadCount() { return get().notifications.filter(n => !n.read).length; },
     }),
     {
       name: 'employee-data',
-      version: 2,
+      version: 3,
     }
   )
 );
