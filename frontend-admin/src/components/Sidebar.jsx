@@ -60,6 +60,27 @@ function Sidebar() {
       color: '#DB2777',
       bgGradient: 'linear-gradient(135deg, #DB2777 0%, #EC4899 100%)'
     },
+    { 
+      path: '/expense-approvals', 
+      icon: '💸', 
+      label: 'Expense Approvals', 
+      color: '#0D9488',
+      bgGradient: 'linear-gradient(135deg, #0D9488 0%, #14B8A6 100%)'
+    },
+    { 
+      path: '/document-verification', 
+      icon: '🛡️', 
+      label: 'Document Verification', 
+      color: '#7C3AED',
+      bgGradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)'
+    },
+    { 
+      path: '/task-assignment', 
+      icon: '📋', 
+      label: 'Task Assignment', 
+      color: '#EA580C',
+      bgGradient: 'linear-gradient(135deg, #EA580C 0%, #F97316 100%)'
+    },
   ];
 
   return (

@@ -11,6 +11,9 @@ import Reports from './components/Reports';
 import Payroll from './components/Payroll';
 import Departments from './components/Departments';
 import Announcements from './components/Announcements';
+import ExpenseApprovals from './components/ExpenseApprovals';
+import DocumentVerification from './components/DocumentVerification';
+import TaskAssignment from './components/TaskAssignment';
 import VideoBackground from './components/VideoBackground';
 import './App.css';
 
@@ -46,6 +49,9 @@ function App() {
                   <Route path="/payroll" element={<ProtectedRoute><Payroll /></ProtectedRoute>} />
                   <Route path="/departments" element={<ProtectedRoute><Departments /></ProtectedRoute>} />
                   <Route path="/announcements" element={<ProtectedRoute><Announcements /></ProtectedRoute>} />
+                  <Route path="/expense-approvals" element={<ProtectedRoute><ExpenseApprovals /></ProtectedRoute>} />
+                  <Route path="/document-verification" element={<ProtectedRoute><DocumentVerification /></ProtectedRoute>} />
+                  <Route path="/task-assignment" element={<ProtectedRoute><TaskAssignment /></ProtectedRoute>} />
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
