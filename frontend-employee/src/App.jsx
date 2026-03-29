@@ -22,6 +22,8 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Calendar from './pages/Calendar';
+import Notifications from './pages/Notifications';
+import LeaveManagement from './pages/LeaveManagement';
 
 import './App.css';
 
@@ -73,6 +75,8 @@ function App() {
           <Route path="/reports" element={<Reports />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/leave" element={<LeaveManagement />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/calendar" element={<Calendar />} />
         </Route>
