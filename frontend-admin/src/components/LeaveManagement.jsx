@@ -1,105 +1,30 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useDataStore } from '../store/dataStore';
 import './LeaveManagement.css';
 
 function LeaveManagement() {
-  const [leaveRequests, setLeaveRequests] = useState([
-    {
-      id: 1,
-      name: 'Diya Sharma',
-      type: 'Sick Leave',
-      from: '2026-01-05',
-      to: '2026-01-07',
-      days: 3,
-      reason: 'Medical checkup and recovery',
-      status: 'Pending',
-      appliedOn: '2026-01-02'
-    },
-    {
-      id: 2,
-      name: 'Pratham Verma',
-      type: 'Casual Leave',
-      from: '2026-01-10',
-      to: '2026-01-12',
-      days: 3,
-      reason: 'Family function',
-      status: 'Pending',
-      appliedOn: '2026-01-02'
-    },
-    {
-      id: 3,
-      name: 'Aditya Patel',
-      type:  'Vacation',
-      from: '2026-01-15',
-      to: '2026-01-20',
-      days: 6,
-      reason: 'Family vacation to Goa',
-      status: 'Approved',
-      appliedOn: '2025-12-28'
-    },
-    {
-      id: 4,
-      name: 'Mahin Khan',
-      type: 'Sick Leave',
-      from: '2026-01-03',
-      to: '2026-01-04',
-      days: 2,
-      reason: 'Fever and cold',
-      status: 'Approved',
-      appliedOn: '2026-01-01'
-    },
-    {
-      id: 5,
-      name: 'Ishan Singh',
-      type: 'Personal Leave',
-      from: '2026-01-08',
-      to: '2026-01-09',
-      days: 2,
-      reason: 'Personal work',
-      status: 'Pending',
-      appliedOn: '2026-01-02'
-    },
-    {
-      id: 6,
-      name: 'Priya Gupta',
-      type: 'Maternity Leave',
-      from: '2026-02-01',
-      to: '2026-05-01',
-      days: 90,
-      reason: 'Maternity leave',
-      status:  'Approved',
-      appliedOn: '2025-12-15'
-    },
-    {
-      id: 7,
-      name: 'Arjun Reddy',
-      type:  'Casual Leave',
-      from: '2026-01-06',
-      to: '2026-01-06',
-      days: 1,
-      reason: 'Wedding to attend',
-      status: 'Rejected',
-      appliedOn: '2026-01-01'
-    },
-  ]);
-
+  const { leaves, approveLeave, rejectLeave } = useDataStore();
   const [filter, setFilter] = useState('All');
 
-  const handleApprove = (id) => {
-    setLeaveRequests(leaveRequests.map(req =>
-      req.id === id ?  { ...req, status: 'Approved' } : req
-    ));
+  const leaveRequests = leaves || [];
+
+  const handleApprove = async (id) => {
+    try {
+      await approveLeave(id);
+    } catch(e) { console.error(e); }
   };
 
-  const handleReject = (id) => {
-    setLeaveRequests(leaveRequests.map(req =>
-      req.id === id ? { ...req, status: 'Rejected' } : req
-    ));
+  const handleReject = async (id) => {
+    try {
+      await rejectLeave(id);
+    } catch(e) { console.error(e); }
   };
 
   const filteredRequests = filter === 'All' 
     ? leaveRequests 
-    : leaveRequests.filter(req => req.status === filter);
+    : leaveRequests.filter(req => (req.status || '').toLowerCase() === filter.toLowerCase());
+
 
   const getStatusColor = (status) => {
     switch(status) {
@@ -203,7 +128,7 @@ function LeaveManagement() {
                 className="status-badge"
                 style={{ background: getStatusColor(request.status) }}
               >
-                {request.status}
+                <span style={{textTransform:'capitalize'}}>{request.status || 'Pending'}</span>
               </span>
             </div>
 
@@ -212,7 +137,7 @@ function LeaveManagement() {
                 <span className="detail-icon">{getLeaveTypeIcon(request.type)}</span>
                 <div className="detail-info">
                   <span className="detail-label">Leave Type</span>
-                  <span className="detail-value">{request. type}</span>
+                  <span className="detail-value">{request.type}</span>
                 </div>
               </div>
 
@@ -221,7 +146,7 @@ function LeaveManagement() {
                 <div className="detail-info">
                   <span className="detail-label">Duration</span>
                   <span className="detail-value">
-                    {new Date(request.from).toLocaleDateString('en-IN')} - {new Date(request.to).toLocaleDateString('en-IN')}
+                    {request.from ? new Date(request.from).toLocaleDateString('en-IN') : 'N/A'} - {request.to ? new Date(request.to).toLocaleDateString('en-IN') : 'N/A'}
                   </span>
                 </div>
               </div>
@@ -230,7 +155,7 @@ function LeaveManagement() {
                 <span className="detail-icon">⏰</span>
                 <div className="detail-info">
                   <span className="detail-label">Total Days</span>
-                  <span className="detail-value">{request.days} {request.days === 1 ?  'day' : 'days'}</span>
+                  <span className="detail-value">{request.days} {request.days === 1 ? 'day' : 'days'}</span>
                 </div>
               </div>
 
@@ -243,11 +168,11 @@ function LeaveManagement() {
               </div>
             </div>
 
-            {request.status === 'Pending' && (
+            {(request.status || '').toLowerCase() === 'pending' && (
               <div className="leave-actions">
                 <motion.button
                   className="approve-btn"
-                  onClick={() => handleApprove(request. id)}
+                  onClick={() => handleApprove(request.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
