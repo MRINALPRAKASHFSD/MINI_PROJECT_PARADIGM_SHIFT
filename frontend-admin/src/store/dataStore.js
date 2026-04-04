@@ -35,12 +35,13 @@ export const useDataStore = create((set, get) => ({
         api.get('/documents'),
         api.get('/attendance'),
         api.get('/departments'),
-        api.get('/dashboard')
+        api.get('/dashboard/stats')
       ]);
 
       const extract = (res, key) => res.status === 'fulfilled' ? (res.value.data[key] || []) : [];
 
       set({
+        dashboardStats: dashboardRes.status === 'fulfilled' ? dashboardRes.value.data : {},
         employees: extract(employeesRes, 'employees').map(e => ({ ...e, id: e._id || e.id })),
         leaves: extract(leavesRes, 'leaves').map(l => {
           const fromDate = l.startDate || l.from;
@@ -111,13 +112,13 @@ export const useDataStore = create((set, get) => ({
   // Leaves
   approveLeave: async (id) => {
     try {
-      const res = await api.put(`/leaves/${id}/action`, { action: 'approve' });
+      const res = await api.put(`/leaves/${id}/approve`);
       set(s => ({ leaves: s.leaves.map(l => l.id === id ? { ...l, status: 'approved' } : l) }));
     } catch (e) { throw e; }
   },
   rejectLeave: async (id) => {
     try {
-      const res = await api.put(`/leaves/${id}/action`, { action: 'reject' });
+      const res = await api.put(`/leaves/${id}/reject`);
       set(s => ({ leaves: s.leaves.map(l => l.id === id ? { ...l, status: 'rejected' } : l) }));
     } catch (e) { throw e; }
   },
@@ -125,13 +126,13 @@ export const useDataStore = create((set, get) => ({
   // Expenses
   approveExpense: async (id) => {
     try {
-      const res = await api.put(`/expenses/${id}`, { status: 'approved' });
+      const res = await api.put(`/expenses/${id}/approve`);
       set(s => ({ expenses: s.expenses.map(e => e.id === id ? { ...e, status: 'approved' } : e) }));
     } catch (e) { throw e; }
   },
   rejectExpense: async (id) => {
     try {
-      const res = await api.put(`/expenses/${id}`, { status: 'rejected' });
+      const res = await api.put(`/expenses/${id}/reject`);
       set(s => ({ expenses: s.expenses.map(e => e.id === id ? { ...e, status: 'rejected' } : e) }));
     } catch (e) { throw e; }
   },
@@ -139,13 +140,13 @@ export const useDataStore = create((set, get) => ({
   // Documents
   verifyDocument: async (id) => {
     try {
-      const res = await api.put(`/documents/${id}`, { status: 'verified' });
+      const res = await api.put(`/documents/${id}/verify`);
       set(s => ({ documents: s.documents.map(d => d.id === id ? { ...d, status: 'verified' } : d) }));
     } catch (e) { throw e; }
   },
   rejectDocument: async (id) => {
     try {
-      const res = await api.put(`/documents/${id}`, { status: 'rejected' });
+      const res = await api.put(`/documents/${id}/reject`);
       set(s => ({ documents: s.documents.map(d => d.id === id ? { ...d, status: 'rejected' } : d) }));
     } catch (e) { throw e; }
   },

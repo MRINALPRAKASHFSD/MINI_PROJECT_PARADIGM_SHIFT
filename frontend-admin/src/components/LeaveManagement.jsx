@@ -27,10 +27,10 @@ function LeaveManagement() {
 
 
   const getStatusColor = (status) => {
-    switch(status) {
-      case 'Approved': return '#4ade80';
-      case 'Rejected': return '#f87171';
-      case 'Pending': return '#fbbf24';
+    switch((status || '').toLowerCase()) {
+      case 'approved': return '#4ade80';
+      case 'rejected': return '#f87171';
+      case 'pending': return '#fbbf24';
       default:  return '#64748b';
     }
   };
@@ -60,15 +60,15 @@ function LeaveManagement() {
         </div>
         <div className="leave-stats">
           <div className="stat-badge pending">
-            <span className="badge-value">{leaveRequests.filter(r => r.status === 'Pending').length}</span>
+            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'pending').length}</span>
             <span className="badge-label">Pending</span>
           </div>
           <div className="stat-badge approved">
-            <span className="badge-value">{leaveRequests.filter(r => r.status === 'Approved').length}</span>
+            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'approved').length}</span>
             <span className="badge-label">Approved</span>
           </div>
           <div className="stat-badge rejected">
-            <span className="badge-value">{leaveRequests.filter(r => r.status === 'Rejected').length}</span>
+            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'rejected').length}</span>
             <span className="badge-label">Rejected</span>
           </div>
         </div>
@@ -90,19 +90,19 @@ function LeaveManagement() {
           className={`filter-btn ${filter === 'Pending' ? 'active' : ''}`}
           onClick={() => setFilter('Pending')}
         >
-          Pending ({leaveRequests.filter(r => r.status === 'Pending').length})
+          Pending ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'pending').length})
         </button>
         <button 
           className={`filter-btn ${filter === 'Approved' ? 'active' : ''}`}
           onClick={() => setFilter('Approved')}
         >
-          Approved ({leaveRequests.filter(r => r.status === 'Approved').length})
+          Approved ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'approved').length})
         </button>
         <button 
           className={`filter-btn ${filter === 'Rejected' ?  'active' : ''}`}
           onClick={() => setFilter('Rejected')}
         >
-          Rejected ({leaveRequests.filter(r => r.status === 'Rejected').length})
+          Rejected ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'rejected').length})
         </button>
       </motion.div>
 

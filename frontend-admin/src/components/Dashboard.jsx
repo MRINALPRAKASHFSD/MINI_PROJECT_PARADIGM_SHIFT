@@ -8,7 +8,7 @@ function Dashboard() {
   const { dashboardStats, dashboardActivities, employees, departments, leaves } = useDataStore();
 
   const totalEmps = employees.length || 0;
-  const pendingLeavesCount = leaves.filter(l => l.status === 'pending').length || 0;
+  const pendingLeavesCount = leaves.filter(l => (l.status || '').toLowerCase() === 'pending').length || 0;
   const totalDepts = departments.length || 0;
   const presentToday = dashboardStats?.presentToday || 0;
 

@@ -7,7 +7,7 @@ import { Calendar, Plus, X, Clock, CheckCircle, XCircle, AlertCircle, Briefcase,
 const LEAVE_TYPES = [
   { key: 'Casual Leave', icon: Sun, color: '#3b82f6', desc: 'Personal work, family events' },
   { key: 'Sick Leave', icon: Thermometer, color: '#ef4444', desc: 'Illness, medical appointments' },
-  { key: 'Earned Leave', icon: Calendar, color: '#10b981', desc: 'Planned vacation, travel' },
+  { key: 'Vacation', icon: Calendar, color: '#10b981', desc: 'Planned vacation, travel' },
   { key: 'Work From Home', icon: Home, color: '#f59e0b', desc: 'Remote work day' },
 ];
 
@@ -23,12 +23,12 @@ const LeaveManagement = () => {
   const [form, setForm] = useState({ type: 'Casual Leave', from: '', to: '', reason: '' });
   const [tab, setTab] = useState('overview');
 
-  const usedLeaves = { casual: 0, sick: 0, earned: 0, wfh: 0 };
+  const usedLeaves = { casual: 0, sick: 0, vacation: 0, wfh: 0 };
   leaves.forEach(l => {
     if (l.status !== 'rejected') {
       if (l.type === 'Casual Leave') usedLeaves.casual += l.days;
       if (l.type === 'Sick Leave') usedLeaves.sick += l.days;
-      if (l.type === 'Earned Leave') usedLeaves.earned += l.days;
+      if (l.type === 'Vacation') usedLeaves.vacation += l.days;
       if (l.type === 'Work From Home') usedLeaves.wfh += l.days;
     }
   });
@@ -36,7 +36,7 @@ const LeaveManagement = () => {
   const balances = [
     { label: 'Casual Leave', total: leaveBalances.casual, used: usedLeaves.casual, color: '#3b82f6', icon: Sun },
     { label: 'Sick Leave', total: leaveBalances.sick, used: usedLeaves.sick, color: '#ef4444', icon: Thermometer },
-    { label: 'Earned Leave', total: leaveBalances.earned, used: usedLeaves.earned, color: '#10b981', icon: Calendar },
+    { label: 'Vacation', total: leaveBalances.earned, used: usedLeaves.vacation, color: '#10b981', icon: Calendar },
     { label: 'Work From Home', total: leaveBalances.wfh, used: usedLeaves.wfh, color: '#f59e0b', icon: Home },
   ];
 
