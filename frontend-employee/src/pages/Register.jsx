@@ -53,7 +53,7 @@ const Register = () => {
     const result = await registerWithEmail(formData.email, formData.password, formData.name);
 
     if (result.success) {
-      setUser(result.user);
+      setUser(result.user, result.token);
       navigate('/dashboard');
     } else {
       setError(result.error);
