@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
 
@@ -36,6 +37,37 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    const token = signToken(user._id);
+    res.json({ token, user: user.toJSON() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/auth/google
+router.post('/google', async (req, res) => {
+  try {
+    const { email, name, photoURL } = req.body;
+    if (!email) return res.status(400).json({ error: 'Google email is required.' });
+
+    let user = await User.findOne({ email });
+
+    // If no user exists, auto-register them
+    if (!user) {
+      const count = await User.countDocuments();
+      const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      
+      user = await User.create({
+        name: name || 'Google User',
+        email,
+        password: randomPassword,
+        role: 'employee',
+        employeeId,
+        avatar: photoURL || '',
+      });
     }
 
     const token = signToken(user._id);

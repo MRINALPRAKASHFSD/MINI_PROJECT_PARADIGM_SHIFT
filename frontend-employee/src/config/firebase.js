@@ -6,17 +6,60 @@
 
 import api from '../services/api';
 
-// These are kept for backward compatibility but are null
-export const app = null;
-export const auth = null;
-export const db = null;
-export const storage = null;
-export const realtimeDb = null;
-export const googleProvider = null;
-export const microsoftProvider = null;
-export const FIREBASE_CONFIGURED = false;
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import api from '../services/api';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDummyKey-PleaseConfigureInEnv",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "paradigmshift-dummy.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "paradigmshift-dummy",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "paradigmshift-dummy.appspot.com",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:dummy"
+};
+
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+export const FIREBASE_CONFIGURED = true;
 
 // ── Auth Functions (Backend API) ─────────────────────────────
+
+export async function signInWithGooglePlatform() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    
+    // Handshake with Custom Backend via Google OAuth profile data
+    const { data } = await api.post('/auth/google', {
+      email: user.email,
+      name: user.displayName,
+      photoURL: user.photoURL,
+    });
+    
+    localStorage.setItem('token', data.token);
+    return {
+      success: true,
+      user: {
+        uid: data.user._id,
+        email: data.user.email,
+        displayName: data.user.name,
+        name: data.user.name,
+        role: data.user.role,
+        department: data.user.department,
+        designation: data.user.designation,
+        employeeId: data.user.employeeId,
+        photoURL: data.user.avatar || null,
+        ...data.user,
+      },
+      token: data.token,
+    };
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    return { success: false, error: 'Google sign-in failed. Please try again or use standard login.' };
+  }
+}
 
 export async function loginWithEmail(email, password) {
   try {

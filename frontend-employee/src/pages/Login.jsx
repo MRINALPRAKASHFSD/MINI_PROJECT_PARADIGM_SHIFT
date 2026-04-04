@@ -14,7 +14,7 @@ import {
   Zap,
   CheckCircle2
 } from 'lucide-react';
-import { loginWithEmail, loginWithGoogle } from '../config/firebase';
+import { loginWithEmail, signInWithGooglePlatform } from '../config/firebase';
 import './Auth.css';
 
 const Login = () => {
@@ -47,11 +47,11 @@ const Login = () => {
     setError('');
     setIsLoading(true);
 
-    const result = await loginWithGoogle();
+    const result = await signInWithGooglePlatform();
 
     if (result.success) {
       if (result.user) {
-        setUser(result.user);
+        setUser(result.user, result.token);
         navigate('/dashboard');
       }
     } else {
