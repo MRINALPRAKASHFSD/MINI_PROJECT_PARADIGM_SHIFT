@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
+import { useDataStore } from './store/dataStore';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -24,6 +26,11 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const fetchAll = useDataStore((s) => s.fetchAll);
+
+  useEffect(() => {
+    if (isAuthenticated) fetchAll();
+  }, [isAuthenticated, fetchAll]);
 
   return (
     <Router>
