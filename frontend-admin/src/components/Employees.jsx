@@ -1,150 +1,22 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useDataStore } from '../store/dataStore';
 import './Employees.css';
 
 function Employees() {
-  const [employees] = useState([
-    {
-      id: 1,
-      name: 'Diya Sharma',
-      employeeId: 'EMP001',
-      email: 'diya.sharma@paradigmshift.com',
-      phone: '+91 98765 43210',
-      department: 'IT',
-      designation: 'Senior Developer',
-      joiningDate: '2023-03-15',
-      salary: 75000,
-      status: 'Active',
-      avatar: 'D'
-    },
-    {
-      id: 2,
-      name: 'Pratham Verma',
-      employeeId:  'EMP002',
-      email: 'pratham.verma@paradigmshift.com',
-      phone: '+91 98765 43211',
-      department: 'HR',
-      designation: 'HR Manager',
-      joiningDate: '2022-06-20',
-      salary: 65000,
-      status: 'Active',
-      avatar: 'P'
-    },
-    {
-      id: 3,
-      name: 'Aditya Patel',
-      employeeId: 'EMP003',
-      email: 'aditya.patel@paradigmshift.com',
-      phone: '+91 98765 43212',
-      department: 'Sales',
-      designation: 'Sales Executive',
-      joiningDate: '2023-01-10',
-      salary: 50000,
-      status: 'Active',
-      avatar: 'A'
-    },
-    {
-      id: 4,
-      name: 'Mahin Khan',
-      employeeId: 'EMP004',
-      email: 'mahin.khan@paradigmshift.com',
-      phone: '+91 98765 43213',
-      department: 'Marketing',
-      designation: 'Marketing Lead',
-      joiningDate: '2022-09-05',
-      salary: 70000,
-      status: 'Active',
-      avatar: 'M'
-    },
-    {
-      id: 5,
-      name: 'Ishan Singh',
-      employeeId: 'EMP005',
-      email: 'ishan.singh@paradigmshift.com',
-      phone: '+91 98765 43214',
-      department: 'Finance',
-      designation: 'Financial Analyst',
-      joiningDate:  '2023-02-18',
-      salary: 60000,
-      status: 'Active',
-      avatar: 'I'
-    },
-    {
-      id: 6,
-      name: 'Priya Gupta',
-      employeeId: 'EMP006',
-      email: 'priya.gupta@paradigmshift.com',
-      phone: '+91 98765 43215',
-      department: 'IT',
-      designation: 'Team Lead',
-      joiningDate:  '2021-11-12',
-      salary: 80000,
-      status: 'Active',
-      avatar: 'P'
-    },
-    {
-      id: 7,
-      name: 'Arjun Reddy',
-      employeeId:  'EMP007',
-      email: 'arjun. reddy@paradigmshift.com',
-      phone: '+91 98765 43216',
-      department: 'R&D',
-      designation: 'Research Analyst',
-      joiningDate: '2023-04-22',
-      salary: 55000,
-      status: 'Active',
-      avatar: 'A'
-    },
-    {
-      id: 8,
-      name: 'Sneha Iyer',
-      employeeId:  'EMP008',
-      email: 'sneha.iyer@paradigmshift.com',
-      phone: '+91 98765 43217',
-      department: 'Support',
-      designation: 'Support Executive',
-      joiningDate: '2023-05-30',
-      salary: 45000,
-      status: 'Active',
-      avatar: 'S'
-    },
-    {
-      id: 9,
-      name: 'Rohan Kapoor',
-      employeeId:  'EMP009',
-      email: 'rohan.kapoor@paradigmshift.com',
-      phone: '+91 98765 43218',
-      department: 'Legal',
-      designation: 'Legal Advisor',
-      joiningDate: '2022-08-14',
-      salary: 72000,
-      status: 'Active',
-      avatar: 'R'
-    },
-    {
-      id: 10,
-      name: 'Ananya Desai',
-      employeeId: 'EMP010',
-      email: 'ananya.desai@paradigmshift.com',
-      phone: '+91 98765 43219',
-      department: 'Operations',
-      designation: 'Operations Manager',
-      joiningDate: '2022-07-25',
-      salary: 68000,
-      status: 'Active',
-      avatar: 'A'
-    },
-  ]);
-
+  const { employees } = useDataStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('All');
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const departments = ['All', 'IT', 'HR', 'Sales', 'Marketing', 'Finance', 'R&D', 'Support', 'Legal', 'Operations'];
 
   const filteredEmployees = employees.filter(emp => {
-    const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         emp.employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         emp.email. toLowerCase().includes(searchTerm. toLowerCase());
+    const term = searchTerm.toLowerCase();
+    const nameMatch = emp.name?.toLowerCase().includes(term) || false;
+    const idMatch = emp.employeeId?.toLowerCase().includes(term) || false;
+    const emailMatch = emp.email?.toLowerCase().includes(term) || false;
+    const matchesSearch = nameMatch || idMatch || emailMatch;
     const matchesDepartment = filterDepartment === 'All' || emp.department === filterDepartment;
     return matchesSearch && matchesDepartment;
   });
@@ -246,11 +118,11 @@ function Employees() {
             whileHover={{ scale: 1.03, y: -5 }}
           >
             <div className="employee-header">
-              <div className="employee-avatar-large">{employee.avatar}</div>
+              <div className="employee-avatar-large">{employee.avatar || (employee.name ? employee.name.charAt(0).toUpperCase() : '?')}</div>
               <div className="employee-basic-info">
                 <h3>{employee.name}</h3>
-                <p className="employee-id">{employee.employeeId}</p>
-                <span className="status-badge active">{employee.status}</span>
+                <p className="employee-id">{employee.employeeId || 'EMP'}</p>
+                <span className="status-badge active">{employee.status || 'Active'}</span>
               </div>
             </div>
 
@@ -259,7 +131,7 @@ function Employees() {
                 <span className="detail-icon">💼</span>
                 <div>
                   <span className="detail-label">Designation</span>
-                  <span className="detail-value">{employee. designation}</span>
+                  <span className="detail-value">{employee.designation || employee.role || 'Employee'}</span>
                 </div>
               </div>
 
@@ -275,7 +147,7 @@ function Employees() {
                 <span className="detail-icon">📧</span>
                 <div>
                   <span className="detail-label">Email</span>
-                  <span className="detail-value">{employee.email}</span>
+                  <span className="detail-value">{employee.email || 'N/A'}</span>
                 </div>
               </div>
 
@@ -291,7 +163,7 @@ function Employees() {
                 <span className="detail-icon">📅</span>
                 <div>
                   <span className="detail-label">Joining Date</span>
-                  <span className="detail-value">{new Date(employee.joiningDate).toLocaleDateString('en-IN')}</span>
+                  <span className="detail-value">{employee.joiningDate ? new Date(employee.joiningDate).toLocaleDateString('en-IN') : 'N/A'}</span>
                 </div>
               </div>
 
@@ -299,7 +171,7 @@ function Employees() {
                 <span className="detail-icon">💰</span>
                 <div>
                   <span className="detail-label">Salary</span>
-                  <span className="detail-value">₹{employee.salary. toLocaleString('en-IN')}</span>
+                  <span className="detail-value">₹{(employee.salary || 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
