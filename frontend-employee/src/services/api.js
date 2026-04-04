@@ -10,26 +10,35 @@ const api = axios.create({
 });
 
 // Request interceptor to add token
-api.interceptors.request. use(
+api.interceptors.request.use(
   (config) => {
-    const token = localStorage. getItem('token');
+    // Try localStorage first (set during login)
+    let token = localStorage.getItem('token');
+    // Fallback: read from Zustand persist
+    if (!token) {
+      try {
+        const authStorage = localStorage.getItem('auth-storage');
+        if (authStorage) {
+          const parsed = JSON.parse(authStorage);
+          token = parsed?.state?.token;
+        }
+      } catch (e) { /* ignore */ }
+    }
     if (token) {
-      config.headers. Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor for error handling
-api.interceptors. response.use(
+api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?. status === 401) {
+    if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('auth-storage');
       window.location.href = '/login';
     }
     return Promise.reject(error);
