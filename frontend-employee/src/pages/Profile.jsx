@@ -42,10 +42,10 @@ const Profile = () => {
     { title: 'Innovator', desc: '2 patents filed', icon: '💡', color: '#f97316' },
   ];
 
-  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
+  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
         style={{ ...cardStyle, background: 'linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(139,92,246,0.15) 50%, rgba(236,72,153,0.15) 100%)', marginBottom: '24px', padding: '40px' }}>
@@ -56,8 +56,8 @@ const Profile = () => {
           </motion.div>
           <div style={{ flex: 1, minWidth: '200px' }}>
             <h1 style={{ fontSize: '32px', fontWeight: '700', margin: '0 0 4px 0' }}>{profileData.name}</h1>
-            <p style={{ fontSize: '18px', color: '#94a3b8', margin: '0 0 12px 0' }}>{profileData.designation} · {profileData.department}</p>
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', fontSize: '14px', color: '#64748b' }}>
+            <p style={{ fontSize: '18px', color: 'var(--text-secondary)', margin: '0 0 12px 0' }}>{profileData.designation} · {profileData.department}</p>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', fontSize: '14px', color: 'var(--text-muted)' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Mail size={14} /> {profileData.email}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Phone size={14} /> {profileData.phone}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={14} /> {profileData.location}</span>
@@ -68,7 +68,7 @@ const Profile = () => {
             {isEditing ? <><Save size={18} /> Save</> : <><Edit3 size={18} /> Edit</>}
           </motion.button>
         </div>
-        <p style={{ marginTop: '20px', color: '#94a3b8', lineHeight: '1.7', fontSize: '15px' }}>{profileData.bio}</p>
+        <p style={{ marginTop: '20px', color: 'var(--text-secondary)', lineHeight: '1.7', fontSize: '15px' }}>{profileData.bio}</p>
       </motion.div>
 
       {/* Stats */}
@@ -81,7 +81,7 @@ const Profile = () => {
             </div>
             <div>
               <div style={{ fontSize: '28px', fontWeight: '700' }}>{stat.value}</div>
-              <div style={{ fontSize: '13px', color: '#64748b' }}>{stat.label}</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{stat.label}</div>
             </div>
           </motion.div>
         ))}
@@ -100,7 +100,7 @@ const Profile = () => {
                   <span>{skill.name}</span>
                   <span style={{ color: skill.color, fontWeight: '600' }}>{skill.level}%</span>
                 </div>
-                <div style={{ height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                <div style={{ height: '8px', borderRadius: '4px', background: 'var(--border-soft)', overflow: 'hidden' }}>
                   <motion.div initial={{ width: 0 }} animate={{ width: `${skill.level}%` }} transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
                     style={{ height: '100%', borderRadius: '4px', background: skill.color }} />
                 </div>
@@ -120,7 +120,7 @@ const Profile = () => {
                 <span style={{ fontSize: '28px' }}>{ach.icon}</span>
                 <div>
                   <div style={{ fontWeight: '600', fontSize: '14px' }}>{ach.title}</div>
-                  <div style={{ fontSize: '12px', color: '#64748b' }}>{ach.desc}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{ach.desc}</div>
                 </div>
               </motion.div>
             ))}

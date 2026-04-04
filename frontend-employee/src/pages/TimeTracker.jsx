@@ -65,11 +65,11 @@ const TimeTracker = () => {
     { label: 'Avg/Day', value: fmtDur(avgPerDay), sub: 'Over 7 days', color: '#f59e0b' },
   ];
 
-  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
-  const inputStyle = { width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#e2e8f0', fontSize: '14px', boxSizing: 'border-box' };
+  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
+  const inputStyle = { width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '14px', boxSizing: 'border-box' };
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
@@ -79,7 +79,7 @@ const TimeTracker = () => {
           </div>
           <div>
             <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Time Tracker</h1>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Track your work hours efficiently</p>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px' }}>Track your work hours efficiently</p>
           </div>
         </div>
         <button onClick={() => setShowAddModal(true)}
@@ -92,9 +92,9 @@ const TimeTracker = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '24px' }}>
         {statCards.map((s, i) => (
           <div key={i} style={{ ...cardStyle, padding: '20px' }}>
-            <div style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px' }}>{s.label}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{s.label}</div>
             <div style={{ fontSize: '26px', fontWeight: '700', color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: '12px', color: '#475569', marginTop: '4px' }}>{s.sub}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-faint)', marginTop: '4px' }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -102,10 +102,10 @@ const TimeTracker = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
         {/* Timer */}
         <div style={{ ...cardStyle, textAlign: 'center' }}>
-          <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(59,130,246,0.2))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: isRunning ? '3px solid #8b5cf6' : '3px solid rgba(255,255,255,0.1)', transition: 'border-color 0.3s' }}>
-            <Clock size={44} style={{ color: isRunning ? '#8b5cf6' : '#64748b' }} />
+          <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(59,130,246,0.2))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: isRunning ? '3px solid #8b5cf6' : '3px solid var(--btn-ghost-border)', transition: 'border-color 0.3s' }}>
+            <Clock size={44} style={{ color: isRunning ? '#8b5cf6' : 'var(--text-muted)' }} />
           </div>
-          <div style={{ fontSize: '48px', fontWeight: '700', fontFamily: 'monospace', letterSpacing: '4px', marginBottom: '20px', background: isRunning ? 'linear-gradient(135deg, #10b981, #34d399)' : 'linear-gradient(135deg, #e2e8f0, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <div style={{ fontSize: '48px', fontWeight: '700', fontFamily: 'monospace', letterSpacing: '4px', marginBottom: '20px', background: isRunning ? 'linear-gradient(135deg, #10b981, #34d399)' : 'linear-gradient(135deg, var(--text-primary), var(--text-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             {fmtTime(time)}
           </div>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
@@ -136,10 +136,10 @@ const TimeTracker = () => {
           </h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={weekChart}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
-              <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }}
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--btn-ghost-bg)" />
+              <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
+              <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
                 formatter={(val) => [`${val}h`, 'Hours']} />
               <Bar dataKey="hours" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
               <defs>
@@ -161,14 +161,14 @@ const TimeTracker = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {timeEntries.slice(0, 12).map((entry, i) => (
             <div key={entry.id} className="stat-card-smooth"
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transition: 'transform 0.15s' }}>
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', borderRadius: '14px', background: 'var(--surface-inset)', border: '1px solid var(--btn-ghost-bg)', transition: 'transform 0.15s' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6' }}>
                   <Clock size={20} />
                 </div>
                 <div>
                   <div style={{ fontWeight: '600', fontSize: '14px' }}>{entry.task}</div>
-                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{entry.project} · {entry.date}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{entry.project} · {entry.date}</div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -180,7 +180,7 @@ const TimeTracker = () => {
               </div>
             </div>
           ))}
-          {timeEntries.length === 0 && <p style={{ color: '#64748b', textAlign: 'center', padding: '30px' }}>No entries yet. Start the timer or add a manual entry!</p>}
+          {timeEntries.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '30px' }}>No entries yet. Start the timer or add a manual entry!</p>}
         </div>
       </div>
 
@@ -193,7 +193,7 @@ const TimeTracker = () => {
               style={{ ...cardStyle, width: '100%', maxWidth: '440px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
                 <h2 style={{ margin: 0, fontSize: '22px' }}>Add Manual Entry</h2>
-                <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
+                <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <input placeholder="Task name" value={manualEntry.task} onChange={e => setManualEntry(p => ({ ...p, task: e.target.value }))} style={inputStyle} />

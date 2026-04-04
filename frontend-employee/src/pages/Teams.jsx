@@ -46,7 +46,7 @@ const Teams = () => {
     setNewTeam({ name: '', description: '' });
   };
 
-  const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#e2e8f0', fontSize: '14px', outline: 'none', boxSizing: 'border-box' };
+  const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' };
 
   return (
     <div className="teams-container dark">
@@ -66,7 +66,7 @@ const Teams = () => {
             whileHover={{ y: -5, scale: 1.02 }} style={{ borderColor: `${team.color}40` }} onClick={() => setSelectedTeam(team)}>
             <div className="team-card-header">
               <div className="team-icon" style={{ backgroundColor: `${team.color}20` }}>{team.icon}</div>
-              <button className="team-menu" onClick={e => e.stopPropagation()} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}>⋮</button>
+              <button className="team-menu" onClick={e => e.stopPropagation()} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>⋮</button>
             </div>
             <h3 style={{ color: team.color }}>{team.name}</h3>
             <p className="team-description">{team.description}</p>
@@ -90,42 +90,42 @@ const Teams = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedTeam(null)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(8px)', padding: '20px' }}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}
-              style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '640px', color: '#e2e8f0', maxHeight: '80vh', overflowY: 'auto' }}>
+              style={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '640px', color: 'var(--text-primary)', maxHeight: '80vh', overflowY: 'auto' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <span style={{ fontSize: '36px' }}>{selectedTeam.icon}</span>
-                  <div><h2 style={{ margin: 0, color: selectedTeam.color }}>{selectedTeam.name}</h2><p style={{ margin: '4px 0 0', color: '#64748b' }}>{selectedTeam.description}</p></div>
+                  <div><h2 style={{ margin: 0, color: selectedTeam.color }}>{selectedTeam.name}</h2><p style={{ margin: '4px 0 0', color: 'var(--text-muted)' }}>{selectedTeam.description}</p></div>
                 </div>
-                <button onClick={() => setSelectedTeam(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={24} /></button>
+                <button onClick={() => setSelectedTeam(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={24} /></button>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '24px' }}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: selectedTeam.color }}>{selectedTeam.members}</div><div style={{ fontSize: '12px', color: '#64748b' }}>Members</div>
+                <div style={{ background: 'var(--surface-inset)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: selectedTeam.color }}>{selectedTeam.members}</div><div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Members</div>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981' }}>{selectedTeam.projects}</div><div style={{ fontSize: '12px', color: '#64748b' }}>Projects</div>
+                <div style={{ background: 'var(--surface-inset)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981' }}>{selectedTeam.projects}</div><div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Projects</div>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#f59e0b' }}>{selectedTeam.progress}%</div><div style={{ fontSize: '12px', color: '#64748b' }}>Progress</div>
+                <div style={{ background: 'var(--surface-inset)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#f59e0b' }}>{selectedTeam.progress}%</div><div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Progress</div>
                 </div>
               </div>
               <h3 style={{ fontSize: '16px', marginBottom: '16px' }}>Team Members</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {teamMembers.map(member => (
                   <motion.div key={member.id} whileHover={{ x: 5 }} onClick={() => setSelectedMember(member)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', background: 'var(--surface-inset)', borderRadius: '14px', border: '1px solid var(--btn-ghost-bg)', cursor: 'pointer' }}>
                     <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: `linear-gradient(135deg, ${selectedTeam.color}, ${selectedTeam.color}88)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '14px', flexShrink: 0 }}>
                       {member.name.split(' ').map(w => w[0]).join('')}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: '600', fontSize: '14px' }}>{member.name}</div>
-                      <div style={{ fontSize: '12px', color: '#64748b' }}>{member.role}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{member.role}</div>
                     </div>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: statusColors[member.status] }} title={member.status} />
-                    <ChevronRight size={16} style={{ color: '#64748b' }} />
+                    <ChevronRight size={16} style={{ color: 'var(--text-muted)' }} />
                   </motion.div>
                 ))}
-                {teamMembers.length === 0 && <p style={{ color: '#64748b', textAlign: 'center', padding: '20px' }}>No members in this team yet</p>}
+                {teamMembers.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '20px' }}>No members in this team yet</p>}
               </div>
             </motion.div>
           </motion.div>
@@ -138,14 +138,14 @@ const Teams = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedMember(null)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, backdropFilter: 'blur(8px)' }}>
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}
-              style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '440px', color: '#e2e8f0' }}>
-              <button onClick={() => setSelectedMember(null)} style={{ position: 'absolute', right: '16px', top: '16px', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
+              style={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '440px', color: 'var(--text-primary)' }}>
+              <button onClick={() => setSelectedMember(null)} style={{ position: 'absolute', right: '16px', top: '16px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '28px', margin: '0 auto 16px', boxShadow: '0 8px 32px rgba(59,130,246,0.3)' }}>
                   {selectedMember.name.split(' ').map(w => w[0]).join('')}
                 </div>
                 <h2 style={{ margin: '0 0 4px' }}>{selectedMember.name}</h2>
-                <p style={{ color: '#94a3b8', margin: 0 }}>{selectedMember.role}</p>
+                <p style={{ color: 'var(--text-secondary)', margin: 0 }}>{selectedMember.role}</p>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
                   {[...Array(5)].map((_, i) => <Star key={i} size={16} fill={i < Math.round(selectedMember.rating) ? '#f59e0b' : 'none'} color={i < Math.round(selectedMember.rating) ? '#f59e0b' : '#4a5568'} />)}
                   <span style={{ marginLeft: '6px', fontSize: '14px', color: '#f59e0b' }}>{selectedMember.rating}</span>
@@ -158,13 +158,13 @@ const Teams = () => {
                   { icon: MapPin, label: selectedMember.location },
                   { icon: Users, label: selectedMember.team },
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px' }}>
-                    <item.icon size={16} style={{ color: '#64748b' }} /><span style={{ fontSize: '14px' }}>{item.label}</span>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'var(--surface-inset)', borderRadius: '10px' }}>
+                    <item.icon size={16} style={{ color: 'var(--text-muted)' }} /><span style={{ fontSize: '14px' }}>{item.label}</span>
                   </div>
                 ))}
               </div>
               <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '10px' }}>Skills</h4>
+                <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px' }}>Skills</h4>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {selectedMember.skills.map((skill, i) => <span key={i} style={{ padding: '6px 14px', borderRadius: '8px', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', fontSize: '13px', fontWeight: '500' }}>{skill}</span>)}
                 </div>
@@ -184,17 +184,17 @@ const Teams = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCreateModal(false)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(8px)' }}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}
-              style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '440px', color: '#e2e8f0' }}>
+              style={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '440px', color: 'var(--text-primary)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
                 <h2 style={{ margin: 0 }}>Create Team</h2>
-                <button onClick={() => setShowCreateModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={24} /></button>
+                <button onClick={() => setShowCreateModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={24} /></button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div><label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Team Name *</label><input value={newTeam.name} onChange={e => setNewTeam({ ...newTeam, name: e.target.value })} placeholder="e.g. Mobile Development" style={inputStyle} /></div>
-                <div><label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Description</label><textarea value={newTeam.description} onChange={e => setNewTeam({ ...newTeam, description: e.target.value })} placeholder="What does this team do?" rows="3" style={{ ...inputStyle, resize: 'vertical' }} /></div>
+                <div><label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Team Name *</label><input value={newTeam.name} onChange={e => setNewTeam({ ...newTeam, name: e.target.value })} placeholder="e.g. Mobile Development" style={inputStyle} /></div>
+                <div><label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Description</label><textarea value={newTeam.description} onChange={e => setNewTeam({ ...newTeam, description: e.target.value })} placeholder="What does this team do?" rows="3" style={{ ...inputStyle, resize: 'vertical' }} /></div>
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-                <motion.button whileHover={{ scale: 1.02 }} onClick={() => setShowCreateModal(false)} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Cancel</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} onClick={() => setShowCreateModal(false)} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Cancel</motion.button>
                 <motion.button whileHover={{ scale: 1.02 }} onClick={handleCreateTeam} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', color: '#fff', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Create Team</motion.button>
               </div>
             </motion.div>

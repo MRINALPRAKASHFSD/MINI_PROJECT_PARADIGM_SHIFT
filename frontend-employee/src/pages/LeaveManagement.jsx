@@ -48,14 +48,14 @@ const LeaveManagement = () => {
     setForm({ type: 'Casual Leave', from: '', to: '', reason: '' });
   };
 
-  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
+  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
   const tabStyle = (active) => ({
     padding: '10px 24px', borderRadius: '12px', border: 'none', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s',
-    background: active ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'rgba(255,255,255,0.05)', color: active ? '#fff' : '#94a3b8',
+    background: active ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'var(--btn-ghost-bg)', color: active ? '#fff' : 'var(--text-secondary)',
   });
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
@@ -65,7 +65,7 @@ const LeaveManagement = () => {
           </div>
           <div>
             <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Leave Management</h1>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Apply and track your leaves</p>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px' }}>Apply and track your leaves</p>
           </div>
         </div>
         <button onClick={() => setShowModal(true)}
@@ -96,10 +96,10 @@ const LeaveManagement = () => {
                   <span style={{ fontSize: '28px', fontWeight: '700', color: b.color }}>{remaining}</span>
                 </div>
                 <div style={{ fontWeight: '600', fontSize: '15px', marginBottom: '8px' }}>{b.label}</div>
-                <div style={{ height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: '8px' }}>
+                <div style={{ height: '6px', borderRadius: '3px', background: 'var(--border-soft)', overflow: 'hidden', marginBottom: '8px' }}>
                   <div style={{ height: '100%', borderRadius: '3px', background: b.color, width: `${pct}%`, transition: 'width 0.8s ease' }} />
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-muted)' }}>
                   <span>{b.used} used</span>
                   <span>{b.total} total</span>
                 </div>
@@ -118,11 +118,11 @@ const LeaveManagement = () => {
               {leaves.slice(0, 5).map((leave, i) => {
                 const badge = STATUS_BADGE[leave.status];
                 return (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderRadius: '14px', background: 'var(--surface-inset)', border: '1px solid var(--btn-ghost-bg)' }}>
                     <div>
                       <div style={{ fontWeight: '600', fontSize: '14px' }}>{leave.type}</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{leave.from}{leave.from !== leave.to ? ` → ${leave.to}` : ''} · {leave.days} day{leave.days > 1 ? 's' : ''}</div>
-                      <div style={{ fontSize: '12px', color: '#475569', marginTop: '4px' }}>{leave.reason}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{leave.from}{leave.from !== leave.to ? ` → ${leave.to}` : ''} · {leave.days} day{leave.days > 1 ? 's' : ''}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-faint)', marginTop: '4px' }}>{leave.reason}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', padding: '6px 12px', borderRadius: '10px', background: badge.bg, color: badge.color }}>
@@ -138,26 +138,26 @@ const LeaveManagement = () => {
                   </div>
                 );
               })}
-              {leaves.length === 0 && <p style={{ color: '#64748b', textAlign: 'center', padding: '20px' }}>No leave applications yet</p>}
+              {leaves.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '20px' }}>No leave applications yet</p>}
             </div>
           </div>
           <div style={cardStyle}>
             <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600' }}>Leave Policy</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {LEAVE_TYPES.map((lt, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px', borderRadius: '14px', background: 'var(--surface-inset)', border: '1px solid var(--btn-ghost-bg)' }}>
                   <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: `${lt.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: lt.color }}>
                     <lt.icon size={20} />
                   </div>
                   <div>
                     <div style={{ fontWeight: '600', fontSize: '14px' }}>{lt.key}</div>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{lt.desc}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{lt.desc}</div>
                   </div>
                 </div>
               ))}
               <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.15)', marginTop: '8px' }}>
                 <h4 style={{ margin: '0 0 8px', fontSize: '14px', color: '#3b82f6' }}>📝 Important Notes</h4>
-                <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '13px', color: '#94a3b8', lineHeight: '1.8' }}>
+                <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.8' }}>
                   <li>Casual leaves cannot be carried forward</li>
                   <li>Sick leave beyond 3 days requires medical certificate</li>
                   <li>Earned leaves can be encashed at year-end</li>
@@ -173,26 +173,26 @@ const LeaveManagement = () => {
       {tab === 'history' && (
         <div style={cardStyle}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {leaves.length === 0 && <p style={{ color: '#64748b', textAlign: 'center', padding: '40px' }}>No leave history</p>}
+            {leaves.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>No leave history</p>}
             {leaves.map((leave, i) => {
               const badge = STATUS_BADGE[leave.status];
               return (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 20px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 20px', borderRadius: '14px', background: 'var(--surface-inset)', border: '1px solid var(--btn-ghost-bg)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: `${badge.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: badge.color }}>
                       <badge.icon size={22} />
                     </div>
                     <div>
                       <div style={{ fontWeight: '600', fontSize: '15px' }}>{leave.type}</div>
-                      <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>{leave.from}{leave.from !== leave.to ? ` → ${leave.to}` : ''}</div>
-                      <div style={{ fontSize: '12px', color: '#475569', marginTop: '4px' }}>{leave.reason}</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>{leave.from}{leave.from !== leave.to ? ` → ${leave.to}` : ''}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-faint)', marginTop: '4px' }}>{leave.reason}</div>
                     </div>
                   </div>
                   <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', padding: '6px 14px', borderRadius: '10px', background: badge.bg, color: badge.color }}>
                       <badge.icon size={14} /> {badge.label}
                     </span>
-                    <span style={{ fontSize: '11px', color: '#64748b' }}>{leave.days} day{leave.days > 1 ? 's' : ''} · {formatDistanceToNow(new Date(leave.appliedAt), { addSuffix: true })}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{leave.days} day{leave.days > 1 ? 's' : ''} · {formatDistanceToNow(new Date(leave.appliedAt), { addSuffix: true })}</span>
                   </div>
                 </div>
               );
@@ -204,11 +204,11 @@ const LeaveManagement = () => {
       {/* Calendar View */}
       {tab === 'calendar' && (
         <div style={cardStyle}>
-          <p style={{ color: '#94a3b8', textAlign: 'center', padding: '40px' }}>
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '40px' }}>
             <Calendar size={48} style={{ color: '#334155', marginBottom: '16px', display: 'block', margin: '0 auto 16px' }} />
             Leave calendar view shows your approved leaves and holidays for the current year.
             <br /><br />
-            <span style={{ fontSize: '14px', color: '#64748b' }}>
+            <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
               You have <strong style={{ color: '#10b981' }}>{leaves.filter(l => l.status === 'approved').length}</strong> approved leaves
               and <strong style={{ color: '#f59e0b' }}>{leaves.filter(l => l.status === 'pending').length}</strong> pending applications.
             </span>
@@ -228,17 +228,17 @@ const LeaveManagement = () => {
               <div style={{ minWidth: '400px', maxWidth: '500px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                   <h2 style={{ margin: 0, fontSize: '22px' }}>Apply for Leave</h2>
-                  <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
+                  <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
                 </div>
 
                 {/* Leave Type Selector */}
-                <label style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600', display: 'block', marginBottom: '8px' }}>Leave Type</label>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', display: 'block', marginBottom: '8px' }}>Leave Type</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '20px' }}>
                   {LEAVE_TYPES.map(lt => (
                     <button key={lt.key} onClick={() => setForm({ ...form, type: lt.key })}
                       style={{
-                        padding: '14px', borderRadius: '12px', border: form.type === lt.key ? `2px solid ${lt.color}` : '1px solid rgba(255,255,255,0.08)',
-                        background: form.type === lt.key ? `${lt.color}10` : 'rgba(255,255,255,0.03)', cursor: 'pointer', color: '#e2e8f0',
+                        padding: '14px', borderRadius: '12px', border: form.type === lt.key ? `2px solid ${lt.color}` : '1px solid var(--btn-ghost-border)',
+                        background: form.type === lt.key ? `${lt.color}10` : 'var(--surface-inset)', cursor: 'pointer', color: 'var(--text-primary)',
                         display: 'flex', alignItems: 'center', gap: '10px', transition: 'all 0.2s',
                       }}>
                       <lt.icon size={18} style={{ color: lt.color }} />
@@ -250,21 +250,21 @@ const LeaveManagement = () => {
                 {/* Date Fields */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                   <div>
-                    <label style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600', display: 'block', marginBottom: '6px' }}>From</label>
+                    <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', display: 'block', marginBottom: '6px' }}>From</label>
                     <input type="date" value={form.from} onChange={e => setForm({ ...form, from: e.target.value })}
-                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#e2e8f0', fontSize: '14px', boxSizing: 'border-box' }} />
+                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '14px', boxSizing: 'border-box' }} />
                   </div>
                   <div>
-                    <label style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600', display: 'block', marginBottom: '6px' }}>To</label>
+                    <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', display: 'block', marginBottom: '6px' }}>To</label>
                     <input type="date" value={form.to} onChange={e => setForm({ ...form, to: e.target.value })}
-                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#e2e8f0', fontSize: '14px', boxSizing: 'border-box' }} />
+                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '14px', boxSizing: 'border-box' }} />
                   </div>
                 </div>
 
                 {/* Reason */}
-                <label style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600', display: 'block', marginBottom: '6px' }}>Reason</label>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', display: 'block', marginBottom: '6px' }}>Reason</label>
                 <textarea value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} rows={3} placeholder="Describe your reason..."
-                  style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#e2e8f0', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                  style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
 
                 {/* Days Preview */}
                 {form.from && form.to && (

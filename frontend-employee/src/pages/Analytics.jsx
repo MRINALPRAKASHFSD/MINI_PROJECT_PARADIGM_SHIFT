@@ -73,10 +73,10 @@ const Analytics = () => {
     { skill: 'Leadership', score: 78, color: '#eab308' },
   ];
 
-  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
+  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
@@ -86,13 +86,13 @@ const Analytics = () => {
           </div>
           <div>
             <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Analytics</h1>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Your performance insights</p>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px' }}>Your performance insights</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           {['week', 'month', 'year'].map(r => (
             <button key={r} onClick={() => setTimeRange(r)}
-              style={{ padding: '8px 20px', borderRadius: '10px', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: timeRange === r ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'rgba(255,255,255,0.05)', color: timeRange === r ? '#fff' : '#94a3b8', textTransform: 'capitalize', transition: 'all 0.2s' }}>
+              style={{ padding: '8px 20px', borderRadius: '10px', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: timeRange === r ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'var(--btn-ghost-bg)', color: timeRange === r ? '#fff' : 'var(--text-secondary)', textTransform: 'capitalize', transition: 'all 0.2s' }}>
               {r}
             </button>
           ))}
@@ -110,7 +110,7 @@ const Analytics = () => {
               <span style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '8px', fontWeight: '600', background: 'rgba(16,185,129,0.15)', color: '#10b981' }}>{stat.change}</span>
             </div>
             <div style={{ fontSize: '28px', fontWeight: '700' }}>{stat.value}</div>
-            <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>{stat.label}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label}</div>
           </div>
         ))}
       </div>
@@ -123,10 +123,10 @@ const Analytics = () => {
           </h3>
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={productivityTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--btn-ghost-bg)" />
+              <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }} />
               <defs>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
@@ -145,10 +145,10 @@ const Analytics = () => {
           </h3>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={weeklyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
-              <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }}
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--btn-ghost-bg)" />
+              <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
+              <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
                 formatter={(v) => [`${v}h`, 'Hours']} />
               <Bar dataKey="hours" radius={[6, 6, 0, 0]}>
                 {weeklyData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
@@ -170,7 +170,7 @@ const Analytics = () => {
                   <Pie data={projectPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="hours" nameKey="name" paddingAngle={2}>
                     {projectPie.map((p, i) => <Cell key={i} fill={p.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }}
+                  <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
                     formatter={(v) => [`${v}h`, 'Hours']} />
                 </PieChart>
               </ResponsiveContainer>
@@ -181,12 +181,12 @@ const Analytics = () => {
                       <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: p.color }} />
                       <span>{p.name}</span>
                     </div>
-                    <span style={{ color: '#94a3b8', fontWeight: '600' }}>{p.hours}h ({p.percentage}%)</span>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>{p.hours}h ({p.percentage}%)</span>
                   </div>
                 ))}
               </div>
             </>
-          ) : <p style={{ color: '#64748b', textAlign: 'center', padding: '40px' }}>No data yet</p>}
+          ) : <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>No data yet</p>}
         </div>
 
         {/* Task Status */}
@@ -199,7 +199,7 @@ const Analytics = () => {
                   <Pie data={taskStatusPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name" paddingAngle={2}>
                     {taskStatusPie.map((s, i) => <Cell key={i} fill={s.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#e2e8f0' }} />
+                  <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }} />
                 </PieChart>
               </ResponsiveContainer>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
@@ -209,12 +209,12 @@ const Analytics = () => {
                       <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: s.color }} />
                       <span>{s.name}</span>
                     </div>
-                    <span style={{ color: '#94a3b8', fontWeight: '600' }}>{s.value} tasks</span>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>{s.value} tasks</span>
                   </div>
                 ))}
               </div>
             </>
-          ) : <p style={{ color: '#64748b', textAlign: 'center', padding: '40px' }}>No tasks</p>}
+          ) : <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>No tasks</p>}
         </div>
 
         {/* Skills Radar (as bars) */}
@@ -229,7 +229,7 @@ const Analytics = () => {
                   <span>{skill.skill}</span>
                   <span style={{ color: skill.color, fontWeight: '600' }}>{skill.score}%</span>
                 </div>
-                <div style={{ height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                <div style={{ height: '8px', borderRadius: '4px', background: 'var(--border-soft)', overflow: 'hidden' }}>
                   <div style={{ height: '100%', borderRadius: '4px', background: skill.color, width: `${skill.score}%`, transition: 'width 1s ease' }} />
                 </div>
               </div>

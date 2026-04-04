@@ -66,7 +66,7 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
   };
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Page header — not a card, just text */}
       <div style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
@@ -74,14 +74,14 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
             <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 6px' }}>
               Salary & Payslips
             </h1>
-            <p style={{ color: '#64748b', margin: 0, fontSize: '14px', maxWidth: '500px', lineHeight: '1.6' }}>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '14px', maxWidth: '500px', lineHeight: '1.6' }}>
               Your compensation details and monthly payslips. Download any payslip for your records or tax filing.
             </p>
           </div>
           <select
             value={selectedYear}
             onChange={e => setSelectedYear(e.target.value)}
-            style={{ padding: '10px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', cursor: 'pointer', outline: 'none' }}
+            style={{ padding: '10px 16px', borderRadius: '10px', background: 'var(--border-soft)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', cursor: 'pointer', outline: 'none' }}
           >
             <option value="2026">FY 2025-26</option>
             <option value="2025">FY 2024-25</option>
@@ -97,45 +97,45 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
               <Wallet size={22} color="#10b981" />
             </div>
             <div>
-              <div style={{ fontSize: '12px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>YTD Net Pay</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>YTD Net Pay</div>
               <div style={{ fontSize: '26px', fontWeight: '700', color: '#10b981' }}>₹{ytdNet.toLocaleString('en-IN')}</div>
             </div>
           </div>
-          <div style={{ fontSize: '13px', color: '#64748b' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
             Across {filteredSlips.length} month{filteredSlips.length !== 1 ? 's' : ''} in {selectedYear}
           </div>
         </div>
 
-        <div style={{ background: 'rgba(15,23,42,0.55)', borderRadius: '14px', padding: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: '14px', padding: '20px', border: '1px solid var(--btn-ghost-bg)' }}>
           <ArrowUpRight size={18} color="#3b82f6" style={{ marginBottom: '8px' }} />
-          <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Gross Earned</div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Gross Earned</div>
           <div style={{ fontSize: '20px', fontWeight: '700' }}>₹{ytdGross.toLocaleString('en-IN')}</div>
         </div>
 
-        <div style={{ background: 'rgba(15,23,42,0.55)', borderRadius: '14px', padding: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: '14px', padding: '20px', border: '1px solid var(--btn-ghost-bg)' }}>
           <ArrowDownRight size={18} color="#ef4444" style={{ marginBottom: '8px' }} />
-          <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Total Deductions</div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Total Deductions</div>
           <div style={{ fontSize: '20px', fontWeight: '700', color: '#f87171' }}>₹{ytdDeductions.toLocaleString('en-IN')}</div>
         </div>
 
-        <div style={{ background: 'rgba(15,23,42,0.55)', borderRadius: '14px', padding: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: '14px', padding: '20px', border: '1px solid var(--btn-ghost-bg)' }}>
           <TrendingUp size={18} color="#a855f7" style={{ marginBottom: '8px' }} />
-          <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Avg Monthly</div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Avg Monthly</div>
           <div style={{ fontSize: '20px', fontWeight: '700' }}>₹{avgMonthly.toLocaleString('en-IN')}</div>
         </div>
       </div>
 
       {/* Payslip List */}
-      <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-        <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ background: 'var(--surface-panel)', borderRadius: '18px', border: '1px solid var(--btn-ghost-bg)', overflow: 'hidden' }}>
+        <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--btn-ghost-bg)' }}>
           <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Receipt size={18} color="#64748b" />
+            <Receipt size={18} color="var(--text-muted)" />
             Monthly Payslips
           </h3>
         </div>
 
         {filteredSlips.length === 0 && (
-          <div style={{ padding: '48px 24px', textAlign: 'center', color: '#64748b' }}>
+          <div style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--text-muted)' }}>
             No payslips found for {selectedYear}. Check back later!
           </div>
         )}
@@ -146,7 +146,7 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
           const isExpanded = expandedSlip === slip.id;
 
           return (
-            <div key={slip.id} style={{ borderBottom: i < filteredSlips.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+            <div key={slip.id} style={{ borderBottom: i < filteredSlips.length - 1 ? '1px solid var(--surface-inset)' : 'none' }}>
               {/* Summary row */}
               <div
                 onClick={() => setExpandedSlip(isExpanded ? null : slip.id)}
@@ -160,20 +160,20 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
                   </div>
                   <div>
                     <div style={{ fontWeight: '600', fontSize: '15px' }}>{slip.month}</div>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Credited on {new Date(slip.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>Credited on {new Date(slip.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '17px', fontWeight: '700', color: '#10b981' }}>₹{slip.netPay.toLocaleString('en-IN')}</div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>Net Pay</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Net Pay</div>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); handleDownload(slip); }}
                     style={{ padding: '8px 14px', borderRadius: '8px', background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60a5fa', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
                     <Download size={14} /> Download
                   </button>
-                  {isExpanded ? <ChevronUp size={18} color="#64748b" /> : <ChevronDown size={18} color="#64748b" />}
+                  {isExpanded ? <ChevronUp size={18} color="var(--text-muted)" /> : <ChevronDown size={18} color="var(--text-muted)" />}
                 </div>
               </div>
 
@@ -189,8 +189,8 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
                       ['Dearness Allowance', slip.da],
                       ['Special Allowance', slip.special],
                     ].map(([label, val]) => (
-                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                        <span style={{ color: '#94a3b8' }}>{label}</span>
+                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: '13px', borderBottom: '1px solid var(--surface-inset)' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
                         <span style={{ fontWeight: '500' }}>₹{val.toLocaleString('en-IN')}</span>
                       </div>
                     ))}
@@ -209,8 +209,8 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
                       ['Professional Tax', slip.pt],
                       ['Health Insurance', slip.insurance],
                     ].map(([label, val]) => (
-                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                        <span style={{ color: '#94a3b8' }}>{label}</span>
+                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: '13px', borderBottom: '1px solid var(--surface-inset)' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
                         <span style={{ fontWeight: '500', color: '#fca5a5' }}>- ₹{val.toLocaleString('en-IN')}</span>
                       </div>
                     ))}
@@ -227,7 +227,7 @@ Generated on ${new Date().toLocaleDateString('en-IN')}
       </div>
 
       {/* Bottom note — casual, human touch */}
-      <p style={{ color: '#475569', fontSize: '13px', marginTop: '20px', lineHeight: '1.6', textAlign: 'center' }}>
+      <p style={{ color: 'var(--text-faint)', fontSize: '13px', marginTop: '20px', lineHeight: '1.6', textAlign: 'center' }}>
         Having trouble with your salary? Reach out to HR at <span style={{ color: '#60a5fa' }}>hr@paradigmshift.in</span> or ping Vikram on Slack.
       </p>
     </div>

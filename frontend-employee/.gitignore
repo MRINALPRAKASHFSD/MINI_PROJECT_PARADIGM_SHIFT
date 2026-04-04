@@ -40,3 +40,4 @@ lerna-debug.log*
 # OS
 Thumbs.db
 . cache/" > .gitignore
+.vercel

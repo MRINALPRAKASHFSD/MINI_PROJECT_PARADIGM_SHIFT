@@ -24,15 +24,15 @@ const Notifications = () => {
 
   const unread = notifications.filter(n => !n.read).length;
 
-  const cardStyle = { background: 'rgba(15,23,42,0.6)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.06)' };
+  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
   const filterBtnStyle = (active) => ({
     padding: '8px 18px', borderRadius: '12px', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s',
-    background: active ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'rgba(255,255,255,0.05)',
-    color: active ? '#fff' : '#94a3b8',
+    background: active ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'var(--btn-ghost-bg)',
+    color: active ? '#fff' : 'var(--text-secondary)',
   });
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
@@ -42,7 +42,7 @@ const Notifications = () => {
           </div>
           <div>
             <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Notifications</h1>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>{unread} unread notification{unread !== 1 ? 's' : ''}</p>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px' }}>{unread} unread notification{unread !== 1 ? 's' : ''}</p>
           </div>
         </div>
         {unread > 0 && (
@@ -73,8 +73,8 @@ const Notifications = () => {
         {filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <BellOff size={48} style={{ color: '#334155', marginBottom: '16px' }} />
-            <h3 style={{ color: '#64748b', margin: '0 0 8px' }}>No notifications</h3>
-            <p style={{ color: '#475569', fontSize: '14px', margin: 0 }}>You're all caught up!</p>
+            <h3 style={{ color: 'var(--text-muted)', margin: '0 0 8px' }}>No notifications</h3>
+            <p style={{ color: 'var(--text-faint)', fontSize: '14px', margin: 0 }}>You're all caught up!</p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -86,7 +86,7 @@ const Notifications = () => {
                   className="stat-card-smooth"
                   style={{
                     display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '18px 16px', cursor: 'pointer',
-                    borderBottom: i < filtered.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                    borderBottom: i < filtered.length - 1 ? '1px solid var(--surface-inset)' : 'none',
                     background: notif.read ? 'transparent' : 'rgba(59,130,246,0.04)',
                     transition: 'background 0.2s',
                   }}>
@@ -100,9 +100,9 @@ const Notifications = () => {
                       <span style={{ fontWeight: notif.read ? '500' : '700', fontSize: '15px' }}>{notif.title}</span>
                       {!notif.read && <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', flexShrink: 0 }} />}
                     </div>
-                    <p style={{ margin: '0 0 6px', color: '#94a3b8', fontSize: '13px', lineHeight: '1.5' }}>{notif.message}</p>
+                    <p style={{ margin: '0 0 6px', color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5' }}>{notif.message}</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>{formatDistanceToNow(new Date(notif.createdAt), { addSuffix: true })}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{formatDistanceToNow(new Date(notif.createdAt), { addSuffix: true })}</span>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         {!notif.read && (
                           <button onClick={e => { e.stopPropagation(); markRead(notif.id); }}
@@ -111,7 +111,7 @@ const Notifications = () => {
                           </button>
                         )}
                         <button onClick={e => { e.stopPropagation(); clearNotification(notif.id); }}
-                          style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }} title="Dismiss">
+                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }} title="Dismiss">
                           <Trash2 size={14} />
                         </button>
                       </div>

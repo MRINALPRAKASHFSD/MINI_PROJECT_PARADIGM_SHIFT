@@ -43,12 +43,12 @@ const Expenses = () => {
   };
 
   return (
-    <div style={{ padding: '24px', color: '#e2e8f0', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header section — text only, no card wrapper */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 6px' }}>Expense Claims</h1>
-          <p style={{ color: '#64748b', margin: 0, fontSize: '14px', lineHeight: '1.5' }}>
+          <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '14px', lineHeight: '1.5' }}>
             Submit claims for work-related expenses. Approved amounts are reimbursed in next month's salary.
           </p>
         </div>
@@ -60,16 +60,16 @@ const Expenses = () => {
 
       {/* Quick stats — three different sized cards */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '24px' }}>
-        <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #10b981' }}>
-          <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Approved & Reimbursed</div>
+        <div style={{ background: 'var(--surface-panel)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #10b981' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Approved & Reimbursed</div>
           <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981' }}>₹{totalApproved.toLocaleString('en-IN')}</div>
         </div>
-        <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #f59e0b' }}>
-          <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Pending Approval</div>
+        <div style={{ background: 'var(--surface-panel)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #f59e0b' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Pending Approval</div>
           <div style={{ fontSize: '24px', fontWeight: '700', color: '#f59e0b' }}>₹{totalPending.toLocaleString('en-IN')}</div>
         </div>
-        <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #a855f7' }}>
-          <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>This Month Total</div>
+        <div style={{ background: 'var(--surface-panel)', borderRadius: '14px', padding: '20px', borderLeft: '4px solid #a855f7' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>This Month Total</div>
           <div style={{ fontSize: '24px', fontWeight: '700' }}>₹{totalThisMonth.toLocaleString('en-IN')}</div>
         </div>
       </div>
@@ -77,16 +77,16 @@ const Expenses = () => {
       {/* Search + Filter row */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-          <Search size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+          <Search size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input type="text" placeholder="Search expenses..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-            style={{ width: '100%', padding: '10px 14px 10px 38px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#e2e8f0', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+            style={{ width: '100%', padding: '10px 14px 10px 38px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
         </div>
         {['all', 'approved', 'pending', 'rejected'].map(f => (
           <button key={f} onClick={() => setFilter(f)}
             style={{
               padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', border: 'none',
-              background: filter === f ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.04)',
-              color: filter === f ? '#60a5fa' : '#94a3b8',
+              background: filter === f ? 'rgba(59,130,246,0.2)' : 'var(--surface-inset)',
+              color: filter === f ? '#60a5fa' : 'var(--text-secondary)',
             }}>
             {f === 'all' ? `All (${expenses.length})` : `${f.charAt(0).toUpperCase() + f.slice(1)} (${expenses.filter(e => e.status === f).length})`}
           </button>
@@ -96,7 +96,7 @@ const Expenses = () => {
       {/* Expense list */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {filteredExpenses.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '48px', color: '#64748b', background: 'rgba(15,23,42,0.4)', borderRadius: '16px' }}>
+          <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)', background: 'var(--surface-panel)', borderRadius: '16px' }}>
             {searchTerm ? 'No expenses match your search.' : 'No expenses yet. Submit your first claim! ✨'}
           </div>
         )}
@@ -109,9 +109,9 @@ const Expenses = () => {
 
           return (
             <div key={expense.id}
-              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 20px', background: 'rgba(15,23,42,0.45)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.15s' }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(15,23,42,0.65)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'rgba(15,23,42,0.45)'}
+              style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 20px', background: 'var(--surface-panel)', borderRadius: '14px', border: '1px solid var(--surface-inset)', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-panel)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'var(--surface-panel)'}
             >
               {/* Category icon */}
               <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -121,7 +121,7 @@ const Expenses = () => {
               {/* Details */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '3px' }}>{expense.title}</div>
-                <div style={{ fontSize: '12px', color: '#64748b', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   <span>{expense.category}</span>
                   <span>·</span>
                   <span>{new Date(expense.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -140,14 +140,14 @@ const Expenses = () => {
               </div>
 
               {/* Receipt # */}
-              <span style={{ fontSize: '11px', color: '#475569', whiteSpace: 'nowrap', fontFamily: 'monospace' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-faint)', whiteSpace: 'nowrap', fontFamily: 'monospace' }}>
                 {expense.receiptNo}
               </span>
 
               {/* Delete */}
               {expense.status === 'pending' && (
                 <button onClick={() => deleteExpense(expense.id)}
-                  style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '6px' }}>
+                  style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '6px' }}>
                   <Trash2 size={16} />
                 </button>
               )}
@@ -163,10 +163,10 @@ const Expenses = () => {
           const count = expenses.filter(e => e.category === name).length;
           const CIcon = config.icon;
           return (
-            <div key={name} style={{ background: 'rgba(15,23,42,0.4)', borderRadius: '12px', padding: '16px', textAlign: 'center', border: `1px solid ${config.color}15` }}>
+            <div key={name} style={{ background: 'var(--surface-panel)', borderRadius: '12px', padding: '16px', textAlign: 'center', border: `1px solid ${config.color}15` }}>
               <CIcon size={22} color={config.color} style={{ marginBottom: '8px' }} />
               <div style={{ fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>{name}</div>
-              <div style={{ fontSize: '11px', color: '#64748b' }}>{count} claim{count !== 1 ? 's' : ''} · ₹{total.toLocaleString('en-IN')}</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{count} claim{count !== 1 ? 's' : ''} · ₹{total.toLocaleString('en-IN')}</div>
             </div>
           );
         })}
@@ -177,46 +177,46 @@ const Expenses = () => {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
           onClick={() => setShowModal(false)}>
           <div onClick={e => e.stopPropagation()}
-            style={{ background: '#0f172a', borderRadius: '20px', padding: '32px', width: '440px', maxWidth: '95vw', border: '1px solid rgba(255,255,255,0.08)' }}>
+            style={{ background: '#0f172a', borderRadius: '20px', padding: '32px', width: '440px', maxWidth: '95vw', border: '1px solid var(--btn-ghost-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ margin: 0, fontSize: '20px' }}>Submit Expense Claim</h2>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>What did you spend on?</label>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>What did you spend on?</label>
                 <input type="text" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="e.g., Cab to client office"
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Category</label>
+                  <label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Category</label>
                   <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', outline: 'none' }}>
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none' }}>
                     {Object.keys(categoryConfig).map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Amount (₹)</label>
+                  <label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Amount (₹)</label>
                   <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="0"
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
                 </div>
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Date</label>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Date</label>
                 <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Description (optional)</label>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Description (optional)</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Any additional details..."
-                  rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', fontSize: '14px', outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                  rows={3} style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'var(--btn-ghost-bg)', border: '1px solid var(--btn-ghost-border)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', resize: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }} />
               </div>
 
               <button onClick={handleSubmit}
