@@ -4,8 +4,6 @@
 // This replaces Firebase auth with our Express/MongoDB backend.
 // All auth goes through http://localhost:5050/api/auth
 
-import api from '../services/api';
-
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import api from '../services/api';
