@@ -1,26 +1,30 @@
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { useDataStore } from '../store/dataStore';
 import './Dashboard.css';
 
 function Dashboard() {
   const { isDarkMode } = useTheme();
+  const { dashboardStats, dashboardActivities, employees, departments, leaves } = useDataStore();
+
+  const totalEmps = employees.length || 0;
+  const pendingLeavesCount = leaves.filter(l => l.status === 'pending').length || 0;
+  const totalDepts = departments.length || 0;
+  const presentToday = dashboardStats?.presentToday || 0;
 
   const stats = [
-    { icon: '👥', value: 150, label: 'Total Employees', color: '#667eea', delay: 0.1 },
-    { icon: '✅', value: 128, label: 'Present Today', color:  '#4ade80', delay:  0.2 },
-    { icon: '📅', value: 12, label: 'Pending Leaves', color: '#f59e0b', delay:  0.3 },
-    { icon: '🏢', value: 8, label: 'Departments', color: '#06b6d4', delay: 0.4 },
+    { icon: '👥', value: totalEmps, label: 'Total Employees', color: '#667eea', delay: 0.1 },
+    { icon: '✅', value: presentToday, label: 'Present Today', color:  '#4ade80', delay:  0.2 },
+    { icon: '📅', value: pendingLeavesCount, label: 'Pending Leaves', color: '#f59e0b', delay:  0.3 },
+    { icon: '🏢', value: totalDepts, label: 'Departments', color: '#06b6d4', delay: 0.4 },
   ];
 
-  const activities = [
+  const fallbackActivities = [
     { icon: '✨', text: 'Diya Sharma joined as Senior Developer', time: '2 hours ago', name: 'Diya Sharma' },
     { icon: '📝', text: 'Pratham Verma requested 3 days leave', time: '3 hours ago', name: 'Pratham Verma' },
-    { icon: '🎉', text: 'Aditya Patel completed onboarding', time: '5 hours ago', name: 'Aditya Patel' },
-    { icon: '📊', text:  'Mahin Khan submitted monthly report', time: '6 hours ago', name: 'Mahin Khan' },
-    { icon: '🏆', text:  'Ishan Singh received Employee of the Month', time: '1 day ago', name: 'Ishan Singh' },
-    { icon: '💼', text: 'Priya Gupta promoted to Team Lead', time:  '1 day ago', name:  'Priya Gupta' },
-    { icon: '🎓', text: 'Arjun Reddy completed training program', time: '2 days ago', name: 'Arjun Reddy' },
   ];
+
+  const activities = dashboardActivities?.length ? dashboardActivities : fallbackActivities;
 
   const quickActions = [
     { icon: '➕', text: 'Add Employee', color: '#667eea', route: '/employees/add' },
