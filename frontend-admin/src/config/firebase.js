@@ -1,111 +1,57 @@
 // ============================================================
-// Firebase Configuration for Admin Portal
-// (graceful fallback when not configured)
+// Auth Configuration — Backend API (Admin)
 // ============================================================
 
-let app = null;
-let auth = null;
-let db = null;
-let googleProvider = null;
+import api from '../services/api';
 
-// ⚡ DEMO MODE: Set to false to run with static data (no Firebase needed)
-const FIREBASE_CONFIGURED = false;
+export const app = null;
+export const auth = null;
+export const db = null;
+export const googleProvider = null;
+export const FIREBASE_CONFIGURED = false;
 
-if (FIREBASE_CONFIGURED) {
-  const { initializeApp } = await import("firebase/app");
-  const firebaseAuth = await import("firebase/auth");
-  const firebaseFirestore = await import("firebase/firestore");
-
-  const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  };
-
-  app = initializeApp(firebaseConfig);
-  auth = firebaseAuth.getAuth(app);
-  db = firebaseFirestore.getFirestore(app);
-  googleProvider = new firebaseAuth.GoogleAuthProvider();
-  googleProvider.setCustomParameters({ prompt: "select_account" });
-
-  console.log("[Firebase Admin] initialized:", { projectId: firebaseConfig.projectId });
-} else {
-  console.warn(
-    "[Firebase Admin] Not configured — running in DEMO mode. " +
-    "To enable, create frontend-admin/.env with VITE_FIREBASE_* vars."
-  );
-}
-
-export { app, auth, db, googleProvider, FIREBASE_CONFIGURED };
-
-// ============================================================
-// Auth Functions (demo-mode fallbacks)
-// ============================================================
-
-function createMockAdmin(email, name) {
-  return {
-    uid: "admin-" + Date.now(),
-    email: email || "admin@paradigmshift.com",
-    displayName: name || "Admin User",
-    name: name || "Admin User",
-    photoURL: null,
-    role: "admin",
-  };
-}
-
-// Demo admin credentials
-const DEMO_ADMINS = [
-  { email: 'admin@paradigmshift.com', password: 'admin123', name: 'Vikram Patel', role: 'Super Admin' },
-  { email: 'hr@paradigmshift.com', password: 'hr123', name: 'Ananya Gupta', role: 'HR Manager' },
-];
+// ── Auth Functions (Backend API) ─────────────────────────────
 
 export async function loginWithEmail(email, password) {
-  if (!FIREBASE_CONFIGURED) {
-    const admin = DEMO_ADMINS.find(
-      a => a.email.toLowerCase() === email.trim().toLowerCase() && a.password === password
-    );
-    if (admin) {
-      return { success: true, user: createMockAdmin(admin.email, admin.name) };
-    }
-    return { success: false, error: "Invalid email or password. Use admin@paradigmshift.com / admin123" };
-  }
   try {
-    const { setPersistence, browserLocalPersistence, signInWithEmailAndPassword } = await import("firebase/auth");
-    await setPersistence(auth, browserLocalPersistence);
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    return { success: true, user: result.user };
+    const { data } = await api.post('/auth/login', { email, password });
+    
+    // Check if user is admin
+    if (data.user.role !== 'admin' && data.user.role !== 'hr') {
+      return { success: false, error: 'Unauthorized: Admin or HR access required.' };
+    }
+
+    // Store JWT
+    localStorage.setItem('admin-token', data.token);
+
+    return {
+      success: true,
+      user: {
+        uid: data.user._id,
+        email: data.user.email,
+        displayName: data.user.name,
+        name: data.user.name,
+        role: data.user.role,
+        department: data.user.department,
+        photoURL: data.user.avatar || null,
+        ...data.user,
+      },
+      token: data.token,
+    };
   } catch (error) {
-    return { success: false, error: error?.message || "Login failed." };
+    const msg = error.response?.data?.error || 'Login failed. Check your credentials.';
+    return { success: false, error: msg };
   }
 }
 
 export async function loginWithGoogle() {
-  if (!FIREBASE_CONFIGURED) {
-    return { success: true, user: createMockAdmin("admin.google@paradigmshift.com", "Google Admin") };
-  }
-  try {
-    const { signInWithPopup } = await import("firebase/auth");
-    const result = await signInWithPopup(auth, googleProvider);
-    return { success: true, user: result.user };
-  } catch (error) {
-    return { success: false, error: error?.message || "Google login failed." };
-  }
+  return { success: false, error: 'Google login is not available for admins.' };
 }
 
 export async function logout() {
-  if (!FIREBASE_CONFIGURED) {
-    return { success: true };
-  }
-  try {
-    const { signOut } = await import("firebase/auth");
-    await signOut(auth);
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Logout failed." };
-  }
+  localStorage.removeItem('admin-token');
+  localStorage.removeItem('admin-auth-storage');
+  return { success: true };
 }
 
 export default app;
