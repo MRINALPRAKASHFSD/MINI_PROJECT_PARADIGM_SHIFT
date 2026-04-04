@@ -207,11 +207,19 @@ async function seed() {
   console.log('(All employees use password: password123)');
   console.log('─────────────────────────────────────────');
 
-  await mongoose.disconnect();
-  process.exit(0);
+  // If running directly as script, disconnect and exit
+  if (require.main === module) {
+    await mongoose.disconnect();
+    process.exit(0);
+  }
 }
 
-seed().catch((err) => {
-  console.error('❌ Seed failed:', err);
-  process.exit(1);
-});
+// Check if running as a standalone script
+if (require.main === module) {
+  seed().catch((err) => {
+    console.error('❌ Seed failed:', err);
+    process.exit(1);
+  });
+}
+
+module.exports = { runSeed: seed };

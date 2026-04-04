@@ -92,7 +92,26 @@ async function connectDB() {
   }
 }
 
-connectDB().then(() => {
+connectDB().then(async () => {
+  // Auto-seed if database is empty
+  const User = require('./models/User');
+  const count = await User.countDocuments();
+  if (count === 0) {
+    console.log('📦 Database is empty — running auto-seed...');
+    try {
+      // Inline seed using existing connection
+      const seedModule = require('./seed');
+      if (typeof seedModule.runSeed === 'function') {
+        await seedModule.runSeed();
+      }
+      console.log('✅ Auto-seed complete!');
+    } catch (seedErr) {
+      console.warn('⚠️  Auto-seed failed:', seedErr.message);
+    }
+  } else {
+    console.log(`📊 Database has ${count} users — skipping seed.`);
+  }
+
   app.listen(PORT, () => {
     console.log(`🚀 Paradigm Shift API running on http://localhost:${PORT}`);
     console.log(`📋 Routes: auth, employees, tasks, leaves, expenses, documents, attendance, departments, announcements, payslips, notifications, dashboard`);
