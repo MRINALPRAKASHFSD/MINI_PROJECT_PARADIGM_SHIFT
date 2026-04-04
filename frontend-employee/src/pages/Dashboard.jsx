@@ -35,7 +35,10 @@ const TEAM_MEMBERS = [
 const Dashboard = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const { tasks, timeEntries, activities, notifications, expenses, leaves } = useDataStore();
+  const { tasks, timeEntries, activities, notifications, expenses, leaves, fetchAll } = useDataStore();
+
+  // ── load data from backend on mount ─────────────────────────
+  useEffect(() => { fetchAll(); }, []);
 
   // ── live clock ─────────────────────────────────────────────
   const [now, setNow] = useState(new Date());
@@ -53,12 +56,13 @@ const Dashboard = () => {
   const totalTasks = tasks.length;
   const todaySeconds = timeEntries.filter(e => e.date === todayStr).reduce((s, e) => s + e.seconds, 0);
   const weekSeconds = timeEntries.reduce((s, e) => s + e.seconds, 0);
-  const myTasks = tasks.filter(t => t.assignee === 'Rajesh Kumar');
+  const userName = user?.name || user?.displayName || 'You';
+  const myTasks = tasks.filter(t => t.assignee === userName || t.assigneeName === userName);
   const overdueTasks = tasks.filter(t => t.status !== 'completed' && t.dueDate && new Date(t.dueDate) < new Date());
   const unreadNotifs = notifications.filter(n => !n.read).length;
   const pendingLeaves = leaves.filter(l => l.status === 'pending').length;
   const pendingExpenses = expenses.filter(e => e.status === 'pending').length;
-  const recentExpenseTotal = expenses.filter(e => e.date.startsWith(new Date().toISOString().slice(0, 7))).reduce((s, e) => s + e.amount, 0);
+  const recentExpenseTotal = expenses.filter(e => e.date && e.date.startsWith(new Date().toISOString().slice(0, 7))).reduce((s, e) => s + e.amount, 0);
 
   const formatDur = (sec) => { const h = Math.floor(sec / 3600); const m = Math.floor((sec % 3600) / 60); return h > 0 ? `${h}h ${m}m` : `${m}m`; };
 
@@ -75,7 +79,7 @@ const Dashboard = () => {
     return count;
   }, [timeEntries]);
 
-  const userName = user?.displayName?.split(' ')[0] || 'Rajesh';
+  const firstName = userName.split(' ')[0] || 'User';
   const greeting = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 17 ? 'Good Afternoon' : 'Good Evening';
 
   // ── upcoming deadlines (sorted, only active tasks) ─────────
@@ -91,7 +95,7 @@ const Dashboard = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '30px', fontWeight: '700', margin: '0 0 4px' }}>
-            {greeting}, {userName} 👋
+            {greeting}, {firstName} 👋
           </h1>
           <p style={{ color: '#64748b', margin: 0, fontSize: '14px' }}>
             {now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
