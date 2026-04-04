@@ -25,7 +25,7 @@ function Login() {
 
     const result = await loginWithEmail(email, password);
     if (result.success) {
-      setUser(result.user);
+      setUser(result.user, result.token);
       navigate('/dashboard');
     } else {
       setError(result.error);
