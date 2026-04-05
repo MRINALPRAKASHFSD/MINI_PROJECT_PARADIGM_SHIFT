@@ -29,6 +29,12 @@ app.use(cors({
   credentials: true,
 }));
 
+// ── localtunnel bypass — prevents the "visit this page first" wall
+app.use((req, res, next) => {
+  res.setHeader('Bypass-Tunnel-Reminder', 'true');
+  next();
+});
+
 // ── API routes ──────────────────────────────────────────────
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/employees', require('./routes/employees'));
