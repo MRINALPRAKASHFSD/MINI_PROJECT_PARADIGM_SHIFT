@@ -9,12 +9,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import api from '../services/api';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDummyKey-PleaseConfigureInEnv",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "paradigmshift-dummy.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "paradigmshift-dummy",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "paradigmshift-dummy.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:dummy"
+  apiKey: "AIzaSyCgkb1Lzk8eKLLOicMcKb4TlbaEcpomTqQ",
+  authDomain: "paradigmshift-f7332.firebaseapp.com",
+  projectId: "paradigmshift-f7332",
+  storageBucket: "paradigmshift-f7332.firebasestorage.app",
+  messagingSenderId: "578218611526",
+  appId: "1:578218611526:web:6654d7b717247bcb054b47",
+  measurementId: "G-8V31V133QV"
 };
 
 export const app = initializeApp(firebaseConfig);
