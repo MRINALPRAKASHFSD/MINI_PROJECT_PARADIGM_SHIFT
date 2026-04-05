@@ -1,11 +1,16 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost');
+
+const API_URL = isProduction 
+  ? 'https://paradigmshift-backend.onrender.com/api'
+  : 'http://localhost:5050/api';
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
+    'bypass-tunnel-reminder': 'true'
   },
 });
 
