@@ -64,7 +64,7 @@ const Layout = () => {
       </div>
 
       {/* ── SIDEBAR ─────────────────────────────────────────── */}
-      <aside className="sidebar glass-sidebar" style={{ width: sidebarOpen ? 280 : 80, transition: 'width 0.25s ease' }}>
+      <aside className="sidebar glass-sidebar" style={{ width: sidebarOpen ? 280 : 80 }}>
         {/* Header */}
         <div className="sidebar-header">
           <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
@@ -163,7 +163,7 @@ const Layout = () => {
       </aside>
 
       {/* ── MAIN CONTENT ────────────────────────────────────── */}
-      <div className="main-content" style={{ marginLeft: sidebarOpen ? 280 : 80, transition: 'margin-left 0.25s ease' }}>
+      <div className="main-content" style={{ marginLeft: sidebarOpen ? 280 : 80 }}>
         {/* Top Bar */}
         <header className="topbar glass-topbar">
           <div className="topbar-left">

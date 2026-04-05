@@ -96,8 +96,8 @@
     rgba(26, 31, 53, 0.98) 60%,
     rgba(15, 23, 42, 0.98) 100%
   );
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-right: 2px solid transparent;
   border-image: linear-gradient(180deg, 
     rgba(59, 130, 246, 0.4) 0%,
@@ -111,8 +111,12 @@
     inset 0 0 100px rgba(139, 92, 246, 0.05);
 }
 
+.sidebar {
+  width: 80px; /* Default closed width */
+}
+
 .sidebar.open {
-  width: 320px ! important;
+  width: 280px ! important;
 }
 
 .sidebar-bg-effects {
@@ -725,8 +729,8 @@
 .main-content {
   position: relative;
   min-height: 100vh;
-  margin-left: 320px;
-  transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 80px; /* Default closed margin */
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
@@ -904,21 +908,21 @@
 /* Make closed sidebar MUCH WIDER - 100px instead of 80px */
 @media (min-width: 1025px) {
   .sidebar:not(.open) {
-    width: 100px !important;
+    width: 80px !important;
   }
   
   .main-content {
-    margin-left: 100px !important;
+    margin-left: 80px !important;
   }
 }
 
 @media (max-width: 1024px) {
   .sidebar {
-    width: 100px !important;
+    width: 80px !important;
   }
 
   .main-content {
-    margin-left: 100px ! important;
+    margin-left: 80px ! important;
   }
   
   /* Perfect centering for wider closed state */
@@ -974,7 +978,7 @@
 
   .sidebar.open {
     transform: translateX(0);
-    width: 320px !important;
+    width: 280px !important;
   }
 
   .main-content {
