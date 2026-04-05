@@ -8,20 +8,15 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import api from '../services/api';
 
-// Prefer env-provided Firebase config (Vercel/Vite) and fall back to baked defaults
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCgkb1Lzk8eKLLOicMcKb4TlbaEcpomTqQ",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "paradigmshift-f7332.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "paradigmshift-f7332",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "paradigmshift-f7332.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "578218611526",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:578218611526:web:6654d7b717247bcb054b47",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-8V31V133QV"
+  apiKey: "AIzaSyCgkb1Lzk8eKLLOicMcKb4TlbaEcpomTqQ",
+  authDomain: "paradigmshift-f7332.firebaseapp.com",
+  projectId: "paradigmshift-f7332",
+  storageBucket: "paradigmshift-f7332.firebasestorage.app",
+  messagingSenderId: "578218611526",
+  appId: "1:578218611526:web:6654d7b717247bcb054b47",
+  measurementId: "G-8V31V133QV"
 };
-
-if (!import.meta.env.VITE_FIREBASE_API_KEY) {
-  console.warn("[Firebase] Using built-in fallback config. Set VITE_FIREBASE_* env vars in production.");
-}
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

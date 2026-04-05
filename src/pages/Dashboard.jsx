@@ -15,7 +15,7 @@ import {
   BarChart3,
   Zap
 } from 'lucide-react';
-import './Dashboardpro.css';
+import './DashboardPro.css';
 
 const Dashboard = () => {
   const { user } = useAuthStore();

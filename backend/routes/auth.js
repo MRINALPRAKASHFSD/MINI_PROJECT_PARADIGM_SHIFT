@@ -6,16 +6,8 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Use env secrets when provided; fall back to a safe default so hosted envs without
-// JWT_SECRET still issue tokens (avoids prod login breaking when env vars are missing).
-const JWT_SECRET = process.env.JWT_SECRET || 'pshift_fallback_secret_set_env_asap';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-
-if (!process.env.JWT_SECRET) {
-  console.warn('[auth] JWT_SECRET not set — using fallback secret. Set JWT_SECRET in env for security.');
-}
-
-const signToken = (id) => jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
