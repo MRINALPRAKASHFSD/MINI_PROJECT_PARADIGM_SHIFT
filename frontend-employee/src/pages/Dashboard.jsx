@@ -9,7 +9,7 @@ import {
   Activity, Quote, Users, Coffee, IndianRupee,
   FileText, Palmtree, FolderOpen, Wallet, Flame
 } from 'lucide-react';
-import './Dashboardpro.css';
+import './DashboardPro.css';
 
 // different quotes each refresh — feels hand-picked
 const QUOTES = [
