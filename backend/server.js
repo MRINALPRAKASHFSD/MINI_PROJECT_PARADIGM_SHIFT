@@ -20,9 +20,13 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http:/
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow if no origin (like mobile apps/curl) OR if origin is in the list
+    // OR if it's ANY localhost in development mode
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+    if (!origin || allowedOrigins.includes(origin) || (isDevelopment && origin.includes('localhost'))) {
       callback(null, true);
     } else {
+      console.warn(`[CORS] Blocked request from unauthorized origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -91,9 +95,9 @@ async function connectDB() {
     const memUri = mongod.getUri();
     await mongoose.connect(memUri);
     console.log('✅ In-memory MongoDB started:', memUri);
-    console.log('⚠️  NOTE: Data will NOT persist after server restart.');
+    console.warn('⚠️  CRITICAL: External MongoDB not found. Data will NOT persist after server restart.');
   } catch (memErr) {
-    console.error('❌ Could not start any MongoDB:', memErr.message);
+    console.error('❌ Could not start any MongoDB service:', memErr.message);
     process.exit(1);
   }
 }

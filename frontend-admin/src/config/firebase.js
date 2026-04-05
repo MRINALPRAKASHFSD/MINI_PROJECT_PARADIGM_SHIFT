@@ -21,8 +21,7 @@ export async function loginWithEmail(email, password) {
       return { success: false, error: 'Unauthorized: Admin or HR access required.' };
     }
 
-    // Store JWT
-    localStorage.setItem('admin-token', data.token);
+    // Store JWT - Handled by authStore persist
 
     return {
       success: true,

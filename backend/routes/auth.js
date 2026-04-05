@@ -7,7 +7,7 @@ const { auth } = require('../middleware/auth');
 const router = express.Router();
 
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+  jwt.sign({ id: id.toString() }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
@@ -24,6 +24,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ token, user: user.toJSON() });
   } catch (err) {
+    console.error('[AUTH_REGISTER_ERROR]', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -42,6 +43,7 @@ router.post('/login', async (req, res) => {
     const token = signToken(user._id);
     res.json({ token, user: user.toJSON() });
   } catch (err) {
+    console.error('[AUTH_LOGIN_ERROR]', err.message);
     res.status(500).json({ error: err.message });
   }
 });

@@ -63,8 +63,7 @@ export async function signInWithGooglePlatform() {
 export async function loginWithEmail(email, password) {
   try {
     const { data } = await api.post('/auth/login', { email, password });
-    // Store JWT
-    localStorage.setItem('token', data.token);
+    // Store JWT - Handled by authStore persist
     return {
       success: true,
       user: {
@@ -95,7 +94,7 @@ export async function registerWithEmail(email, password, displayName) {
       password,
       role: 'employee',
     });
-    localStorage.setItem('token', data.token);
+    // Store JWT - Handled by authStore persist
     return {
       success: true,
       user: {

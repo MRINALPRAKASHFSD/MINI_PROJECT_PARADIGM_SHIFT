@@ -38,7 +38,12 @@ const Login = () => {
       setUser(result.user, result.token);
       navigate('/dashboard');
     } else {
-      setError(result.error);
+      // If it looks like a network error (no response)
+      if (result.error === 'Network Error' || result.error.includes('Error: Network Error')) {
+        setError('Cannot connect to the server. Please ensure the backend is running on port 5050.');
+      } else {
+        setError(result.error);
+      }
     }
     setIsLoading(false);
   };
