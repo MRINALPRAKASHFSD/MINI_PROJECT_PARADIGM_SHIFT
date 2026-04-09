@@ -2,11 +2,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
 import { useDataStore } from './store/dataStore';
+import socket from './services/socket';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Employees from './components/Employees';
+import EmployeeForm from './components/EmployeeForm';
 import LeaveManagement from './components/LeaveManagement';
 import AttendanceReport from './components/AttendanceReport';
 import Reports from './components/Reports';
@@ -29,7 +31,18 @@ function App() {
   const fetchAll = useDataStore((s) => s.fetchAll);
 
   useEffect(() => {
-    if (isAuthenticated) fetchAll();
+    if (isAuthenticated) {
+      fetchAll();
+      
+      // Listen for global data updates
+      socket.on('DATA_UPDATED', (data) => {
+        console.log('📡 [ADMIN REAL-TIME] Data update received:', data);
+        fetchAll(true); // Force re-fetch all data
+      });
+    }
+    return () => {
+      socket.off('DATA_UPDATED');
+    };
   }, [isAuthenticated, fetchAll]);
 
   return (
@@ -50,6 +63,8 @@ function App() {
                 <Routes>
                   <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
+                  <Route path="/employees/add" element={<ProtectedRoute><EmployeeForm /></ProtectedRoute>} />
+                  <Route path="/employees/edit/:id" element={<ProtectedRoute><EmployeeForm /></ProtectedRoute>} />
                   <Route path="/leaves" element={<ProtectedRoute><LeaveManagement /></ProtectedRoute>} />
                   <Route path="/attendance" element={<ProtectedRoute><AttendanceReport /></ProtectedRoute>} />
                   <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />

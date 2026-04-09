@@ -14,8 +14,8 @@ export const useDataStore = create((set, get) => ({
   _loaded: false,
   loading: false,
 
-  fetchAll: async () => {
-    if (get()._loaded) return;
+  fetchAll: async (force = false) => {
+    if (get()._loaded && !force) return;
     set({ loading: true });
     try {
       const [
@@ -101,11 +101,26 @@ export const useDataStore = create((set, get) => ({
 
   // Employees
   setEmployees: (employees) => set({ employees }),
+  addEmployee: async (data) => {
+    try {
+      const res = await api.post('/employees', data);
+      const newEmp = { ...res.data.employee, id: res.data.employee._id || res.data.employee.id };
+      set(s => ({ employees: [newEmp, ...s.employees] }));
+      return res.data;
+    } catch (e) { throw e; }
+  },
   updateEmployee: async (id, data) => {
     try {
       const res = await api.put(`/employees/${id}`, data);
-      set(s => ({ employees: s.employees.map(e => e.id === id ? { ...e, ...res.data.employee } : e) }));
+      const updatedEmp = { ...res.data.employee, id: res.data.employee._id || res.data.employee.id };
+      set(s => ({ employees: s.employees.map(e => e.id === id ? updatedEmp : e) }));
       return res.data;
+    } catch (e) { throw e; }
+  },
+  deleteEmployee: async (id) => {
+    try {
+      await api.delete(`/employees/${id}`);
+      set(s => ({ employees: s.employees.filter(e => e.id !== id) }));
     } catch (e) { throw e; }
   },
 
