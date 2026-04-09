@@ -59,6 +59,7 @@ router.post('/', auth, authorize('admin', 'hr'), async (req, res) => {
     });
 
     res.status(201).json({ employee: user.toJSON() });
+    req.app.get('io').emit('DATA_UPDATED');
   } catch (err) {
     if (err.code === 11000) {
       const field = Object.keys(err.keyPattern)[0];
@@ -88,6 +89,7 @@ router.put('/:id', auth, authorize('admin', 'hr'), async (req, res) => {
     const employee = await User.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
     if (!employee) return res.status(404).json({ error: 'Employee not found.' });
     res.json({ employee });
+    req.app.get('io').emit('DATA_UPDATED');
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -99,6 +101,7 @@ router.delete('/:id', auth, authorize('admin'), async (req, res) => {
     const employee = await User.findByIdAndDelete(req.params.id);
     if (!employee) return res.status(404).json({ error: 'Employee not found.' });
     res.json({ message: 'Employee deleted.' });
+    req.app.get('io').emit('DATA_UPDATED');
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
