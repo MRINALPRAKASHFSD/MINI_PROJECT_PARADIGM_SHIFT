@@ -11,6 +11,8 @@ This repo contains **two powerful React apps** for seamless HR and employee mana
 ParadigmShift/
   frontend-admin/      # Admin Panel (HR/Manager control)
   frontend-employee/   # Employee Panel (Employee dashboard)
+  backend/             # Express API & WebSocket Server
+  vercel.json          # Monorepo deployment config
   README.md            # You're reading it!
 ```
 
