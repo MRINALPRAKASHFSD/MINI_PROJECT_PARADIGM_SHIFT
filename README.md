@@ -130,6 +130,14 @@ npm run dev
 
 ---
 
+## 📡 Real-Time Synchronization
+ParadigmShift uses **Socket.io** to bridge the Admin and Employee portals. 
+- **Automatic Updates**: When an admin assigns a task or approves a leave request, the employee sees the update instantly.
+- **Bi-Directional**: Requests submitted by employees appear on the Admin dashboard in real-time.
+- **Efficiency**: No manual page refreshes required to see the latest data.
+
+---
+
 ## 📢 Contact / Support
 
 - Raise an [issue](https://github.com/<your-username>/<your-repo>/issues) for help or bugs.
