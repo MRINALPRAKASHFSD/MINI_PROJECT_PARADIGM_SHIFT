@@ -111,8 +111,10 @@ npm run dev
 ## 📚 Tech Stack
 
 - ⚛️ React (Vite)
-- 🔥 Firebase (Auth, RTDB, Storage)
-- ☁️ Hosting: Vercel / Netlify / Firebase Hosting
+- 🍃 MongoDB (Atlas)
+- 🚀 Node.js / Express
+- 📡 Socket.io (Real-time Sync)
+- ☁️ Hosting: Vercel (Experimental Services)
 
 ---
 
