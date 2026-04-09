@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 
 const SOCKET_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:5050' 
-  : 'https://paradigm-shift-api.onrender.com'; // Adjust for production
+  : '/';
 
 export const socket = io(SOCKET_URL, {
   autoConnect: true,

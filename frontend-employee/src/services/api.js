@@ -3,7 +3,7 @@ import axios from 'axios';
 // Production = Render cloud backend | Development = local backend
 const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost');
 const API_URL = isProduction
-  ? 'https://paradigmshift-backend.onrender.com/api'
+  ? '/api'
   : (import.meta.env.VITE_API_URL || 'http://localhost:5050/api');
 
 const api = axios.create({
