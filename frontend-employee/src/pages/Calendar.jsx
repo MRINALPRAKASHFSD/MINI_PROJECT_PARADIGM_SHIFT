@@ -91,7 +91,7 @@ const Calendar = () => {
                 <motion.button key={day} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedDate(new Date(year, month, day))}
                   style={{
-                    width: '100%', aspectRatio: '1', border: 'none', borderRadius: '14px', cursor: 'pointer', position: 'relative',
+                    width: '100%', aspectRatio: '1', borderRadius: '14px', cursor: 'pointer', position: 'relative',
                     background: isSelected(day) ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : isToday(day) ? 'rgba(59,130,246,0.15)' : 'transparent',
                     color: isSelected(day) ? '#fff' : isToday(day) ? '#3b82f6' : '#e2e8f0',
                     fontWeight: isToday(day) || isSelected(day) ? '700' : '400', fontSize: '15px',

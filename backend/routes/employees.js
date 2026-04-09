@@ -33,8 +33,14 @@ router.post('/', auth, authorize('admin', 'hr'), async (req, res) => {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ error: 'Email already registered.' });
 
-    const count = await User.countDocuments();
-    const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
+    // Safely generate next employeeId
+    const lastUser = await User.findOne({ role: 'employee' }).sort({ createdAt: -1 });
+    let nextNum = 1;
+    if (lastUser && lastUser.employeeId && lastUser.employeeId.startsWith('EMP')) {
+      const lastNum = parseInt(lastUser.employeeId.replace('EMP', ''));
+      if (!isNaN(lastNum)) nextNum = lastNum + 1;
+    }
+    const employeeId = `EMP${String(nextNum).padStart(3, '0')}`;
     
     // Default password is 'Welcome@123'
     const user = await User.create({
@@ -54,8 +60,12 @@ router.post('/', auth, authorize('admin', 'hr'), async (req, res) => {
 
     res.status(201).json({ employee: user.toJSON() });
   } catch (err) {
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      return res.status(400).json({ error: `Duplicate ${field}: This value is already in use.` });
+    }
     console.error('[EMPLOYEE_CREATE_ERROR]', err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Internal server error occurred while saving.' });
   }
 });
 

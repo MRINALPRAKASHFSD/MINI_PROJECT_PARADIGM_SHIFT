@@ -92,7 +92,8 @@ function EmployeeForm() {
         navigate('/employees');
       } catch (err) {
         console.error('Failed to save employee:', err);
-        alert('Error saving employee. Please try again.');
+        const serverError = err.response?.data?.error || 'Error saving employee. Please try again.';
+        alert(serverError);
       }
     }
   };
