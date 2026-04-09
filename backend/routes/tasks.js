@@ -26,6 +26,7 @@ router.get('/', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
   try {
     const task = await Task.create({ ...req.body });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'TASKS' });
     res.status(201).json({ task });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -37,6 +38,7 @@ router.put('/:id', auth, async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!task) return res.status(404).json({ error: 'Task not found.' });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'TASKS' });
     res.json({ task });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -47,6 +49,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
+    req.app.get('io').emit('DATA_UPDATED', { type: 'TASKS' });
     res.json({ message: 'Task deleted.' });
   } catch (err) {
     res.status(500).json({ error: err.message });

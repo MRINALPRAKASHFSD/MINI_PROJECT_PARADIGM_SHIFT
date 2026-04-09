@@ -25,6 +25,40 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// POST /api/employees — create (admin only)
+router.post('/', auth, authorize('admin', 'hr'), async (req, res) => {
+  try {
+    const { name, email, department, designation, salary, phone, joiningDate, address } = req.body;
+    
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ error: 'Email already registered.' });
+
+    const count = await User.countDocuments();
+    const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
+    
+    // Default password is 'Welcome@123'
+    const user = await User.create({
+      name,
+      email,
+      password: 'Welcome@123',
+      role: 'employee',
+      employeeId,
+      department,
+      designation,
+      salary,
+      phone,
+      joiningDate,
+      address,
+      status: 'Active'
+    });
+
+    res.status(201).json({ employee: user.toJSON() });
+  } catch (err) {
+    console.error('[EMPLOYEE_CREATE_ERROR]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/employees/:id
 router.get('/:id', auth, async (req, res) => {
   try {

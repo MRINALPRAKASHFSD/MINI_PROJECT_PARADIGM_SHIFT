@@ -36,6 +36,7 @@ router.post('/', auth, async (req, res) => {
       department: req.user.department,
       receiptNo: `EXP-2026-${String(count + 1).padStart(3, '0')}`,
     });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'EXPENSES' });
     res.status(201).json({ expense });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -47,6 +48,7 @@ router.put('/:id/approve', auth, authorize('admin', 'hr'), async (req, res) => {
   try {
     const expense = await Expense.findByIdAndUpdate(req.params.id, { status: 'approved', approvedBy: req.user._id }, { new: true });
     if (!expense) return res.status(404).json({ error: 'Expense not found.' });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'EXPENSES' });
     res.json({ expense });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -58,6 +60,7 @@ router.put('/:id/reject', auth, authorize('admin', 'hr'), async (req, res) => {
   try {
     const expense = await Expense.findByIdAndUpdate(req.params.id, { status: 'rejected', approvedBy: req.user._id }, { new: true });
     if (!expense) return res.status(404).json({ error: 'Expense not found.' });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'EXPENSES' });
     res.json({ expense });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -68,6 +71,7 @@ router.put('/:id/reject', auth, authorize('admin', 'hr'), async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   try {
     await Expense.findOneAndDelete({ _id: req.params.id, employee: req.user._id });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'EXPENSES' });
     res.json({ message: 'Expense deleted.' });
   } catch (err) {
     res.status(500).json({ error: err.message });

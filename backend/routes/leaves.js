@@ -26,6 +26,7 @@ router.post('/', auth, async (req, res) => {
       employee: req.user._id,
       employeeName: req.user.name,
     });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'LEAVES' });
     res.status(201).json({ leave });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -37,6 +38,7 @@ router.put('/:id/approve', auth, authorize('admin', 'hr'), async (req, res) => {
   try {
     const leave = await Leave.findByIdAndUpdate(req.params.id, { status: 'approved', approvedBy: req.user._id }, { new: true });
     if (!leave) return res.status(404).json({ error: 'Leave not found.' });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'LEAVES' });
     res.json({ leave });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -48,6 +50,7 @@ router.put('/:id/reject', auth, authorize('admin', 'hr'), async (req, res) => {
   try {
     const leave = await Leave.findByIdAndUpdate(req.params.id, { status: 'rejected', approvedBy: req.user._id }, { new: true });
     if (!leave) return res.status(404).json({ error: 'Leave not found.' });
+    req.app.get('io').emit('DATA_UPDATED', { type: 'LEAVES' });
     res.json({ leave });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -60,6 +63,7 @@ router.delete('/:id', auth, async (req, res) => {
     const leave = await Leave.findOne({ _id: req.params.id, employee: req.user._id, status: 'pending' });
     if (!leave) return res.status(404).json({ error: 'Leave not found or cannot be cancelled.' });
     await Leave.findByIdAndDelete(req.params.id);
+    req.app.get('io').emit('DATA_UPDATED', { type: 'LEAVES' });
     res.json({ message: 'Leave cancelled.' });
   } catch (err) {
     res.status(500).json({ error: err.message });

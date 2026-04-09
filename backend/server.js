@@ -4,8 +4,24 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
+// Make io accessible to our routes
+app.set('io', io);
+
+io.on('connection', (socket) => {
+  console.log('🔌 Client connected:', socket.id);
+  socket.on('disconnect', () => console.log('👋 Client disconnected'));
+});
 
 // ── Security & parsing ──────────────────────────────────────
 app.use(helmet());
@@ -122,9 +138,10 @@ connectDB().then(async () => {
     console.log(`📊 Database has ${count} users — skipping seed.`);
   }
 
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`🚀 Paradigm Shift API running on http://localhost:${PORT}`);
     console.log(`📋 Routes: auth, employees, tasks, leaves, expenses, documents, attendance, departments, announcements, payslips, notifications, dashboard`);
+    console.log(`📡 WebSocket server is ready`);
   });
 });
 
