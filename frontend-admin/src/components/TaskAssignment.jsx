@@ -1,52 +1,94 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, CheckSquare, Clock, AlertCircle, X, User, Calendar, Tag } from 'lucide-react';
+import { 
+  Plus, 
+  CheckSquare, 
+  Clock, 
+  AlertCircle, 
+  X, 
+  User, 
+  Calendar, 
+  Tag 
+} from 'lucide-react';
+import { useDataStore } from '../store/dataStore';
 import './TaskAssignment.css';
 
-const EMPLOYEES = [
-  'Rajesh Kumar', 'Ananya Gupta', 'Vikram Patel', 'Priya Sharma',
-  'Rohit Saxena', 'Diya Sharma', 'Arjun Reddy', 'Sneha Iyer',
-  'Mahin Khan', 'Rohan Kapoor'
-];
+const PRIORITY_COLORS = { 
+  high: '#ef4444', 
+  medium: '#f59e0b', 
+  low: '#10b981',
+  high: '#ef4444', // Backward compat
+  medium: '#f59e0b',
+  low: '#10b981'
+};
 
-const INITIAL_TASKS = [
-  { id: 1, title: 'Code review: Payment module', assignee: 'Vikram Patel', priority: 'High', status: 'In Progress', dueDate: '2026-04-01', category: 'Engineering', description: 'Review the Razorpay integration PR' },
-  { id: 2, title: 'Aadhaar eKYC flow', assignee: 'Ananya Gupta', priority: 'High', status: 'Todo', dueDate: '2026-04-03', category: 'Design', description: 'Design the Aadhaar verification screens' },
-  { id: 3, title: 'Design new landing page', assignee: 'Rajesh Kumar', priority: 'Medium', status: 'In Progress', dueDate: '2026-04-05', category: 'Engineering', description: 'Build responsive landing with new brand guidelines' },
-  { id: 4, title: 'Unit tests for auth module', assignee: 'Rohit Saxena', priority: 'Medium', status: 'Todo', dueDate: '2026-04-06', category: 'Engineering', description: 'Add Jest tests for login, register, forgot password flows' },
-  { id: 5, title: 'Q1 marketing report', assignee: 'Priya Sharma', priority: 'Low', status: 'Done', dueDate: '2026-03-28', category: 'Marketing', description: 'Compile social media + ad performance data' },
-  { id: 6, title: 'Employee onboarding docs', assignee: 'Sneha Iyer', priority: 'Medium', status: 'In Progress', dueDate: '2026-04-02', category: 'HR', description: 'Update the welcome kit and handbook' },
-  { id: 7, title: 'AWS cost optimization', assignee: 'Arjun Reddy', priority: 'High', status: 'Todo', dueDate: '2026-04-04', category: 'DevOps', description: 'Analyze unused EC2 instances and RDS costs' },
-  { id: 8, title: 'Client presentation deck', assignee: 'Mahin Khan', priority: 'Medium', status: 'Done', dueDate: '2026-03-26', category: 'Sales', description: 'Prepare investor pitch deck for Series A' },
-];
-
-const PRIORITY_COLORS = { High: '#ef4444', Medium: '#f59e0b', Low: '#10b981' };
-const STATUS_ICONS = { 'Todo': Clock, 'In Progress': AlertCircle, 'Done': CheckSquare };
+const STATUS_ICONS = { 
+  todo: Clock, 
+  inProgress: AlertCircle, 
+  completed: CheckSquare 
+};
 
 function TaskAssignment() {
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
+  const { tasks = [], employees = [], addTask, deleteTask, updateTask } = useDataStore();
   const [showModal, setShowModal] = useState(false);
   const [filterStatus, setFilterStatus] = useState('All');
-  const [newTask, setNewTask] = useState({ title: '', assignee: '', priority: 'Medium', dueDate: '', category: 'Engineering', description: '' });
+  const [newTask, setNewTask] = useState({ 
+    title: '', 
+    assigneeId: '', 
+    priority: 'medium', 
+    dueDate: '', 
+    category: 'Engineering', 
+    description: '' 
+  });
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    if (!newTask.title || !newTask.assignee) return;
-    setTasks(prev => [...prev, { ...newTask, id: Date.now(), status: 'Todo' }]);
-    setNewTask({ title: '', assignee: '', priority: 'Medium', dueDate: '', category: 'Engineering', description: '' });
-    setShowModal(false);
+    if (!newTask.title || !newTask.assigneeId) return;
+    
+    const assignedUser = employees.find(emp => emp.id === newTask.assigneeId);
+    
+    try {
+      await addTask({
+        ...newTask,
+        assignee: newTask.assigneeId,
+        assigneeName: assignedUser ? assignedUser.name : 'Unassigned',
+        status: 'todo'
+      });
+      setNewTask({ 
+        title: '', 
+        assigneeId: '', 
+        priority: 'medium', 
+        dueDate: '', 
+        category: 'Engineering', 
+        description: '' 
+      });
+      setShowModal(false);
+    } catch (err) {
+      console.error('Failed to create task:', err);
+    }
   };
 
-  const updateStatus = (id, status) => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, status } : t));
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      await updateTask(id, { status });
+    } catch (err) { console.error(err); }
   };
 
-  const deleteTask = (id) => {
-    setTasks(prev => prev.filter(t => t.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteTask(id);
+    } catch (err) { console.error(err); }
   };
 
-  const filtered = filterStatus === 'All' ? tasks : tasks.filter(t => t.status === filterStatus);
-  const counts = { todo: tasks.filter(t => t.status === 'Todo').length, inProgress: tasks.filter(t => t.status === 'In Progress').length, done: tasks.filter(t => t.status === 'Done').length };
+  const filtered = filterStatus === 'All' 
+    ? tasks 
+    : tasks.filter(t => (t.status || '').toLowerCase() === filterStatus.toLowerCase().replace(' ', ''));
+
+  const counts = { 
+    todo: tasks.filter(t => (t.status || '').toLowerCase() === 'todo').length, 
+    inProgress: tasks.filter(t => (t.status || '').toLowerCase() === 'inprogress').length, 
+    done: tasks.filter(t => (t.status || '').toLowerCase() === 'completed').length 
+  };
 
   return (
     <div className="task-assignment">
@@ -60,7 +102,6 @@ function TaskAssignment() {
         </button>
       </motion.div>
 
-      {/* Stats bar */}
       <motion.div className="ta-stats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
         <div className="ta-stat todo"><Clock size={16} /> <span>{counts.todo} To Do</span></div>
         <div className="ta-stat progress"><AlertCircle size={16} /> <span>{counts.inProgress} In Progress</span></div>
@@ -68,47 +109,51 @@ function TaskAssignment() {
         <div className="ta-stat total"><span>{tasks.length} Total Tasks</span></div>
       </motion.div>
 
-      {/* Filters */}
       <div className="ta-filter-row">
         {['All', 'Todo', 'In Progress', 'Done'].map(f => (
           <button key={f} className={`ta-filter ${filterStatus === f ? 'active' : ''}`} onClick={() => setFilterStatus(f)}>{f}</button>
         ))}
       </div>
 
-      {/* Task list */}
       <div className="ta-list">
         {filtered.map((task, i) => {
-          const Icon = STATUS_ICONS[task.status] || Clock;
-          const daysLeft = Math.ceil((new Date(task.dueDate) - new Date()) / 86400000);
+          const statusKey = (task.status || 'todo').toLowerCase();
+          const StatusIcon = STATUS_ICONS[statusKey] || Clock;
+          const priorityKey = (task.priority || 'medium').toLowerCase();
+          const priorityColor = PRIORITY_COLORS[priorityKey] || '#64748b';
+
           return (
-            <motion.div key={task.id} className="ta-card glass" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i }}>
+            <motion.div key={task.id || task._id || i} className="ta-card glass" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i }}>
               <div className="ta-card-left">
-                <div className="ta-priority-bar" style={{ background: PRIORITY_COLORS[task.priority] }} />
+                <div className="ta-priority-bar" style={{ background: priorityColor }} />
                 <div className="ta-card-body">
                   <div className="ta-card-top-row">
                     <h3>{task.title}</h3>
-                    <span className="ta-priority-badge" style={{ background: `${PRIORITY_COLORS[task.priority]}18`, color: PRIORITY_COLORS[task.priority] }}>{task.priority}</span>
+                    <span className="ta-priority-badge" style={{ background: `${priorityColor}18`, color: priorityColor }}>
+                      {task.priority || 'Medium'}
+                    </span>
                   </div>
                   <p className="ta-card-desc">{task.description}</p>
                   <div className="ta-card-meta">
-                    <span className="ta-meta-item"><User size={12} /> {task.assignee}</span>
-                    <span className="ta-meta-item"><Tag size={12} /> {task.category}</span>
-                    <span className="ta-meta-item"><Calendar size={12} /> {new Date(task.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
-                    {task.status !== 'Done' && (
-                      <span className={`ta-meta-item ${daysLeft <= 2 ? 'urgent' : ''}`}>
-                        {daysLeft > 0 ? `${daysLeft}d left` : 'Overdue'}
-                      </span>
-                    )}
+                    <span className="ta-meta-item"><User size={12} /> {task.assigneeName || 'Unassigned'}</span>
+                    <span className="ta-meta-item"><Tag size={12} /> {task.category || 'General'}</span>
+                    <span className="ta-meta-item">
+                      <Calendar size={12} /> {task.dueDate ? new Date(task.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'No date'}
+                    </span>
                   </div>
                 </div>
               </div>
               <div className="ta-card-right">
-                <select className="ta-status-select" value={task.status} onChange={e => updateStatus(task.id, e.target.value)}>
-                  <option value="Todo">To Do</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Done">Done</option>
+                <select 
+                  className="ta-status-select" 
+                  value={task.status || 'todo'} 
+                  onChange={e => handleUpdateStatus(task.id, e.target.value)}
+                >
+                  <option value="todo">To Do</option>
+                  <option value="inProgress">In Progress</option>
+                  <option value="completed">Done</option>
                 </select>
-                <button className="ta-delete-btn" onClick={() => deleteTask(task.id)} title="Delete"><X size={14} /></button>
+                <button className="ta-delete-btn" onClick={() => handleDelete(task.id)} title="Delete"><X size={14} /></button>
               </div>
             </motion.div>
           );
@@ -116,7 +161,6 @@ function TaskAssignment() {
         {filtered.length === 0 && <div className="ta-empty">No tasks for this filter. Assign one! 🎯</div>}
       </div>
 
-      {/* Create Modal */}
       {showModal && (
         <div className="ta-modal-overlay" onClick={() => setShowModal(false)}>
           <motion.div className="ta-modal" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
@@ -132,17 +176,17 @@ function TaskAssignment() {
               <div className="ta-form-row">
                 <div className="ta-form-field">
                   <label>Assign To *</label>
-                  <select value={newTask.assignee} onChange={e => setNewTask(p => ({ ...p, assignee: e.target.value }))} required>
+                  <select value={newTask.assigneeId} onChange={e => setNewTask(p => ({ ...p, assigneeId: e.target.value }))} required>
                     <option value="">Select employee</option>
-                    {EMPLOYEES.map(e => <option key={e} value={e}>{e}</option>)}
+                    {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
                   </select>
                 </div>
                 <div className="ta-form-field">
                   <label>Priority</label>
                   <select value={newTask.priority} onChange={e => setNewTask(p => ({ ...p, priority: e.target.value }))}>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
                   </select>
                 </div>
               </div>

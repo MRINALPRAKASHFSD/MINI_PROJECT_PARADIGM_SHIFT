@@ -4,7 +4,7 @@ import { useDataStore } from '../store/dataStore';
 import { CheckCircle, XCircle, Clock, Search, Filter, Download, IndianRupee } from 'lucide-react';
 import './ExpenseApprovals.css';
 
-const CATEGORY_ICONS = { Travel: '✈️', Travel: '✈️', Food: '🍽️', Meals: '🍽️', Software: '💻', Equipment: '🖥️', Training: '🎓', Marketing: '📢' };
+const CATEGORY_ICONS = { Travel: '✈️', Food: '🍽️', Meals: '🍽️', Software: '💻', Equipment: '🖥️', Training: '🎓', Marketing: '📢' };
 
 function ExpenseApprovals() {
   const { expenses: dataStoreExpenses, approveExpense, rejectExpense } = useDataStore();
