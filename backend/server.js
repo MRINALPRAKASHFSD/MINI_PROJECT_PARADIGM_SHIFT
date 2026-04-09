@@ -38,8 +38,14 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow if no origin (like mobile apps/curl) OR if origin is in the list
     // OR if it's ANY localhost in development mode
+    // OR if it's a Vercel deployment URL
     const isDevelopment = process.env.NODE_ENV !== 'production';
-    if (!origin || allowedOrigins.includes(origin) || (isDevelopment && origin.includes('localhost'))) {
+    if (
+      !origin || 
+      allowedOrigins.includes(origin) || 
+      origin.endsWith('.vercel.app') ||
+      (isDevelopment && origin.includes('localhost'))
+    ) {
       callback(null, true);
     } else {
       console.warn(`[CORS] Blocked request from unauthorized origin: ${origin}`);
