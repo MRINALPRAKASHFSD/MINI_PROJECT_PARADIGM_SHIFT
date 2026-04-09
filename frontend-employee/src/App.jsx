@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
+import { useDataStore } from './store/dataStore';
+import socket from './services/socket';
+import { Toaster } from 'react-hot-toast';
 
 // Layout shell (sidebar + topbar + <Outlet/>)
 import Layout from './components/Layout';
@@ -32,6 +35,20 @@ import './App.css';
 
 function App() {
   const { isAuthenticated } = useAuthStore();
+  const fetchAll = useDataStore((state) => state.fetchAll);
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      // Listen for data updates from the server
+      socket.on('DATA_UPDATED', (data) => {
+        console.log('📡 [REAL-TIME] Data update received:', data);
+        fetchAll(true); // Force refresh regardless of _loaded state
+      });
+    }
+    return () => {
+      socket.off('DATA_UPDATED');
+    };
+  }, [isAuthenticated, fetchAll]);
 
   return (
     <Router>

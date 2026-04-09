@@ -66,6 +66,14 @@ const Dashboard = () => {
 
   const formatDur = (sec) => { const h = Math.floor(sec / 3600); const m = Math.floor((sec % 3600) / 60); return h > 0 ? `${h}h ${m}m` : `${m}m`; };
 
+  // ── safe date formatting ──
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'TBD';
+    return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+  };
+
   // ── streak: days in a row with time entries ────────────────
   const streak = useMemo(() => {
     let count = 0;
@@ -92,20 +100,20 @@ const Dashboard = () => {
     <div style={{ padding: '24px', minHeight: '100vh', color: '#e2e8f0' }}>
 
       {/* ── HEADER ROW ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', flexWrap: 'wrap', gap: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '20px', maxWidth: '1400px' }}>
         <div>
-          <h1 style={{ fontSize: '30px', fontWeight: '700', margin: '0 0 4px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 6px', letterSpacing: '-0.5px' }}>
             {greeting}, {firstName} 👋
           </h1>
-          <p style={{ color: '#64748b', margin: 0, fontSize: '14px' }}>
+          <p style={{ color: '#94a3b8', margin: 0, fontSize: '15px', fontWeight: '500' }}>
             {now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '32px', fontWeight: '700', fontFamily: "'JetBrains Mono', monospace", color: '#94a3b8' }}>
+        <div style={{ textAlign: 'right', background: 'rgba(255,255,255,0.03)', padding: '10px 18px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ fontSize: '34px', fontWeight: '800', fontFamily: "'JetBrains Mono', monospace", color: '#f1f5f9', letterSpacing: '1px' }}>
             {now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
           </div>
-          <div style={{ fontSize: '11px', color: '#475569', letterSpacing: '0.5px' }}>IST</div>
+          <div style={{ fontSize: '12px', color: '#64748b', letterSpacing: '2px', fontWeight: '700', marginTop: '2px' }}>IST</div>
         </div>
       </div>
 
@@ -117,7 +125,7 @@ const Dashboard = () => {
       </div>
 
       {/* ── MAIN STATS — 5 cards, not 4. Varied importance ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr 1fr 1fr 0.8fr', gap: '14px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {/* Big card: Today's hours */}
         <div onClick={() => navigate('/time-tracker')} className="stat-card-smooth"
           style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(6,182,212,0.06) 100%)', borderRadius: '18px', padding: '22px', border: '1px solid rgba(16,185,129,0.12)', cursor: 'pointer' }}>
@@ -171,7 +179,7 @@ const Dashboard = () => {
       </div>
 
       {/* ── MIDDLE ROW: 3 columns (intentionally unequal) ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '5fr 4fr 3fr', gap: '20px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '24px' }}>
 
         {/* Quick Actions — bigger panel */}
         <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -215,7 +223,7 @@ const Dashboard = () => {
                   style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', cursor: 'pointer', borderLeft: `3px solid ${isOverdue ? '#ef4444' : isUrgent ? '#f59e0b' : '#10b981'}` }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{task.title}</div>
-                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{task.assignee}</div>
+                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{formatDate(task.dueDate)} · {task.assignee}</div>
                   </div>
                   <span style={{ fontSize: '11px', fontWeight: '600', padding: '3px 8px', borderRadius: '6px', whiteSpace: 'nowrap', flexShrink: 0, marginLeft: '8px',
                     background: isOverdue ? 'rgba(239,68,68,0.1)' : isUrgent ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)',
@@ -255,7 +263,7 @@ const Dashboard = () => {
       </div>
 
       {/* ── BOTTOM ROW: Activity + Performance ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
         {/* Recent Activity */}
         <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <h3 style={{ margin: '0 0 16px', fontSize: '15px', fontWeight: '600', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -306,7 +314,7 @@ const Dashboard = () => {
           </div>
 
           {/* Quick info */}
-          <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '16px', padding: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {[
                 { label: 'Department', value: 'Engineering' },

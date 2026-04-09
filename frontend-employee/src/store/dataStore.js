@@ -23,8 +23,8 @@ export const useDataStore = create(
       _loaded: false,
 
       // ── fetch all data from backend ──
-      fetchAll: async () => {
-        if (get()._loaded) return;
+      fetchAll: async (force = false) => {
+        if (get()._loaded && !force) return;
         try {
           const [tasksRes, leavesRes, expensesRes, docsRes, payslipsRes, notifRes] = await Promise.allSettled([
             api.get('/tasks'),
