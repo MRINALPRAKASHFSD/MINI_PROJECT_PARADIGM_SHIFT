@@ -83,10 +83,12 @@ npm run dev
 
 ## 🌍 Deployment
 
-- Host each panel separately (Vercel/Netlify/Firebase Hosting).
-- **Admin Panel Deploy root:** `frontend-admin`
-- **Employee Panel Deploy root:** `frontend-employee`
-- Each panel will have its **own site url** (e.g. `paradigmshift-admin.vercel.app` and `paradigmshift-employee.vercel.app`).
+- **Platform:** Vercel (Experimental Services).
+- **Architecture:** Unified Monorepo routing via `vercel.json`.
+- **Primary Routes:**
+  - `frontend-employee` → `/`
+  - `frontend-admin` → `/admin`
+  - `backend` → `/api`
 
 ---
 
