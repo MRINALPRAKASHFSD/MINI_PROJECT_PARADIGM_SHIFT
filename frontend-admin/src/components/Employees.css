@@ -227,6 +227,13 @@
   font-weight:  700;
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
   animation: float 3s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .employee-basic-info {
@@ -237,12 +244,20 @@
   font-size: 20px;
   color: var(--text-primary);
   margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .employee-id {
   font-size: 13px;
   color: var(--text-secondary);
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .status-badge.active {

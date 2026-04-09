@@ -1,15 +1,27 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDataStore } from '../store/dataStore';
 import './Employees.css';
 
 function Employees() {
-  const { employees } = useDataStore();
+  const navigate = useNavigate();
+  const { employees, deleteEmployee } = useDataStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('All');
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const departments = ['All', 'IT', 'HR', 'Sales', 'Marketing', 'Finance', 'R&D', 'Support', 'Legal', 'Operations'];
+
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      try {
+        await deleteEmployee(id);
+      } catch (err) {
+        console.error('Failed to delete employee:', err);
+      }
+    }
+  };
 
   const filteredEmployees = employees.filter(emp => {
     const term = searchTerm.toLowerCase();
@@ -37,6 +49,7 @@ function Employees() {
           className="add-employee-btn"
           whileHover={{ scale:  1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/employees/add')}
         >
           ➕ Add Employee
         </motion.button>
@@ -118,7 +131,13 @@ function Employees() {
             whileHover={{ scale: 1.03, y: -5 }}
           >
             <div className="employee-header">
-              <div className="employee-avatar-large">{employee.avatar || (employee.name ? employee.name.charAt(0).toUpperCase() : '?')}</div>
+              <div className="employee-avatar-large">
+                {employee.avatar && employee.avatar.startsWith('http') ? (
+                  <img src={employee.avatar} alt={employee.name} className="avatar-img" />
+                ) : (
+                  employee.avatar || (employee.name ? employee.name.charAt(0).toUpperCase() : '?')
+                )}
+              </div>
               <div className="employee-basic-info">
                 <h3>{employee.name}</h3>
                 <p className="employee-id">{employee.employeeId || 'EMP'}</p>
@@ -181,6 +200,7 @@ function Employees() {
                 className="action-btn view"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedEmployee(employee)}
               >
                 👁️ View
               </motion.button>
@@ -188,6 +208,7 @@ function Employees() {
                 className="action-btn edit"
                 whileHover={{ scale:  1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate(`/employees/edit/${employee.id}`)}
               >
                 ✏️ Edit
               </motion.button>
@@ -195,6 +216,7 @@ function Employees() {
                 className="action-btn delete"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => handleDelete(employee.id, employee.name)}
               >
                 🗑️ Delete
               </motion.button>

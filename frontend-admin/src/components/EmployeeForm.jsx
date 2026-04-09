@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useDataStore } from '../store/dataStore';
 import './EmployeeForm.css';
 
 function EmployeeForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
+  const { employees, addEmployee, updateEmployee } = useDataStore();
 
   const [formData, setFormData] = useState({
     name:  '',
@@ -20,6 +22,25 @@ function EmployeeForm() {
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (isEditMode && employees.length > 0) {
+      const emp = employees.find(e => e.id === id);
+      if (emp) {
+        setFormData({
+          name: emp.name || '',
+          email: emp.email || '',
+          phone: emp.phone || '',
+          department: emp.department || '',
+          position: emp.designation || emp.position || '',
+          salary: emp.salary?.toString() || '',
+          joinDate: emp.joiningDate ? new Date(emp.joiningDate).toISOString().split('T')[0] : '',
+          address: emp.address || '',
+          status: emp.status || 'Active'
+        });
+      }
+    }
+  }, [isEditMode, id, employees]);
 
   const departments = ['IT', 'HR', 'Sales', 'Marketing', 'Finance', 'Operations'];
 
@@ -49,13 +70,30 @@ function EmployeeForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log('Form submitted:', formData);
-      alert(isEditMode ? 'Employee updated successfully!' : 'Employee added successfully!');
-      navigate('/employees');
+      try {
+        const payload = {
+          ...formData,
+          salary: Number(formData.salary),
+          joiningDate: formData.joinDate,
+          designation: formData.position
+        };
+
+        if (isEditMode) {
+          await updateEmployee(id, payload);
+          alert('Employee updated successfully!');
+        } else {
+          await addEmployee(payload);
+          alert('Employee added successfully!');
+        }
+        navigate('/employees');
+      } catch (err) {
+        console.error('Failed to save employee:', err);
+        alert('Error saving employee. Please try again.');
+      }
     }
   };
 
