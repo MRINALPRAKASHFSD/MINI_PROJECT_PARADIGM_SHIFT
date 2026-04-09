@@ -112,11 +112,11 @@
 }
 
 .sidebar {
-  width: 80px; /* Default closed width */
+  width: 100px; /* Default closed width */
 }
 
 .sidebar.open {
-  width: 280px ! important;
+  width: 320px ! important;
 }
 
 .sidebar-bg-effects {
@@ -729,7 +729,7 @@
 .main-content {
   position: relative;
   min-height: 100vh;
-  margin-left: 80px; /* Default closed margin */
+  margin-left: 100px; /* Default closed margin */
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
@@ -908,21 +908,21 @@
 /* Make closed sidebar MUCH WIDER - 100px instead of 80px */
 @media (min-width: 1025px) {
   .sidebar:not(.open) {
-    width: 80px !important;
+    width: 100px !important;
   }
   
   .main-content {
-    margin-left: 80px !important;
+    margin-left: 100px !important;
   }
 }
 
 @media (max-width: 1024px) {
   .sidebar {
-    width: 80px !important;
+    width: 100px !important;
   }
 
   .main-content {
-    margin-left: 80px ! important;
+    margin-left: 100px ! important;
   }
   
   /* Perfect centering for wider closed state */
@@ -978,7 +978,7 @@
 
   .sidebar.open {
     transform: translateX(0);
-    width: 280px !important;
+    width: 320px !important;
   }
 
   .main-content {
@@ -1044,8 +1044,9 @@
   
   /* Compact header */
   .sidebar-header {
-    padding: 1. 25rem 0.625rem !important;
+    padding: 1.25rem 0.5rem !important;
     justify-content: center !important;
+    position: relative !important;
   }
   
   .logo {
@@ -1057,7 +1058,12 @@
   }
   
   .sidebar-toggle {
-    display: none !important;
+    display: flex !important;
+    position: absolute !important;
+    right: 10px !important;
+    top: 20px !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
   }
   
   /* Divider */

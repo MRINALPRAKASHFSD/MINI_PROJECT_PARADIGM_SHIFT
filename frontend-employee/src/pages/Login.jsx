@@ -49,9 +49,8 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
-    setError('');
-    setIsLoading(true);
-
+    // Call Firebase immediately to ensure the popup is linked to the user gesture
+    // Many browsers block popups if preceded by async tasks (like state updates)
     const result = await signInWithGooglePlatform();
 
     if (result.success) {
@@ -60,9 +59,9 @@ const Login = () => {
         navigate('/dashboard');
       }
     } else {
+      // Only set error/loading if it failed (or handle loading UI specifically)
       setError(result.error);
     }
-    setIsLoading(false);
   };
 
   const features = [

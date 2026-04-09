@@ -64,7 +64,7 @@ const Layout = () => {
       </div>
 
       {/* ── SIDEBAR ─────────────────────────────────────────── */}
-      <aside className="sidebar glass-sidebar" style={{ width: sidebarOpen ? 280 : 80 }}>
+      <aside className="sidebar glass-sidebar" style={{ width: sidebarOpen ? 320 : 100, transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
         {/* Header */}
         <div className="sidebar-header">
           <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
@@ -155,7 +155,7 @@ const Layout = () => {
             </div>
           )}
           {sidebarOpen && (
-            <div style={{ textAlign: 'center', padding: '8px 0 4px', fontSize: '10px', color: '#334155', letterSpacing: '1px', textTransform: 'uppercase' }}>
+            <div style={{ textAlign: 'center', padding: '12px 0 8px', fontSize: '12px', fontWeight: '700', color: '#475569', letterSpacing: '2px', textTransform: 'uppercase', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
               Paradigm Shift&trade;
             </div>
           )}
@@ -163,7 +163,7 @@ const Layout = () => {
       </aside>
 
       {/* ── MAIN CONTENT ────────────────────────────────────── */}
-      <div className="main-content" style={{ marginLeft: sidebarOpen ? 280 : 80 }}>
+      <div className="main-content" style={{ marginLeft: sidebarOpen ? 320 : 100, transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
         {/* Top Bar */}
         <header className="topbar glass-topbar">
           <div className="topbar-left">
