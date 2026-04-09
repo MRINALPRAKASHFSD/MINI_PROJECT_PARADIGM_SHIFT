@@ -33,8 +33,8 @@ Built for flexibility and ease of use, our platform offers:
   - Submit work proofs, check attendance, leave status, and pay slips.
   - Receive organizational updates and resources in real time.
 
-All built with ❤️ using **ReactJS + Firebase**.  
-**Collaborative, scalable, and made for your org’s productivity!**
+All built with ❤️ using the **MERN Stack (MongoDB, Express, React, Node.js)**.  
+**Collaborative, scalable, and synced in real-time via Socket.io!**
 
 ---
 
