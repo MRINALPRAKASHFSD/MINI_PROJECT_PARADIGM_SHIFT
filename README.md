@@ -63,15 +63,23 @@ git clone https://github.com/<your-username>/<your-repo>.git
 cd ParadigmShift
 ```
 
-#### 2️⃣ Run the **Admin Panel**
+#### 2️⃣ Run the **Backend API**
 ```bash
-cd frontend-admin
+cd backend
+npm install
+npm run dev
+# Server runs on http://localhost:5050
+```
+
+#### 3️⃣ Run the **Admin Panel**
+```bash
+cd ../frontend-admin
 npm install
 npm run dev
 # Go to http://localhost:5173/admin
 ```
 
-#### 3️⃣ Run the **Employee Panel**
+#### 4️⃣ Run the **Employee Panel**
 ```bash
 cd ../frontend-employee
 npm install
