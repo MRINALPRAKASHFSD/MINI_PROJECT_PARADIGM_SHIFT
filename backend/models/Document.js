@@ -10,6 +10,7 @@ const documentSchema = new mongoose.Schema({
   size: { type: String, default: '' },
   status: { type: String, enum: ['pending', 'verified', 'rejected'], default: 'pending' },
   verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Document', documentSchema);
