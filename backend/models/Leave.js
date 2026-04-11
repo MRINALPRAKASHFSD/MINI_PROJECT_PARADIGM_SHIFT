@@ -10,6 +10,7 @@ const leaveSchema = new mongoose.Schema({
   reason: { type: String, default: '' },
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
   approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Leave', leaveSchema);
