@@ -10,6 +10,8 @@ const taskSchema = new mongoose.Schema({
   category: { type: String, default: 'Engineering' },
   tags: [String],
   dueDate: { type: Date },
+  reminderDate: { type: Date },
+  isReminderSent: { type: Boolean, default: false },
   subtasks: [{ text: String, done: { type: Boolean, default: false } }],
   companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
