@@ -7,6 +7,7 @@ const notificationSchema = new mongoose.Schema({
   message: { type: String, default: '' },
   read: { type: Boolean, default: false },
   link: { type: String, default: '' },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Notification', notificationSchema);
