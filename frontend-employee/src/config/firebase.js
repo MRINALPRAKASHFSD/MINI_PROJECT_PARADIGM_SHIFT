@@ -87,13 +87,14 @@ export async function loginWithEmail(email, password) {
   }
 }
 
-export async function registerWithEmail(email, password, displayName) {
+export async function registerWithEmail(email, password, displayName, isCompany = false, companyName = '') {
   try {
     const { data } = await api.post('/auth/register', {
       name: displayName,
       email,
       password,
-      role: 'employee',
+      role: isCompany ? 'admin' : 'employee',
+      companyName: isCompany ? companyName : '',
     });
     // Store JWT - Handled by authStore persist
     return {
@@ -104,6 +105,7 @@ export async function registerWithEmail(email, password, displayName) {
         displayName: data.user.name,
         name: data.user.name,
         role: data.user.role,
+        companyName: data.user.companyName,
         photoURL: null,
         ...data.user,
       },
