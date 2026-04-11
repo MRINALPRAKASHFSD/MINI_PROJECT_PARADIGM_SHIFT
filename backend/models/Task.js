@@ -11,6 +11,7 @@ const taskSchema = new mongoose.Schema({
   tags: [String],
   dueDate: { type: Date },
   subtasks: [{ text: String, done: { type: Boolean, default: false } }],
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Task', taskSchema);
