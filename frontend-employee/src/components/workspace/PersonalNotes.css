@@ -143,13 +143,62 @@
   word-break: break-word;
 }
 
+.note-pin-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.sticky-note:hover .note-pin-indicator,
+.sticky-note.is-pinned .note-pin-indicator {
+  opacity: 1;
+}
+
+.pin-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  transition: transform 0.2s, color 0.2s;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-btn:hover {
+  transform: scale(1.1);
+  color: #1e293b;
+}
+
+.pin-btn.active {
+  color: #1e293b;
+}
+
+.sticky-note.is-pinned {
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.15);
+}
+
 .note-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
   opacity: 0;
   transition: opacity 0.2s;
+}
+
+.share-actions, .status-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.share-btn-small {
+  width: 24px;
+  height: 24px;
 }
 
 .sticky-note:hover .note-footer {
