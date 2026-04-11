@@ -69,6 +69,7 @@ export const useDataStore = create(
           const mapDoc = (d) => ({
             ...d,
             id: d._id || d.id,
+            title: d.name,
             verified: d.status === 'verified',
             uploadedAt: new Date(d.createdAt).getTime(),
           });
@@ -208,7 +209,7 @@ export const useDataStore = create(
           set(s => ({ documents: [newDoc, ...s.documents] }));
         } catch {
           set(s => ({
-            documents: [{ ...doc, id: id(), uploadedAt: ts(), verified: false }, ...s.documents],
+            documents: [{ ...doc, title: doc.name, id: id(), uploadedAt: ts(), verified: false, type: 'Personal Doc' }, ...s.documents],
           }));
         }
       },
