@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 // Production = Render cloud backend | Development = local backend
-const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost');
-const API_URL = isProduction
-  ? '/api'
-  : (import.meta.env.VITE_API_URL || 'http://localhost:5050/api');
+const isLocal = typeof window !== 'undefined' && 
+  (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
+
+const API_URL = import.meta.env.VITE_API_URL || 
+  (isLocal ? 'http://localhost:5050/api' : '/api');
 
 const api = axios.create({
   baseURL: API_URL,
