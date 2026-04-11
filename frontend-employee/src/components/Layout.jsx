@@ -1,13 +1,13 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useDataStore } from '../store/dataStore';
 import { logout as firebaseLogout } from '../config/firebase';
 import {
   LayoutDashboard, Users, CheckSquare, Clock, Camera, FileText,
   BarChart3, Settings, LogOut, Menu, X, Bell, Sun, Moon,
-  Sparkles, Calendar, User, Palmtree, IndianRupee, Receipt, FolderOpen
+  Sparkles, Calendar, User, Palmtree, IndianRupee, Receipt, FolderOpen, Blocks
 } from 'lucide-react';
 import './Layout.css';
 
@@ -20,23 +20,37 @@ const Layout = () => {
 
   // Real unread count from dataStore
   const notifications = useDataStore(s => s.notifications);
+  const companySettings = useDataStore(s => s.companySettings);
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  useEffect(() => {
+    // Sync theme settings and system mode
+    if (companySettings?.theme) {
+      if (companySettings.theme.mode === 'light') setDarkMode(false);
+      else if (companySettings.theme.mode === 'dark') setDarkMode(true);
+      
+      if (companySettings.theme.primaryColor) {
+        document.documentElement.style.setProperty('--primary', companySettings.theme.primaryColor);
+      }
+    }
+  }, [companySettings?.theme]);
 
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: '#3B82F6', gradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)' },
+    { path: '/workspace', icon: Blocks, label: 'My Workspace', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 100%)' },
     { path: '/teams', icon: Users, label: 'Teams', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)' },
-    { path: '/tasks', icon: CheckSquare, label: 'Tasks', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)' },
-    { path: '/time-tracker', icon: Clock, label: 'Time Tracker', color: '#06B6D4', gradient: 'linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%)' },
+    companySettings?.features?.enableTasks !== false && { path: '/tasks', icon: CheckSquare, label: 'Tasks', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)' },
+    companySettings?.features?.enableTimeTracking !== false && { path: '/time-tracker', icon: Clock, label: 'Time Tracker', color: '#06B6D4', gradient: 'linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%)' },
     { path: '/submit-proof', icon: Camera, label: 'Submit Proof', color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
     { path: '/notifications', icon: Bell, label: 'Notifications', color: '#EF4444', gradient: 'linear-gradient(135deg, #EF4444 0%, #F87171 100%)', badge: unreadCount || null },
-    { path: '/leave', icon: Palmtree, label: 'Leave', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #6EE7B7 100%)' },
+    companySettings?.features?.enableLeaves !== false && { path: '/leave', icon: Palmtree, label: 'Leave', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #6EE7B7 100%)' },
     { path: '/reports', icon: FileText, label: 'Reports', color: '#EC4899', gradient: 'linear-gradient(135deg, #EC4899 0%, #F472B6 100%)' },
     { path: '/analytics', icon: BarChart3, label: 'Analytics', color: '#6366F1', gradient: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)' },
-    { path: '/payslips', icon: IndianRupee, label: 'Payslips', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%)' },
-    { path: '/expenses', icon: Receipt, label: 'Expenses', color: '#F97316', gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)' },
-    { path: '/documents', icon: FolderOpen, label: 'Documents', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%)' },
-    { path: '/meetings', icon: Calendar, label: 'Meetings', color: '#F43F5E', gradient: 'linear-gradient(135deg, #F43F5E 0%, #FB7185 100%)' },
-  ];
+    companySettings?.features?.enablePayroll !== false && { path: '/payslips', icon: IndianRupee, label: 'Payslips', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%)' },
+    companySettings?.features?.enableExpenses !== false && { path: '/expenses', icon: Receipt, label: 'Expenses', color: '#F97316', gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)' },
+    companySettings?.features?.enableDocuments !== false && { path: '/documents', icon: FolderOpen, label: 'Documents', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%)' },
+    companySettings?.features?.enableMeetings !== false && { path: '/meetings', icon: Calendar, label: 'Meetings', color: '#F43F5E', gradient: 'linear-gradient(135deg, #F43F5E 0%, #FB7185 100%)' },
+  ].filter(Boolean);
 
   const handleLogout = async () => {
     await firebaseLogout();
@@ -69,10 +83,10 @@ const Layout = () => {
         {/* Header */}
         <div className="sidebar-header">
           <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
-            <div className="logo-icon" style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
-              <LayoutDashboard size={24} strokeWidth={2.5} />
+            <div className="logo-icon" style={{ background: companySettings?.theme?.primaryColor || 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
+              <Sparkles size={22} strokeWidth={2.5} />
             </div>
-            {sidebarOpen && <span className="logo-text" style={{ transition: 'opacity 0.2s' }}>Employee Portal</span>}
+            {sidebarOpen && <span className="logo-text" style={{ transition: 'opacity 0.2s', letterSpacing: '0.5px' }}>Paradigm Shift</span>}
           </div>
           <button className="sidebar-toggle glass-btn" onClick={() => setSidebarOpen(!sidebarOpen)} style={{ transition: 'transform 0.2s' }}>
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
@@ -172,6 +186,11 @@ const Layout = () => {
               <Menu size={22} />
             </button>
             <h2 className="page-title">{pageTitle}</h2>
+            {user?.companyName && (
+              <span className="workspace-badge" style={{ marginLeft: '16px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', padding: '4px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                {user.companyName}
+              </span>
+            )}
           </div>
           <div className="topbar-right">
             <button className="topbar-btn glass-btn" onClick={() => setDarkMode(!darkMode)} style={{ transition: 'transform 0.2s' }}>
