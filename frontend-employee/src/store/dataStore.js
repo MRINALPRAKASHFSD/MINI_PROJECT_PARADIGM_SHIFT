@@ -16,23 +16,27 @@ export const useDataStore = create(
       leaves: [],
       notifications: [],
       activities: [],
-      payslips: [],
       expenses: [],
       documents: [],
+      companySettings: null,
+      messages: [],
+      workspaceNotes: [],
       leaveBalances: { casual: 10, sick: 7, earned: 15, wfh: 24 },
       _loaded: false,
 
-      // ── fetch all data from backend ──
       fetchAll: async (force = false) => {
         if (get()._loaded && !force) return;
         try {
-          const [tasksRes, leavesRes, expensesRes, docsRes, payslipsRes, notifRes] = await Promise.allSettled([
+          const [tasksRes, leavesRes, expensesRes, docsRes, payslipsRes, notifRes, settingsRes, notesRes, msgRes] = await Promise.allSettled([
             api.get('/tasks'),
             api.get('/leaves'),
             api.get('/expenses'),
             api.get('/documents'),
             api.get('/payslips'),
             api.get('/notifications'),
+            api.get('/settings'),
+            api.get('/workspace/notes'),
+            api.get('/workspace/messages'),
           ]);
 
           const extract = (res, key) => res.status === 'fulfilled' ? (res.value.data[key] || []) : [];
@@ -88,6 +92,9 @@ export const useDataStore = create(
             documents: extract(docsRes, 'documents').map(mapDoc),
             payslips: extract(payslipsRes, 'payslips').map(mapPayslip),
             notifications: extract(notifRes, 'notifications').map(mapNotif),
+            companySettings: extract({ status: settingsRes.status, value: { data: { settings: settingsRes.status === 'fulfilled' ? settingsRes.value.data.settings : null } } }, 'settings'),
+            workspaceNotes: extract(notesRes, 'notes'),
+            messages: extract(msgRes, 'messages'),
             _loaded: true,
           });
         } catch (err) {
@@ -208,6 +215,31 @@ export const useDataStore = create(
       deleteDocument: async (docId) => {
         set(s => ({ documents: s.documents.filter(d => d.id !== docId) }));
         try { await api.delete(`/documents/${docId}`); } catch {}
+      },
+
+      // ── workspace notes & messages ──
+      addWorkspaceNote: async (note) => {
+        try {
+          const { data } = await api.post('/workspace/notes', note);
+          set(s => ({ workspaceNotes: [data.note, ...s.workspaceNotes] }));
+        } catch (err) {
+          console.error(err);
+        }
+      },
+      updateWorkspaceNote: async (noteId, updates) => {
+        set(s => ({ workspaceNotes: s.workspaceNotes.map(n => n._id === noteId ? { ...n, ...updates } : n) }));
+        try { await api.put(`/workspace/notes/${noteId}`, updates); } catch {}
+      },
+      deleteWorkspaceNote: async (noteId) => {
+        set(s => ({ workspaceNotes: s.workspaceNotes.filter(n => n._id !== noteId) }));
+        try { await api.delete(`/workspace/notes/${noteId}`); } catch {}
+      },
+      addMessage: (msg) => {
+        // Prevent dupes by checking _id
+        set(s => {
+          if (s.messages.some(m => m._id === msg._id)) return s;
+          return { messages: [...s.messages, msg] };
+        });
       },
 
       // ── refresh individual resource ──
