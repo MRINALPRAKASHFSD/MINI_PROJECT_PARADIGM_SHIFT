@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['Active', 'Inactive', 'On Leave'], default: 'Active' },
   avatar: { type: String, default: '' },
   profileComplete: { type: Boolean, default: false },
+  companyName: { type: String, default: '' },
 }, { timestamps: true });
 
 userSchema.pre('save', async function() {
