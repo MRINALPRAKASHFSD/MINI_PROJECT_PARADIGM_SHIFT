@@ -24,6 +24,7 @@ import {
   Trash2
 } from 'lucide-react';
 import './Settings.css';
+import { useAuthStore } from '../store/authStore';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -31,31 +32,38 @@ const Settings = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('');
 
+  const { user, updateUser } = useAuthStore();
+  
+  // Helper to split name
+  const nameParts = (user?.name || '').split(' ');
+  const fName = nameParts[0] || '';
+  const lName = nameParts.slice(1).join(' ') || '';
+
   // Profile Information State
   const [profile, setProfile] = useState({
-    firstName: 'Rajesh',
-    lastName: 'Kumar',
-    email: 'rajesh.kumar@techsolutions.in',
-    phone: '+91 98765 43210',
-    dateOfBirth: '1990-05-15',
-    gender: 'Male',
-    address: '123 Main Street',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    pincode: '400001',
-    country: 'India'
+    firstName: fName,
+    lastName: lName,
+    email: user?.email || '',
+    phone: user?.phone || '',
+    dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
+    gender: user?.gender || 'Male',
+    address: user?.address || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    pincode: user?.pincode || '',
+    country: user?.country || 'India'
   });
 
-  // Employment Information State
+  // Employment Information State (Admin controlled)
   const [employment, setEmployment] = useState({
-    employeeId: 'EMP001',
-    designation: 'Senior Developer',
-    department: 'Engineering',
-    joiningDate: '2022-01-15',
-    employmentType: 'Full-time',
-    reportingManager: 'Vikram Patel',
-    workLocation: 'Mumbai Office',
-    salary: '₹12,00,000'
+    employeeId: user?.employeeId || '',
+    designation: user?.designation || '',
+    department: user?.department || '',
+    joiningDate: user?.joiningDate ? new Date(user.joiningDate).toISOString().split('T')[0] : '',
+    employmentType: user?.employmentType || 'Full-time',
+    reportingManager: user?.reportingManager || '',
+    workLocation: user?.workLocation || '',
+    salary: user?.salary ? `₹${user.salary}` : ''
   });
 
   // Documents State
@@ -72,29 +80,29 @@ const Settings = () => {
 
   // Bank Details State
   const [bankDetails, setBankDetails] = useState({
-    accountNumber: '1234567890',
-    ifscCode: 'HDFC0001234',
-    bankName: 'HDFC Bank',
-    branch: 'Mumbai Branch',
-    accountHolderName: 'Rajesh Kumar',
-    accountType: 'Savings'
+    accountNumber: user?.bankDetails?.accountNumber || '',
+    ifscCode: user?.bankDetails?.ifscCode || '',
+    bankName: user?.bankDetails?.bankName || '',
+    branch: user?.bankDetails?.branch || '',
+    accountHolderName: user?.bankDetails?.accountHolderName || '',
+    accountType: user?.bankDetails?.accountType || 'Savings'
   });
 
   // Emergency Contact State
   const [emergencyContact, setEmergencyContact] = useState({
-    name: 'Sunita Kumar',
-    relationship: 'Spouse',
-    phone: '+91 98765 12345',
-    address: '42 Andheri West, Mumbai'
+    name: user?.emergencyContact?.name || '',
+    relationship: user?.emergencyContact?.relationship || '',
+    phone: user?.emergencyContact?.phone || '',
+    address: user?.emergencyContact?.address || ''
   });
 
   // Notification Settings
   const [notifications, setNotifications] = useState({
-    emailNotifications: true,
-    pushNotifications: true,
-    taskReminders: true,
-    weeklyReports: false,
-    projectUpdates: true
+    emailNotifications: user?.notifications?.emailNotifications ?? true,
+    pushNotifications: user?.notifications?.pushNotifications ?? true,
+    taskReminders: user?.notifications?.taskReminders ?? true,
+    weeklyReports: user?.notifications?.weeklyReports ?? false,
+    projectUpdates: user?.notifications?.projectUpdates ?? true
   });
 
   const tabs = [
@@ -132,12 +140,31 @@ const Settings = () => {
     }
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     setSaveStatus('saving');
-    setTimeout(() => {
+    try {
+      await updateUser({
+        name: `${profile.firstName} ${profile.lastName}`.trim(),
+        email: profile.email,
+        phone: profile.phone,
+        dateOfBirth: profile.dateOfBirth,
+        gender: profile.gender,
+        address: profile.address,
+        city: profile.city,
+        state: profile.state,
+        pincode: profile.pincode,
+        country: profile.country,
+        bankDetails,
+        emergencyContact,
+        notifications
+      });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus(''), 2000);
-    }, 800);
+    } catch (err) {
+      console.error(err);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus(''), 2000);
+    }
   };
 
   return (
@@ -350,6 +377,7 @@ const Settings = () => {
                       type="text"
                       value={employment.designation}
                       onChange={(e) => setEmployment({ ...employment, designation: e.target.value })}
+                      disabled
                     />
                   </div>
                   <div className="form-group">
@@ -357,6 +385,7 @@ const Settings = () => {
                     <select
                       value={employment.department}
                       onChange={(e) => setEmployment({ ...employment, department: e.target.value })}
+                      disabled
                     >
                       <option>Engineering</option>
                       <option>Marketing</option>
@@ -382,6 +411,7 @@ const Settings = () => {
                     <select
                       value={employment.workLocation}
                       onChange={(e) => setEmployment({ ...employment, workLocation: e.target. value })}
+                      disabled
                     >
                       <option>Mumbai Office</option>
                       <option>Delhi Office</option>
@@ -400,10 +430,11 @@ const Settings = () => {
                   onClick={handleSaveProfile}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  disabled
                 >
                   <Save size={20} />
-                  Save Changes
-                </motion. button>
+                  Save Changes (Restricted)
+                </motion.button>
               </motion.div>
             )}
 
