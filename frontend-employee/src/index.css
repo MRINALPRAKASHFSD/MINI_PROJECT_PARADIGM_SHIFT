@@ -12,8 +12,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #0a0a0f;
-  color: #e4e4e7;
+  background: #060609; /* Slightly darker and richer */
+  color: #f1f5f9; /* Brighter default text */
+  letter-spacing: -0.015em;
   overflow-x: hidden;
 }
 
