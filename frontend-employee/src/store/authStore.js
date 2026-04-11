@@ -21,6 +21,18 @@ export const useAuthStore = create(
 
       setLoading: (loading) => set({ loading }),
 
+      updateUser: async (updates) => {
+        try {
+          const api = (await import('../services/api.js')).default;
+          // The auth me route is /auth/me or maybe we just put directly
+          const { data } = await api.put('/auth/me', updates);
+          set((state) => ({ user: { ...state.user, ...data.user } }));
+          return data.user;
+        } catch (error) {
+          throw error;
+        }
+      },
+
       logout: () => {
         localStorage.removeItem('token');
         set({ user: null, token: null, isAuthenticated: false });
