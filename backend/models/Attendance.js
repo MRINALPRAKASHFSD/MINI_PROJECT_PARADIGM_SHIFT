@@ -8,6 +8,7 @@ const attendanceSchema = new mongoose.Schema({
   checkOut: { type: String, default: '' },
   status: { type: String, enum: ['Present', 'Absent', 'Half Day', 'On Leave', 'WFH'], default: 'Present' },
   hoursWorked: { type: Number, default: 0 },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 attendanceSchema.index({ employee: 1, date: 1 }, { unique: true });
