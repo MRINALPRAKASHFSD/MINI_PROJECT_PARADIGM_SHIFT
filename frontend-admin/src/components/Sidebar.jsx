@@ -81,6 +81,13 @@ function Sidebar() {
       color: '#EA580C',
       bgGradient: 'linear-gradient(135deg, #EA580C 0%, #F97316 100%)'
     },
+    { 
+      path: '/settings', 
+      icon: '⚙️', 
+      label: 'Portal Settings', 
+      color: '#64748b',
+      bgGradient: 'linear-gradient(135deg, #475569 0%, #334155 100%)'
+    },
   ];
 
   return (

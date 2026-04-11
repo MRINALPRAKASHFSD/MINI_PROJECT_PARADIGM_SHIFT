@@ -19,6 +19,7 @@ import ExpenseApprovals from './components/ExpenseApprovals';
 import DocumentVerification from './components/DocumentVerification';
 import TaskAssignment from './components/TaskAssignment';
 import VideoBackground from './components/VideoBackground';
+import CompanySettings from './components/CompanySettings';
 import './App.css';
 
 function ProtectedRoute({ children }) {
@@ -74,6 +75,7 @@ function App() {
                   <Route path="/expense-approvals" element={<ProtectedRoute><ExpenseApprovals /></ProtectedRoute>} />
                   <Route path="/document-verification" element={<ProtectedRoute><DocumentVerification /></ProtectedRoute>} />
                   <Route path="/task-assignment" element={<ProtectedRoute><TaskAssignment /></ProtectedRoute>} />
+                  <Route path="/settings" element={<ProtectedRoute><CompanySettings /></ProtectedRoute>} />
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
