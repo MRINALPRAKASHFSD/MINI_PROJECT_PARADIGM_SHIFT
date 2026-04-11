@@ -16,6 +16,47 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String, default: '' },
   profileComplete: { type: Boolean, default: false },
   companyName: { type: String, default: '' },
+  
+  // Extended Profile
+  gender: { type: String, default: '' },
+  dateOfBirth: { type: Date },
+  address: { type: String, default: '' },
+  city: { type: String, default: '' },
+  state: { type: String, default: '' },
+  pincode: { type: String, default: '' },
+  country: { type: String, default: '' },
+
+  // Employment specifics
+  employmentType: { type: String, default: 'Full-time' },
+  reportingManager: { type: String, default: '' },
+  workLocation: { type: String, default: '' },
+
+  // Bank Details
+  bankDetails: {
+    accountNumber: { type: String, default: '' },
+    ifscCode: { type: String, default: '' },
+    bankName: { type: String, default: '' },
+    branch: { type: String, default: '' },
+    accountHolderName: { type: String, default: '' },
+    accountType: { type: String, default: 'Savings' }
+  },
+
+  // Emergency Contact
+  emergencyContact: {
+    name: { type: String, default: '' },
+    relationship: { type: String, default: '' },
+    phone: { type: String, default: '' },
+    address: { type: String, default: '' }
+  },
+
+  // Notifications
+  notifications: {
+    emailNotifications: { type: Boolean, default: true },
+    pushNotifications: { type: Boolean, default: true },
+    taskReminders: { type: Boolean, default: true },
+    weeklyReports: { type: Boolean, default: false },
+    projectUpdates: { type: Boolean, default: true }
+  }
 }, { timestamps: true });
 
 userSchema.pre('save', async function() {
