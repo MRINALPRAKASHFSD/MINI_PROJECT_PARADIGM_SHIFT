@@ -32,6 +32,7 @@ import Payslips from './pages/Payslips';
 import Expenses from './pages/Expenses';
 import Documents from './pages/Documents';
 import Meetings from './pages/Meetings';
+import Workspace from './pages/Workspace';
 
 import './App.css';
 
@@ -41,14 +42,24 @@ function App() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
+      // Connect to unified company room
+      if (useAuthStore.getState().user?.companyName) {
+        socket.emit('joinCompanyRoom', useAuthStore.getState().user.companyName);
+      }
+
       // Listen for data updates from the server
       socket.on('DATA_UPDATED', (data) => {
         console.log('📡 [REAL-TIME] Data update received:', data);
         fetchAll(true); // Force refresh regardless of _loaded state
       });
+
+      socket.on('newMessage', (msg) => {
+        useDataStore.getState().addMessage(msg);
+      });
     }
     return () => {
       socket.off('DATA_UPDATED');
+      socket.off('newMessage');
     };
   }, [isAuthenticated, fetchAll]);
 
@@ -106,6 +117,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/meetings" element={<Meetings />} />
+          <Route path="/workspace" element={<Workspace />} />
         </Route>
 
         {/* Default redirect */}
