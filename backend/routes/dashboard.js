@@ -12,6 +12,7 @@ const router = express.Router();
 // GET /api/dashboard/stats — aggregated stats for admin dashboard
 router.get('/stats', auth, async (req, res) => {
   try {
+    const companyFilter = { companyName: req.user.companyName };
     const [
       totalEmployees,
       activeEmployees,
@@ -22,27 +23,28 @@ router.get('/stats', auth, async (req, res) => {
       totalTasks,
       completedTasks,
     ] = await Promise.all([
-      User.countDocuments({ role: 'employee' }),
-      User.countDocuments({ role: 'employee', status: 'Active' }),
-      Leave.countDocuments({ status: 'pending' }),
-      User.distinct('department').then(d => d.filter(Boolean).length),
-      Expense.countDocuments({ status: 'pending' }),
-      Document.countDocuments({ status: 'pending' }),
-      Task.countDocuments(),
-      Task.countDocuments({ status: 'completed' }),
+      User.countDocuments({ role: 'employee', ...companyFilter }),
+      User.countDocuments({ role: 'employee', status: 'Active', ...companyFilter }),
+      Leave.countDocuments({ status: 'pending', ...companyFilter }),
+      User.distinct('department', companyFilter).then(d => d.filter(Boolean).length),
+      Expense.countDocuments({ status: 'pending', ...companyFilter }),
+      Document.countDocuments({ status: 'pending', ...companyFilter }),
+      Task.countDocuments(companyFilter),
+      Task.countDocuments({ status: 'completed', ...companyFilter }),
     ]);
 
     // Today's attendance
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
-    const presentToday = await Attendance.countDocuments({ date: { $gte: todayStart }, status: 'Present' });
+    const presentToday = await Attendance.countDocuments({ date: { $gte: todayStart }, status: 'Present', ...companyFilter });
 
     // Total payroll
-    const payrollAgg = await User.aggregate([{ $match: { role: 'employee' } }, { $group: { _id: null, total: { $sum: '$salary' } } }]);
+    const payrollAgg = await User.aggregate([{ $match: { role: 'employee', ...companyFilter } }, { $group: { _id: null, total: { $sum: '$salary' } } }]);
     const totalPayroll = payrollAgg[0]?.total || 0;
 
     // Expense totals
     const expenseAgg = await Expense.aggregate([
+      { $match: companyFilter },
       { $group: { _id: '$status', total: { $sum: '$amount' } } },
     ]);
     const expenseTotals = {};
