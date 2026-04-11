@@ -20,7 +20,37 @@ app.set('io', io);
 
 io.on('connection', (socket) => {
   console.log('🔌 Client connected:', socket.id);
-  socket.on('disconnect', () => console.log('👋 Client disconnected'));
+  
+  // Join user to a company-specific room
+  socket.on('joinCompanyRoom', (companyName) => {
+    if (companyName) {
+      socket.join(companyName);
+      console.log(`🔌 Client ${socket.id} joined room: ${companyName}`);
+    }
+  });
+
+  // Handle incoming chat messages
+  socket.on('chatMessage', async (data) => {
+    try {
+      const Message = require('./models/Message');
+      const { senderId, senderName, senderAvatar, companyName, content } = data;
+      
+      const newMessage = await Message.create({
+        senderId,
+        senderName,
+        senderAvatar,
+        companyName,
+        content
+      });
+
+      // Broadcast to everyone in the company room (including sender to confirm delivery)
+      io.to(companyName).emit('newMessage', newMessage);
+    } catch (err) {
+      console.error('Socket chatMessage error:', err.message);
+    }
+  });
+
+  socket.on('disconnect', () => console.log('👋 Client disconnected', socket.id));
 });
 
 // ── Security & parsing ──────────────────────────────────────
@@ -75,6 +105,8 @@ app.use('/api/payslips', require('./routes/payslips'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/meetings', require('./routes/meetings'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/workspace', require('./routes/workspace'));
 
 // ── Health check ────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
