@@ -12,15 +12,26 @@ const signToken = (id) =>
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, companyName } = req.body;
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ error: 'Email already registered.' });
 
     const count = await User.countDocuments();
     const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
 
-    const user = await User.create({ name, email, password, role: role || 'employee', employeeId });
+    const user = await User.create({ 
+      name, 
+      email, 
+      password, 
+      role: role || 'employee', 
+      employeeId,
+      companyName: companyName || ''
+    });
     const token = signToken(user._id);
+
+    if (req.app.get('io')) {
+      req.app.get('io').emit('DATA_UPDATED', { type: 'NEW_USER', user: user.toJSON() });
+    }
 
     res.status(201).json({ token, user: user.toJSON() });
   } catch (err) {
@@ -70,10 +81,36 @@ router.post('/google', async (req, res) => {
         employeeId,
         avatar: photoURL || '',
       });
+
+      if (req.app.get('io')) {
+        req.app.get('io').emit('DATA_UPDATED', { type: 'NEW_USER', user: user.toJSON() });
+      }
     }
 
     const token = signToken(user._id);
     res.json({ token, user: user.toJSON() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/auth/setup-company
+router.post('/setup-company', auth, async (req, res) => {
+  try {
+    const { companyName } = req.body;
+    if (!companyName) return res.status(400).json({ error: 'Company Name is required.' });
+
+    const user = await User.findById(req.user._id);
+    if (user.companyName) return res.status(400).json({ error: 'You are already in a company.' });
+
+    user.companyName = companyName;
+    await user.save();
+
+    if (req.app.get('io')) {
+      req.app.get('io').emit('DATA_UPDATED', { type: 'COMPANY_JOIN' });
+    }
+
+    res.json({ user: user.toJSON() });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
