@@ -15,6 +15,7 @@ const payslipSchema = new mongoose.Schema({
   insurance: { type: Number, default: 0 },
   netPay: { type: Number, default: 0 },
   status: { type: String, enum: ['draft', 'generated', 'paid'], default: 'generated' },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Payslip', payslipSchema);
