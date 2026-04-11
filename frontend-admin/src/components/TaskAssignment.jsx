@@ -16,9 +16,6 @@ import './TaskAssignment.css';
 const PRIORITY_COLORS = { 
   high: '#ef4444', 
   medium: '#f59e0b', 
-  low: '#10b981',
-  high: '#ef4444', // Backward compat
-  medium: '#f59e0b',
   low: '#10b981'
 };
 
