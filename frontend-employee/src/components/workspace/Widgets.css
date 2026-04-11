@@ -1,0 +1,462 @@
+/* Shared Widget Styles */
+.workspace-widget {
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.workspace-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.widget-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.widget-header h3 svg {
+  color: var(--primary, #3b82f6);
+}
+
+.text-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.text-btn:hover {
+  color: var(--primary, #3b82f6);
+}
+
+.empty-state {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* List Content Shared (Tasks & Docs) */
+.list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.task-item {
+  cursor: pointer;
+}
+
+.task-info, .doc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.task-title, .doc-title {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.task-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  width: max-content;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.task-badge.high { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+.task-badge.medium { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+.task-badge.low { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+
+.doc-meta {
+  color: #64748b;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.action-btn, .task-arrow {
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.list-item:hover .action-btn, .list-item:hover .task-arrow {
+  color: var(--primary, #3b82f6);
+}
+
+/* Spotify Widget Enhanced */
+.spotify-widget {
+  padding: 1rem;
+  position: relative;
+  overflow: visible; /* Let aura glow bleed out slightly if needed */
+}
+
+.spotify-player-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.music-visualizer {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vis-bar {
+  width: 4px;
+  height: 8px;
+  background: var(--primary, #3b82f6);
+  border-radius: 2px;
+  animation: bounce 1.2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+@keyframes bounce {
+  0%, 100% { height: 8px; opacity: 0.4; }
+  50% { height: 24px; opacity: 1; transform: translateY(-4px); }
+}
+
+.spotify-aura-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+  animation: pulse-aura 3s ease-in-out infinite;
+}
+
+@keyframes pulse-aura {
+  0%, 100% { opacity: 0.3; scale: 1; }
+  50% { opacity: 0.6; scale: 1.05; }
+}
+
+.spotify-iframe-container {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.spotify-input-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 180px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.spotify-input-overlay p {
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+.input-row {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+}
+.input-row input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+.input-row button {
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 0.8rem;
+  cursor: pointer;
+}
+
+/* Focus Timer Widget */
+.timer-widget {
+  align-items: center;
+}
+
+.timer-mode-toggles {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 0.2rem;
+}
+
+.timer-mode-toggles button {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.timer-mode-toggles button.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.timer-widget.break-mode {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.timer-display-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer-ring {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.timer-bg {
+  fill: transparent;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 4;
+}
+
+.timer-progress {
+  fill: transparent;
+  stroke: var(--primary, #3b82f6);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s linear;
+}
+
+.break-mode .timer-progress {
+  stroke: #10b981;
+}
+
+.timer-text {
+  position: absolute;
+  text-align: center;
+}
+
+.timer-text h1 {
+  font-size: 2rem;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.timer-text p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.timer-controls button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.timer-controls .play-btn {
+  background: var(--primary, #3b82f6);
+  border-color: var(--primary, #3b82f6);
+}
+.break-mode .timer-controls .play-btn {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.play-icon {
+  margin-left: 2px; /* optical alignment */
+}
+
+/* Inline Forms (Tasks & Docs) */
+.inline-task-form, .inline-doc-form {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.inline-task-form input[type="text"], .inline-doc-form input[type="text"] {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.6rem;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.form-row select, .form-row input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 0.5rem;
+  border-radius: 6px;
+}
+
+.input-with-icon input {
+  border: none !important;
+  background: transparent !important;
+  padding: 0.4rem 0 !important;
+  width: 100px;
+}
+
+.submit-small {
+  width: 100%;
+  padding: 0.5rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  background: var(--primary, #3b82f6) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.small-btn {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.upload-input-group input {
+  flex: 1;
+}
+
+.upload-input-group .submit-small {
+  width: 40px;
+}
+
+.upload-hint {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: -0.4rem;
+}
+
+.timer-controls button:hover {
+  transform: scale(1.05);
+}
