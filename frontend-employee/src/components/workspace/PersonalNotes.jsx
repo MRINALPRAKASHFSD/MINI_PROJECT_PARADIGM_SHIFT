@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, X, Trash2, CheckCircle2 } from 'lucide-react';
+import { Plus, X, Trash2, CheckCircle2, Pin, PinOff, Share2, Mail, Download } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,6 +24,35 @@ const PersonalNotes = () => {
     const newStatus = note.status === 'Done' ? 'Todo' : 'Done';
     await updateWorkspaceNote(note._id, { status: newStatus });
   };
+
+  const togglePin = async (note) => {
+    await updateWorkspaceNote(note._id, { isPinned: !note.isPinned });
+  };
+
+  const shareViaWhatsApp = (content) => {
+    const url = `https://wa.me/?text=${encodeURIComponent(content)}`;
+    window.open(url, '_blank');
+  };
+
+  const shareViaEmail = (content) => {
+    const url = `mailto:?subject=Personal Note&body=${encodeURIComponent(content)}`;
+    window.location.href = url;
+  };
+
+  const exportAsDoc = (content) => {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `note-${new Date().getTime()}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const sortedNotes = [...workspaceNotes].sort((a, b) => {
+    if (a.isPinned === b.isPinned) return 0;
+    return a.isPinned ? -1 : 1;
+  });
 
   return (
     <div className="personal-notes-container">
@@ -68,24 +97,42 @@ const PersonalNotes = () => {
 
       <div className="notes-grid">
         <AnimatePresence>
-          {workspaceNotes.map(note => (
+          {sortedNotes.map(note => (
             <motion.div 
               key={note._id}
               layout
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`sticky-note ${note.status === 'Done' ? 'is-done' : ''}`}
+              className={`sticky-note ${note.status === 'Done' ? 'is-done' : ''} ${note.isPinned ? 'is-pinned' : ''}`}
               style={{ '--note-color': note.color }}
             >
+              <div className="note-pin-indicator">
+                <button className={`pin-btn ${note.isPinned ? 'active' : ''}`} onClick={() => togglePin(note)}>
+                  {note.isPinned ? <Pin size={14} fill="currentColor" /> : <Pin size={14} />}
+                </button>
+              </div>
               <div className="note-content">{note.content}</div>
               <div className="note-footer">
-                <button className="icon-btn check-btn" onClick={() => toggleStatus(note)}>
-                  <CheckCircle2 size={16} />
-                </button>
-                <button className="icon-btn delete-btn" onClick={() => deleteWorkspaceNote(note._id)}>
-                  <Trash2 size={14} />
-                </button>
+                <div className="share-actions">
+                  <button className="icon-btn share-btn-small" onClick={() => shareViaWhatsApp(note.content)} title="Share on WhatsApp">
+                    <Share2 size={12} />
+                  </button>
+                  <button className="icon-btn share-btn-small" onClick={() => shareViaEmail(note.content)} title="Share via Email">
+                    <Mail size={12} />
+                  </button>
+                  <button className="icon-btn share-btn-small" onClick={() => exportAsDoc(note.content)} title="Download as Text">
+                    <Download size={12} />
+                  </button>
+                </div>
+                <div className="status-actions">
+                  <button className="icon-btn check-btn" onClick={() => toggleStatus(note)}>
+                    <CheckCircle2 size={16} />
+                  </button>
+                  <button className="icon-btn delete-btn" onClick={() => deleteWorkspaceNote(note._id)}>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
