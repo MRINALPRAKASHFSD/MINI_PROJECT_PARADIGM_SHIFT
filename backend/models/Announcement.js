@@ -8,6 +8,7 @@ const announcementSchema = new mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   authorName: { type: String, default: '' },
   pinned: { type: Boolean, default: false },
+  companyName: { type: String, default: 'Paradigm Shift Inc.' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Announcement', announcementSchema);
