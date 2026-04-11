@@ -35,6 +35,7 @@ const Layout = () => {
     { path: '/payslips', icon: IndianRupee, label: 'Payslips', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%)' },
     { path: '/expenses', icon: Receipt, label: 'Expenses', color: '#F97316', gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)' },
     { path: '/documents', icon: FolderOpen, label: 'Documents', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%)' },
+    { path: '/meetings', icon: Calendar, label: 'Meetings', color: '#F43F5E', gradient: 'linear-gradient(135deg, #F43F5E 0%, #FB7185 100%)' },
   ];
 
   const handleLogout = async () => {
