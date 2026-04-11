@@ -14,6 +14,7 @@ import {
   Shield,
   Zap
 } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { registerWithEmail, signInWithGooglePlatform } from '../config/firebase';
 import './Auth.css';
 
@@ -22,8 +23,10 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    companyName: ''
   });
+  const [isCompany, setIsCompany] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +53,7 @@ const Register = () => {
 
     setIsLoading(true);
 
-    const result = await registerWithEmail(formData.email, formData.password, formData.name);
+    const result = await registerWithEmail(formData.email, formData.password, formData.name, isCompany, formData.companyName);
 
     if (result.success) {
       setUser(result.user, result.token);
@@ -218,6 +221,69 @@ const Register = () => {
             </motion.div>
 
             <form onSubmit={handleSubmit}>
+              <motion.div
+                className="form-group mode-toggle"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.35 }}
+                style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}
+              >
+                <div 
+                  onClick={() => setIsCompany(!isCompany)}
+                  style={{
+                    width: '46px',
+                    height: '24px',
+                    borderRadius: '12px',
+                    backgroundColor: isCompany ? '#3b82f6' : 'rgba(255,255,255,0.1)',
+                    position: 'relative',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s'
+                  }}
+                >
+                  <motion.div
+                    animate={{ x: isCompany ? 22 : 2 }}
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      position: 'absolute',
+                      top: '2px',
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: '14px', color: '#e2e8f0', fontWeight: '500' }}>
+                  {isCompany ? 'Registering a Company' : 'Registering as Employee'}
+                </span>
+              </motion.div>
+
+              <AnimatePresence>
+                {isCompany && (
+                  <motion.div
+                    className="form-group"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <label>
+                      <Briefcase size={18} />
+                      Company Name
+                    </label>
+                    <div className="input-wrapper">
+                      <input
+                        type="text"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        placeholder="Paradigm Shift Inc."
+                        required={isCompany}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <motion.div 
                 className="form-group"
                 initial={{ y: 20, opacity: 0 }}
