@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 // Layout shell (sidebar + topbar + <Outlet/>)
 import Layout from './components/Layout';
 import CompanySetupModal from './components/CompanySetupModal';
+import ReminderEngine from './components/workspace/ReminderEngine';
 
 // Auth pages (rendered outside the layout)
 import Login from './pages/Login';
@@ -66,6 +67,7 @@ function App() {
   return (
     <Router>
       {isAuthenticated && <CompanySetupModal />}
+      <ReminderEngine />
       <Routes>
         {/* Public routes */}
         <Route 
