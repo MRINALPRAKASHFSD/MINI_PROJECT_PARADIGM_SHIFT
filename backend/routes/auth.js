@@ -101,6 +101,7 @@ router.post('/setup-company', auth, async (req, res) => {
     if (!companyName) return res.status(400).json({ error: 'Company Name is required.' });
 
     const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: 'User not found in database. Please log out and back in.' });
     if (user.companyName) return res.status(400).json({ error: 'You are already in a company.' });
 
     user.companyName = companyName;
@@ -119,6 +120,38 @@ router.post('/setup-company', auth, async (req, res) => {
 // GET /api/auth/me
 router.get('/me', auth, async (req, res) => {
   res.json({ user: req.user });
+});
+
+// PUT /api/auth/me
+router.put('/me', auth, async (req, res) => {
+  try {
+    const updates = req.body;
+    
+    // Disallow updating restricted fields
+    const restrictedFields = ['role', 'employeeId', 'department', 'designation', 'salary', 'joiningDate', 'status', 'companyName'];
+    restrictedFields.forEach(field => {
+      delete updates[field];
+    });
+
+    // Special logic for password if provided
+    if (updates.password) {
+      if (updates.password.length < 6) return res.status(400).json({ error: 'Password too short' });
+      const userToUpdate = await User.findById(req.user._id);
+      userToUpdate.password = updates.password;
+      await userToUpdate.save();
+      delete updates.password;
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true, runValidators: true });
+    
+    if (req.app.get('io') && user.companyName) {
+      req.app.get('io').to(user.companyName).emit('DATA_UPDATED');
+    }
+
+    res.json({ user: user.toJSON() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

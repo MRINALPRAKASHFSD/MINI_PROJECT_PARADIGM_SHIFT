@@ -29,7 +29,8 @@ const CompanySetupModal = () => {
       setUser(data.user, localStorage.getItem('token'));
       window.location.reload(); // Hard reload to refresh dataset queries
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to setup workspace');
+      console.error('[SETUP ERROR]', err);
+      setError(err.response?.data?.error || err.message || 'Failed to setup workspace');
     }
     setIsLoading(false);
   };
