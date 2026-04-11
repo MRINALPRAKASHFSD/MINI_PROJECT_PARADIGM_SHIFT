@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Layout shell (sidebar + topbar + <Outlet/>)
 import Layout from './components/Layout';
+import CompanySetupModal from './components/CompanySetupModal';
 
 // Auth pages (rendered outside the layout)
 import Login from './pages/Login';
@@ -30,6 +31,7 @@ import LeaveManagement from './pages/LeaveManagement';
 import Payslips from './pages/Payslips';
 import Expenses from './pages/Expenses';
 import Documents from './pages/Documents';
+import Meetings from './pages/Meetings';
 
 import './App.css';
 
@@ -52,6 +54,7 @@ function App() {
 
   return (
     <Router>
+      {isAuthenticated && <CompanySetupModal />}
       <Routes>
         {/* Public routes */}
         <Route 
@@ -102,6 +105,7 @@ function App() {
           <Route path="/documents" element={<Documents />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/meetings" element={<Meetings />} />
         </Route>
 
         {/* Default redirect */}
