@@ -92,24 +92,28 @@ app.use((req, res, next) => {
 });
 
 // ── API routes ──────────────────────────────────────────────
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/employees', require('./routes/employees'));
-app.use('/api/tasks', require('./routes/tasks'));
-app.use('/api/leaves', require('./routes/leaves'));
-app.use('/api/expenses', require('./routes/expenses'));
-app.use('/api/documents', require('./routes/documents'));
-app.use('/api/attendance', require('./routes/attendance'));
-app.use('/api/departments', require('./routes/departments'));
-app.use('/api/announcements', require('./routes/announcements'));
-app.use('/api/payslips', require('./routes/payslips'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/dashboard', require('./routes/dashboard'));
-app.use('/api/meetings', require('./routes/meetings'));
-app.use('/api/settings', require('./routes/settings'));
-app.use('/api/workspace', require('./routes/workspace'));
+// Vercel experimentalServices strips the /api routePrefix before forwarding
+// to the backend, so in production routes must be registered without it.
+const rp = process.env.NODE_ENV === 'production' ? '' : '/api';
+
+app.use(`${rp}/auth`, require('./routes/auth'));
+app.use(`${rp}/employees`, require('./routes/employees'));
+app.use(`${rp}/tasks`, require('./routes/tasks'));
+app.use(`${rp}/leaves`, require('./routes/leaves'));
+app.use(`${rp}/expenses`, require('./routes/expenses'));
+app.use(`${rp}/documents`, require('./routes/documents'));
+app.use(`${rp}/attendance`, require('./routes/attendance'));
+app.use(`${rp}/departments`, require('./routes/departments'));
+app.use(`${rp}/announcements`, require('./routes/announcements'));
+app.use(`${rp}/payslips`, require('./routes/payslips'));
+app.use(`${rp}/notifications`, require('./routes/notifications'));
+app.use(`${rp}/dashboard`, require('./routes/dashboard'));
+app.use(`${rp}/meetings`, require('./routes/meetings'));
+app.use(`${rp}/settings`, require('./routes/settings'));
+app.use(`${rp}/workspace`, require('./routes/workspace'));
 
 // ── Health check ────────────────────────────────────────────
-app.get('/api/health', (req, res) => {
+app.get(`${rp}/health`, (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
