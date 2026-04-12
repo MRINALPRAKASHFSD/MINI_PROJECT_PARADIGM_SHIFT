@@ -16,3 +16,4 @@ app installs still in use.
 Business logic also tends to diverge over time; rules that make sense for a touch-interface, like
 "swipe-to-pay," may require entirely different validation states than a traditional multi-step web
 checkout.
+This leads to a backend riddled with conditional "if-platform" statements that degrade code
