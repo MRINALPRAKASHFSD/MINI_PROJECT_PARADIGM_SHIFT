@@ -2,3 +2,5 @@ Beyond the technical debt, there’s a human cost to this architectural tug-of-w
 The organizational silos that emerge from this shared ownership can turn collaborative development into a bureaucratic stalemate. Because every backend change carries a "blast radius" that affects both platforms, frontend teams often develop a deep-seated distrust of the API, leading them to bypass shared logic by building their own redundant workarounds.
 
 Communication breaks down into a series of tickets and "blame-storming" sessions when a release goes sideways, turning what should be a unified product vision into two warring factions. Eventually, the overhead of coordination becomes so heavy that the team’s velocity slows to a crawl, and the simple act of shipping a button update requires the diplomatic finesse of a peace treaty.
+
+The "one-size-fits-all" API eventually forces a **compromise in user empathy**. When developers are spread too thin across conflicting requirements, they stop tailoring experiences to the unique nuances of each device. The result is a soul-less interface that feels "clunky" on mobile and "empty" on web—a direct reflection of an exhausted team.
