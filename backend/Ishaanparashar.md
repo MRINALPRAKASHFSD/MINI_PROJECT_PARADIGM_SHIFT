@@ -42,3 +42,4 @@ up web searches might unintentionally slow down mobile-specific queries.
 Rate limiting must be handled delicately, as mobile users on flaky cellular networks exhibit
 different traffic patterns than web users on stable office fiber.
 The backend team is often forced to implement "feature flags" to hide unfinished web features
+from the mobile API, adding layers of conditional logic to the codebase.
