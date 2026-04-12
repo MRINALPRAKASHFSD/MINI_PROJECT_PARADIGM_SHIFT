@@ -18,3 +18,5 @@ Web-based SSO (Single Sign-On) frequently uses SAML, which is notoriously diffic
 The backend must ensure that the "Remember Me" logic doesn't inadvertently lower the security bar for the more vulnerable web-based entry point.
 Managing "Active Sessions" lists for a user profile requires tracking metadata like device type, OS version, and browser type to be useful.
 Password managers and "Auto-fill" features behave differently, sometimes causing the web and mobile frontends to send credentials in slightly different formats.
+The backend must decide whether to use a unified "Identity Provider" service or build custom adapters for each frontend's specific security needs.
+
