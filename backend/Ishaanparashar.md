@@ -23,3 +23,4 @@ immediately on mobile—requires sophisticated real-time infrastructure like Web
 specialized polling.
 Ultimately, the backend team becomes a development bottleneck, caught between two
 frontend teams with conflicting deadlines and data requirements.
+To mitigate this, many teams adopt the Backend-for-Frontend (BFF) pattern, creating
