@@ -8,3 +8,4 @@ accommodate both platforms simultaneously.
 Security adds another layer of difficulty, as web environments often rely on HTTP-only cookies
 for CSRF protection while mobile apps typically utilize Bearer tokens stored in secure hardware.
 The backend must therefore maintain dual authentication flows without creating vulnerabilities
+or compromising the user experience on either side.
