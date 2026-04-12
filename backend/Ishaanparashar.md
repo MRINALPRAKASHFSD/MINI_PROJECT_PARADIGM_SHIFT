@@ -12,3 +12,4 @@ or compromising the user experience on either side.
 Versioning becomes a nightmare because web updates are instantaneous, whereas mobile
 apps suffer from "version fragmentation" where users may not update for months.
 This reality forces the backend to support legacy endpoints indefinitely to avoid breaking older
+app installs still in use.
