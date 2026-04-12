@@ -1,4 +1,3 @@
 
 tech check
-your thoughts on our hrms portall
-bye 
+your thoughts on our hrms portallhdididnf
