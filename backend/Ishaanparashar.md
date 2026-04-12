@@ -11,3 +11,4 @@ The backend must therefore maintain dual authentication flows without creating v
 or compromising the user experience on either side.
 Versioning becomes a nightmare because web updates are instantaneous, whereas mobile
 apps suffer from "version fragmentation" where users may not update for months.
+This reality forces the backend to support legacy endpoints indefinitely to avoid breaking older
