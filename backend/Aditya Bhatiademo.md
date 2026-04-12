@@ -6,3 +6,4 @@ The backend must handle "Social Login" (OAuth2) redirects differently, as web ap
 Session timeout durations often conflict; mobile users expect to stay logged in for weeks, whereas web users on shared computers may need aggressive 30-minute timeouts.
 Multi-Factor Authentication (MFA) flows vary, as mobile apps can use native biometrics (FaceID/Fingerprint) while web apps must rely on TOTP apps or SMS.
 A shared backend must differentiate between "trusted" mobile device IDs and web browser fingerprints to accurately detect suspicious login attempts.
+CSRF (Cross-Site Request Forgery) protection is mandatory for cookie-based web traffic but is often redundant and adds overhead for token-based mobile requests.
