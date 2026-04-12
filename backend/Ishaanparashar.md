@@ -6,3 +6,4 @@ data payload that overwhelms a mobile device's limited bandwidth and processing 
 This forces the backend to either send redundant data or manage complex filtering logic to
 accommodate both platforms simultaneously.
 Security adds another layer of difficulty, as web environments often rely on HTTP-only cookies
+for CSRF protection while mobile apps typically utilize Bearer tokens stored in secure hardware.
