@@ -39,3 +39,4 @@ Testing becomes significantly more complex because every backend deployment now 
 a full suite of regression tests for both the web and mobile environments.
 Performance optimization becomes a game of compromise, as database indexing that speeds
 up web searches might unintentionally slow down mobile-specific queries.
+Rate limiting must be handled delicately, as mobile users on flaky cellular networks exhibit
