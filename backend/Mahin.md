@@ -28,6 +28,9 @@ Finding the perfect data balance becomes a constant source of inter-team resentm
 ## The Erosion of Design Intent
 When a single API serves two masters, the original design intent of the product often gets diluted. A feature designed to be a quick, one-tap action on mobile might be forced to follow a complex, multi-step validation logic built for the web’s administrative portal. This mismatch results in "uncanny valley" user experiences, where the app feels like a website crammed into a phone, and the website feels like an oversized mobile interface, losing the native soul of both platforms.
 
+## The Real-Time Synchronization Gap
+Managing state consistency across devices becomes a logistical nightmare without a dedicated abstraction layer. If a user changes their password on the web portal, the mobile app needs to be notified immediately to re-authenticate, yet the backend is often too generic to handle these platform-specific triggers efficiently. Without specialized "push" logic for each environment, the user is left in a state of digital limbo, seeing outdated information on one device while the other reflects the truth.
+
 ## The Defensive QA Culture
 Quality Assurance transforms from a proactive hunt for bugs into a defensive marathon. Every time the backend team pushes a "minor" fix for a web-specific edge case, the mobile QA team must perform a full regression suite to ensure no collateral damage occurred. This massive testing overhead creates a bottleneck that slows down the entire release train, leading to a culture where teams are incentivized to ship fewer updates because the "cost of testing" is simply too high.
 
