@@ -22,3 +22,4 @@ Furthermore, ensuring state synchronization—like reflecting a profile change m
 immediately on mobile—requires sophisticated real-time infrastructure like WebSockets or
 specialized polling.
 Ultimately, the backend team becomes a development bottleneck, caught between two
+frontend teams with conflicting deadlines and data requirements.
