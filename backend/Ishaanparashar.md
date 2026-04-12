@@ -17,3 +17,4 @@ Business logic also tends to diverge over time; rules that make sense for a touc
 "swipe-to-pay," may require entirely different validation states than a traditional multi-step web
 checkout.
 This leads to a backend riddled with conditional "if-platform" statements that degrade code
+maintainability and increase the risk of bugs.
