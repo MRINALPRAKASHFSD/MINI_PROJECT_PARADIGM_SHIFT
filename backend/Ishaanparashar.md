@@ -35,3 +35,4 @@ Proper documentation and a strict "contract-first" approach with tools like Open
 essential to keep these two worlds from drifting into total incompatibility.
 As the product scales, the lack of a clear separation often results in a "least common
 denominator" API that serves both platforms poorly rather than one platform perfectly.
+Testing becomes significantly more complex because every backend deployment now requires
