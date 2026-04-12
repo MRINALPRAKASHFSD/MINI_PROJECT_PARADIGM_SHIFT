@@ -27,3 +27,4 @@ To mitigate this, many teams adopt the Backend-for-Frontend (BFF) pattern, creat
 specialized thin layers for each platform to decouple their evolution.
 While effective, this solution increases the overall number of services to manage and can lead
 to duplicated code across the different BFF layers.
+Without such an abstraction, the shared backend eventually becomes a "distributed monolith"
