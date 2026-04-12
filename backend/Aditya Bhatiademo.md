@@ -9,3 +9,4 @@ A shared backend must differentiate between "trusted" mobile device IDs and web 
 CSRF (Cross-Site Request Forgery) protection is mandatory for cookie-based web traffic but is often redundant and adds overhead for token-based mobile requests.
 Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
 Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
+Securely handling "Forgot Password" flows requires different deep-link or redirect URI configurations depending on which platform initiated the request.
