@@ -12,3 +12,4 @@ Token revocation becomes a synchronized headache; logging out on the web should 
 Securely handling "Forgot Password" flows requires different deep-link or redirect URI configurations depending on which platform initiated the request.
 Third-party libraries for auth (like Firebase or Auth0) often have different SDK behaviors for web and mobile, forcing the backend to normalize their outputs.
 IP-based rate limiting for logins can accidentally block mobile users who are all sharing a single carrier-grade NAT IP address.
+The backend must manage distinct "User-Agent" parsing logic to provide platform-specific security alerts (e.g., "New login from Chrome" vs "New login from iPhone").
