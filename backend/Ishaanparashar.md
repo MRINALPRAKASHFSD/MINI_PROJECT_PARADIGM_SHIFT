@@ -30,3 +30,4 @@ to duplicated code across the different BFF layers.
 Without such an abstraction, the shared backend eventually becomes a "distributed monolith"
 where a single change intended for the web inadvertently crashes the mobile experience.
 Such dependencies can stall innovation for both platforms, as every minor update requires
+extensive regression testing across the entire ecosystem.
