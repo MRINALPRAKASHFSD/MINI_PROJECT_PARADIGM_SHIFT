@@ -38,3 +38,4 @@ denominator" API that serves both platforms poorly rather than one platform perf
 Testing becomes significantly more complex because every backend deployment now requires
 a full suite of regression tests for both the web and mobile environments.
 Performance optimization becomes a game of compromise, as database indexing that speeds
+up web searches might unintentionally slow down mobile-specific queries.
