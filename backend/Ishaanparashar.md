@@ -19,3 +19,4 @@ checkout.
 This leads to a backend riddled with conditional "if-platform" statements that degrade code
 maintainability and increase the risk of bugs.
 Furthermore, ensuring state synchronization—like reflecting a profile change made on the web
+immediately on mobile—requires sophisticated real-time infrastructure like WebSockets or
