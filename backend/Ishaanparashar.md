@@ -10,3 +10,4 @@ for CSRF protection while mobile apps typically utilize Bearer tokens stored in 
 The backend must therefore maintain dual authentication flows without creating vulnerabilities
 or compromising the user experience on either side.
 Versioning becomes a nightmare because web updates are instantaneous, whereas mobile
+apps suffer from "version fragmentation" where users may not update for months.
