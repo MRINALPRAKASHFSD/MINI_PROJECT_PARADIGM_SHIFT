@@ -43,3 +43,4 @@ Rate limiting must be handled delicately, as mobile users on flaky cellular netw
 different traffic patterns than web users on stable office fiber.
 The backend team is often forced to implement "feature flags" to hide unfinished web features
 from the mobile API, adding layers of conditional logic to the codebase.
+Error handling requires two different vocabularies, as a mobile app might need specific codes
