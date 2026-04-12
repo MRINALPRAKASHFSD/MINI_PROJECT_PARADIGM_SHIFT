@@ -10,3 +10,4 @@ CSRF (Cross-Site Request Forgery) protection is mandatory for cookie-based web t
 Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
 Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
 Securely handling "Forgot Password" flows requires different deep-link or redirect URI configurations depending on which platform initiated the request.
+Third-party libraries for auth (like Firebase or Auth0) often have different SDK behaviors for web and mobile, forcing the backend to normalize their outputs.
