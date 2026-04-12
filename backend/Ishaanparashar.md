@@ -25,3 +25,4 @@ Ultimately, the backend team becomes a development bottleneck, caught between tw
 frontend teams with conflicting deadlines and data requirements.
 To mitigate this, many teams adopt the Backend-for-Frontend (BFF) pattern, creating
 specialized thin layers for each platform to decouple their evolution.
+While effective, this solution increases the overall number of services to manage and can lead
