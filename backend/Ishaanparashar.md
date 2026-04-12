@@ -4,3 +4,4 @@ portal—introduces significant technical and organizational friction primarily 
 Architecturally, you face the challenge of API bloat, where a web dashboard requires a massive
 data payload that overwhelms a mobile device's limited bandwidth and processing power.
 This forces the backend to either send redundant data or manage complex filtering logic to
+accommodate both platforms simultaneously.
