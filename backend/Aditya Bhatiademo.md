@@ -1,3 +1,1 @@
-comeon bhatia test the backend integrationss
-
-what u feel about our hrms portall
+Managing authentication for two separate frontends from a single backend requires balancing different security protocols, storage mechanisms, and session lifecycles.
