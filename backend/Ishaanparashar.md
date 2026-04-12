@@ -41,3 +41,4 @@ Performance optimization becomes a game of compromise, as database indexing that
 up web searches might unintentionally slow down mobile-specific queries.
 Rate limiting must be handled delicately, as mobile users on flaky cellular networks exhibit
 different traffic patterns than web users on stable office fiber.
+The backend team is often forced to implement "feature flags" to hide unfinished web features
