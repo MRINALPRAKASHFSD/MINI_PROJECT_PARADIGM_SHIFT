@@ -15,3 +15,4 @@ This reality forces the backend to support legacy endpoints indefinitely to avoi
 app installs still in use.
 Business logic also tends to diverge over time; rules that make sense for a touch-interface, like
 "swipe-to-pay," may require entirely different validation states than a traditional multi-step web
+checkout.
