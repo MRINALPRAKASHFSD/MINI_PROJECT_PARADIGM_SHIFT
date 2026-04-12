@@ -47,3 +47,4 @@ Error handling requires two different vocabularies, as a mobile app might need s
 to trigger native UI alerts while a web app expects descriptive HTML status messages.
 Analytics and logging become cluttered, making it harder to distinguish whether a spike in
 errors is a platform-specific bug or a global backend failure.
+Data caching strategies must be bifurcated, since browsers and mobile operating systems have vastly different local storage limits and persistence behaviors.
