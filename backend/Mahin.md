@@ -18,3 +18,6 @@ Finally, this technical friction creates a hiring and onboarding hurdle. New eng
 
 ## The Operational Fog of War
 From a DevOps perspective, the lack of platform isolation creates a distorted feedback loop. When an alert fires at 2:00 AM, the on-call engineer often struggles to identify the victim. Is the database truly struggling, or is a new web-only analytics script inadvertently DDOSing the mobile API? This lack of "fault isolation" means that a surge in web traffic can degrade the experience for a mobile user on the other side of the world, making the system's health feel erratic and unpredictable to everyone involved.
+
+## The False Economy of Shared Logic
+Teams often consolidate backends to save money, but they eventually pay a "complexity tax" that far exceeds the cost of separate services. What starts as a streamlined way to share business logic evolves into a tangled web of specialized conditions and platform-specific patches. The supposed efficiency of writing a function once is quickly negated when that same function requires four different unit tests to ensure it doesn't break a specific version of the mobile app or an obscure browser.
