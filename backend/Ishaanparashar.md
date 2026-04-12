@@ -32,3 +32,4 @@ where a single change intended for the web inadvertently crashes the mobile expe
 Such dependencies can stall innovation for both platforms, as every minor update requires
 extensive regression testing across the entire ecosystem.
 Proper documentation and a strict "contract-first" approach with tools like OpenAPI are
+essential to keep these two worlds from drifting into total incompatibility.
