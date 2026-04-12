@@ -34,3 +34,4 @@ extensive regression testing across the entire ecosystem.
 Proper documentation and a strict "contract-first" approach with tools like OpenAPI are
 essential to keep these two worlds from drifting into total incompatibility.
 As the product scales, the lack of a clear separation often results in a "least common
+denominator" API that serves both platforms poorly rather than one platform perfectly.
