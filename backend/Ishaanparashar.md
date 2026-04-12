@@ -45,3 +45,4 @@ The backend team is often forced to implement "feature flags" to hide unfinished
 from the mobile API, adding layers of conditional logic to the codebase.
 Error handling requires two different vocabularies, as a mobile app might need specific codes
 to trigger native UI alerts while a web app expects descriptive HTML status messages.
+Analytics and logging become cluttered, making it harder to distinguish whether a spike in
