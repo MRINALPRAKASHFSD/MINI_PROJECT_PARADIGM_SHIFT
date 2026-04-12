@@ -15,3 +15,4 @@ IP-based rate limiting for logins can accidentally block mobile users who are al
 The backend must manage distinct "User-Agent" parsing logic to provide platform-specific security alerts (e.g., "New login from Chrome" vs "New login from iPhone").
 Mobile apps often require "Biometric Step-up" for sensitive actions, necessitating a backend that can verify cryptographic signatures unique to mobile hardware.
 Web-based SSO (Single Sign-On) frequently uses SAML, which is notoriously difficult to implement cleanly within native mobile application workflows.
+The backend must ensure that the "Remember Me" logic doesn't inadvertently lower the security bar for the more vulnerable web-based entry point.
