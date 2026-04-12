@@ -13,3 +13,4 @@ Versioning becomes a nightmare because web updates are instantaneous, whereas mo
 apps suffer from "version fragmentation" where users may not update for months.
 This reality forces the backend to support legacy endpoints indefinitely to avoid breaking older
 app installs still in use.
+Business logic also tends to diverge over time; rules that make sense for a touch-interface, like
