@@ -959,5 +959,3 @@ Recommended:
 - **Currency**: INR formatting `en-IN`
 - **Animations**: Framer Motion; respect reduced motion where possible
 
----
-If you want, next we can create the backend folder with Prisma + Express/Nest skeleton and connect Admin Console to API (starting with Employees).
