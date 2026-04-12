@@ -7,5 +7,8 @@ The "one-size-fits-all" API eventually forces a **compromise in user empathy**. 
 
 This architectural strain eventually bleeds into **customer perception**, as the "identity crisis" of the backend manifests as a disjointed brand experience. When a user finds a feature on the web that is inexplicably missing or broken on mobile, trust evaporates. The product begins to feel like a collection of mismatched parts rather than a cohesive service.
 
-##The Hidden Tax of Context Switching
+## The Hidden Tax of Context Switching
 For the individual contributor, the mental overhead of maintaining a dual-purpose backend acts as a constant cognitive tax. A developer can’t just "solve a problem"; they have to solve it twice, through two different lenses, while remembering which platform’s legacy constraints take precedence. This fragmented focus leads to "decision fatigue," where the quality of the code suffers not from a lack of skill, but from the sheer exhaustion of navigating a labyrinth of conflicting logic every single hour of the workday.
+
+## The Shadow Documentation Gap
+In the rush to satisfy both web and mobile deadlines, informal knowledge becomes the team's greatest liability. Tribal knowledge about "that one quirk in the mobile auth flow" or "the reason we can't touch the web header" rarely makes it into the official documentation. This creates a dangerous reliance on a few key veterans who carry the system's "secret history" in their heads. When those individuals leave or take a vacation, the remaining team is left guessing, turning every deployment into a high-stakes game of architectural Russian roulette.
