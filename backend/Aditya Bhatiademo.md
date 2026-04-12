@@ -8,3 +8,4 @@ Multi-Factor Authentication (MFA) flows vary, as mobile apps can use native biom
 A shared backend must differentiate between "trusted" mobile device IDs and web browser fingerprints to accurately detect suspicious login attempts.
 CSRF (Cross-Site Request Forgery) protection is mandatory for cookie-based web traffic but is often redundant and adds overhead for token-based mobile requests.
 Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
+Token revocation becomes a synchronized headache; logging out on the web should ideally give the user the option to invalidate sessions on their mobile device as well.
