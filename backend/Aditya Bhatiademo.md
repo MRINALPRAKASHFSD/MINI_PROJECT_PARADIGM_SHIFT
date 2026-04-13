@@ -67,3 +67,4 @@ The backend should implement secure password reset mechanisms.
 Password reset tokens must be unique and time-bound.
 Email verification should be enforced during registration.
 This ensures authenticity of user accounts.
+Both frontends must handle authentication states properly.
