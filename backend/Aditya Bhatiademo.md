@@ -31,3 +31,4 @@ The backend must coordinate "Magic Link" emails so that clicking the link on a p
 Captchas are difficult to implement consistently, as Google reCAPTCHA behaves differently in a mobile WebView than it does in a standard desktop browser.
 JWT signing keys must be rotated carefully; if the mobile app caches an old public key, it might fail to authenticate while the web app continues working.
 A backend must prevent "Session Fixation" attacks on the web while managing "Device Binding" for high-security mobile finance applications.
+Error messages for failed logins must be vague enough for security but specific enough for the mobile app to show a "Retry" vs. "Reset Password" button.
