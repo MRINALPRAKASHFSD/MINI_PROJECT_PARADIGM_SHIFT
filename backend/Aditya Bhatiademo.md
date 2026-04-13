@@ -33,3 +33,4 @@ JWT signing keys must be rotated carefully; if the mobile app caches an old publ
 A backend must prevent "Session Fixation" attacks on the web while managing "Device Binding" for high-security mobile finance applications.
 Error messages for failed logins must be vague enough for security but specific enough for the mobile app to show a "Retry" vs. "Reset Password" button.
 The backend needs to support "Guest Mode" or "Anonymous Auth" differently, as mobile devices often use a hardware ID to track a guest's progress.
+Managing "Legal Consent" (Terms of Service) updates requires the backend to track which version was accepted by which platform's UI.
