@@ -47,3 +47,4 @@ Supporting "Passkeys" (WebAuthn) requires the backend to manage complex public-k
 The backend must account for "Clock Skew" between a mobile user's device and the server when validating time-based tokens.
 Implementing "Login Hints" to help users remember which social provider they used is harder when platforms use different unique identifiers.
 The backend must ensure that a user’s "Avatar" or "Display Name" is synced across platforms immediately after a social login event.
+Handling "Brute Force" protection requires a centralized counter in the backend that spans both mobile and web attempts for a single account.
