@@ -27,3 +27,4 @@ Mobile-specific "App Attestation" (like Google Play Integrity or Apple DeviceChe
 The backend must distinguish between "Session Cookies" and "Persistent Cookies" while ensuring mobile JWTs have appropriate expiration claims.
 OAuth "Scopes" might need to be platform-specific, granting the mobile app access to hardware (like GPS) while restricting the web app to basic profile data.
 Handling "Sign in with Apple" requires specific backend secrets and validation logic that is drastically different for the web-based JS version versus the native SDK.
+The backend must coordinate "Magic Link" emails so that clicking the link on a phone opens the app, while clicking on a PC opens the browser.
