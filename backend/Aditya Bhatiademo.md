@@ -30,3 +30,4 @@ Handling "Sign in with Apple" requires specific backend secrets and validation l
 The backend must coordinate "Magic Link" emails so that clicking the link on a phone opens the app, while clicking on a PC opens the browser.
 Captchas are difficult to implement consistently, as Google reCAPTCHA behaves differently in a mobile WebView than it does in a standard desktop browser.
 JWT signing keys must be rotated carefully; if the mobile app caches an old public key, it might fail to authenticate while the web app continues working.
+A backend must prevent "Session Fixation" attacks on the web while managing "Device Binding" for high-security mobile finance applications.
