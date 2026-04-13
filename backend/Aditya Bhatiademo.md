@@ -65,3 +65,4 @@ Using environment variables helps secure sensitive credentials.
 Secrets like JWT keys should never be hardcoded.
 The backend should implement secure password reset mechanisms.
 Password reset tokens must be unique and time-bound.
+Email verification should be enforced during registration.
