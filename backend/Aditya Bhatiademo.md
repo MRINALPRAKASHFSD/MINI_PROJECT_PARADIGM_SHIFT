@@ -49,3 +49,4 @@ Implementing "Login Hints" to help users remember which social provider they use
 The backend must ensure that a user’s "Avatar" or "Display Name" is synced across platforms immediately after a social login event.
 Handling "Brute Force" protection requires a centralized counter in the backend that spans both mobile and web attempts for a single account.
 The architectural complexity of managing these two distinct flows often leads to "Security Debt," where one platform is significantly less secure than the other.
+The backend must implement consistent logging mechanisms to track authentication events across both frontends.
