@@ -23,3 +23,4 @@ Handling account deletion is legally sensitive; the backend must ensure that tok
 Web browsers enforce "SameSite" cookie attributes that can break cross-domain backend calls, a restriction that doesn't exist for native mobile networking.
 The backend often needs to implement "Silent Authentication" for web apps to refresh sessions without a page reload, which differs from mobile background refreshes.
 Strict Content Security Policies (CSP) on the web may prevent the backend from redirecting to certain auth providers that the mobile app uses freely.
+Mobile-specific "App Attestation" (like Google Play Integrity or Apple DeviceCheck) must be verified by the backend to ensure the request isn't from a rooted device.
