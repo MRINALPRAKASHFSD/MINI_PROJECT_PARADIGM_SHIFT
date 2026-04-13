@@ -41,3 +41,4 @@ Token bloat can occur if you pack too much metadata into a JWT, causing web head
 Mobile apps may require "Certificate Pinning" for high-security auth, which the backend must support without breaking standard TLS for web browsers.
 The backend must be able to "Step-down" authentication (reducing permissions) if a user moves from a trusted mobile device to a public web kiosk.
 Auditing login history becomes difficult when the backend has to normalize "Location Data" from precise mobile GPS and less accurate web IP addresses.
+Providing a "Sign out of all devices" feature requires the backend to maintain a global "Blacklist" of valid but revoked tokens.
