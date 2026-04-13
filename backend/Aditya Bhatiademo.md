@@ -58,3 +58,4 @@ Rate limiting must apply uniformly across both frontends.
 The authentication service should be modular for easy updates.
 This allows future integration with additional frontends if needed.
 API versioning should be considered to maintain backward compatibility.
+Both frontends should align with the same API contract.
