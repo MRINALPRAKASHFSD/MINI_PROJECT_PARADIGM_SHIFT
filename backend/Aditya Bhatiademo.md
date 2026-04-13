@@ -26,3 +26,4 @@ Strict Content Security Policies (CSP) on the web may prevent the backend from r
 Mobile-specific "App Attestation" (like Google Play Integrity or Apple DeviceCheck) must be verified by the backend to ensure the request isn't from a rooted device.
 The backend must distinguish between "Session Cookies" and "Persistent Cookies" while ensuring mobile JWTs have appropriate expiration claims.
 OAuth "Scopes" might need to be platform-specific, granting the mobile app access to hardware (like GPS) while restricting the web app to basic profile data.
+Handling "Sign in with Apple" requires specific backend secrets and validation logic that is drastically different for the web-based JS version versus the native SDK.
