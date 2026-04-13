@@ -74,3 +74,4 @@ This endpoint helps extend user sessions securely.
 Token payloads should remain minimal to reduce overhead.
 Avoid storing sensitive data inside tokens.
 The backend should implement encryption where necessary.
+Sensitive data must be encrypted at rest and in transit.
