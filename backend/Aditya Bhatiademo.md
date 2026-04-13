@@ -68,3 +68,4 @@ Password reset tokens must be unique and time-bound.
 Email verification should be enforced during registration.
 This ensures authenticity of user accounts.
 Both frontends must handle authentication states properly.
+State management libraries can help maintain login sessions.
