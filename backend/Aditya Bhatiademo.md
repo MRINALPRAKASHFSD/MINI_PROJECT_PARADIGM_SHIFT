@@ -35,3 +35,4 @@ Error messages for failed logins must be vague enough for security but specific 
 The backend needs to support "Guest Mode" or "Anonymous Auth" differently, as mobile devices often use a hardware ID to track a guest's progress.
 Managing "Legal Consent" (Terms of Service) updates requires the backend to track which version was accepted by which platform's UI.
 The overhead of verifying a JWT on every request can be higher than a simple database session lookup, impacting mobile latency more severely.
+Standardizing the "Authorization" header format is critical, as some web frameworks might strip headers that mobile libraries expect to be present.
