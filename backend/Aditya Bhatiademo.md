@@ -61,3 +61,4 @@ API versioning should be considered to maintain backward compatibility.
 Both frontends should align with the same API contract.
 The backend should validate all incoming data strictly.
 Input validation prevents injection attacks and malformed requests.
+Using environment variables helps secure sensitive credentials.
