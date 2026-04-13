@@ -72,3 +72,4 @@ State management libraries can help maintain login sessions.
 The backend should provide a refresh token endpoint.
 This endpoint helps extend user sessions securely.
 Token payloads should remain minimal to reduce overhead.
+Avoid storing sensitive data inside tokens.
