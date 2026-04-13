@@ -22,3 +22,4 @@ The backend must decide whether to use a unified "Identity Provider" service or 
 Handling account deletion is legally sensitive; the backend must ensure that tokens for all platforms are purged simultaneously to comply with GDPR/CCPA.
 Web browsers enforce "SameSite" cookie attributes that can break cross-domain backend calls, a restriction that doesn't exist for native mobile networking.
 The backend often needs to implement "Silent Authentication" for web apps to refresh sessions without a page reload, which differs from mobile background refreshes.
+Strict Content Security Policies (CSP) on the web may prevent the backend from redirecting to certain auth providers that the mobile app uses freely.
