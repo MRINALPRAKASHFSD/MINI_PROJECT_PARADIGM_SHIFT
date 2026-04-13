@@ -52,3 +52,4 @@ The architectural complexity of managing these two distinct flows often leads to
 The backend must implement consistent logging mechanisms to track authentication events across both frontends.
 Centralized logging helps in debugging authentication failures efficiently.
 Each login attempt should be recorded with timestamp and device details.
+This improves monitoring and threat detection capabilities.
