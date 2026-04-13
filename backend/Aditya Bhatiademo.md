@@ -56,3 +56,4 @@ This improves monitoring and threat detection capabilities.
 The backend should support rate limiting to prevent brute force attacks.
 Rate limiting must apply uniformly across both frontends.
 The authentication service should be modular for easy updates.
+This allows future integration with additional frontends if needed.
