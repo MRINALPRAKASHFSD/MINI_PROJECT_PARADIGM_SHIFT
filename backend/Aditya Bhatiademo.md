@@ -43,3 +43,4 @@ The backend must be able to "Step-down" authentication (reducing permissions) if
 Auditing login history becomes difficult when the backend has to normalize "Location Data" from precise mobile GPS and less accurate web IP addresses.
 Providing a "Sign out of all devices" feature requires the backend to maintain a global "Blacklist" of valid but revoked tokens.
 The backend must ensure that "Password Reset" tokens have a very short lifespan, as web-based email clients often pre-fetch links, accidentally "using" them.
+Supporting "Passkeys" (WebAuthn) requires the backend to manage complex public-key credentials that are handled differently by iOS, Android, and Windows.
