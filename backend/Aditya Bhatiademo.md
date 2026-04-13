@@ -29,3 +29,4 @@ OAuth "Scopes" might need to be platform-specific, granting the mobile app acces
 Handling "Sign in with Apple" requires specific backend secrets and validation logic that is drastically different for the web-based JS version versus the native SDK.
 The backend must coordinate "Magic Link" emails so that clicking the link on a phone opens the app, while clicking on a PC opens the browser.
 Captchas are difficult to implement consistently, as Google reCAPTCHA behaves differently in a mobile WebView than it does in a standard desktop browser.
+JWT signing keys must be rotated carefully; if the mobile app caches an old public key, it might fail to authenticate while the web app continues working.
