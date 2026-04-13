@@ -40,3 +40,4 @@ The backend must handle "Account Linking" (e.g., linking Google to an Email logi
 Token bloat can occur if you pack too much metadata into a JWT, causing web headers to exceed the maximum size allowed by servers like Nginx.
 Mobile apps may require "Certificate Pinning" for high-security auth, which the backend must support without breaking standard TLS for web browsers.
 The backend must be able to "Step-down" authentication (reducing permissions) if a user moves from a trusted mobile device to a public web kiosk.
+Auditing login history becomes difficult when the backend has to normalize "Location Data" from precise mobile GPS and less accurate web IP addresses.
