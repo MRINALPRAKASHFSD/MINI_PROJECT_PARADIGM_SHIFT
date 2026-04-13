@@ -51,3 +51,4 @@ Handling "Brute Force" protection requires a centralized counter in the backend 
 The architectural complexity of managing these two distinct flows often leads to "Security Debt," where one platform is significantly less secure than the other.
 The backend must implement consistent logging mechanisms to track authentication events across both frontends.
 Centralized logging helps in debugging authentication failures efficiently.
+Each login attempt should be recorded with timestamp and device details.
