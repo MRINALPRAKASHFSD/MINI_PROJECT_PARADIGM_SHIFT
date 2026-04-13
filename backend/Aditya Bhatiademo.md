@@ -70,3 +70,4 @@ This ensures authenticity of user accounts.
 Both frontends must handle authentication states properly.
 State management libraries can help maintain login sessions.
 The backend should provide a refresh token endpoint.
+This endpoint helps extend user sessions securely.
