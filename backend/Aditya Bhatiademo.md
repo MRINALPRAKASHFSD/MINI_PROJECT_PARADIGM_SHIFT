@@ -38,3 +38,4 @@ The overhead of verifying a JWT on every request can be higher than a simple dat
 Standardizing the "Authorization" header format is critical, as some web frameworks might strip headers that mobile libraries expect to be present.
 The backend must handle "Account Linking" (e.g., linking Google to an Email login) consistently regardless of which platform the user is currently using.
 Token bloat can occur if you pack too much metadata into a JWT, causing web headers to exceed the maximum size allowed by servers like Nginx.
+Mobile apps may require "Certificate Pinning" for high-security auth, which the backend must support without breaking standard TLS for web browsers.
