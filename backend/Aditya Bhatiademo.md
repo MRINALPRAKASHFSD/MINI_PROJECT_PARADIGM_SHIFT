@@ -46,3 +46,4 @@ The backend must ensure that "Password Reset" tokens have a very short lifespan,
 Supporting "Passkeys" (WebAuthn) requires the backend to manage complex public-key credentials that are handled differently by iOS, Android, and Windows.
 The backend must account for "Clock Skew" between a mobile user's device and the server when validating time-based tokens.
 Implementing "Login Hints" to help users remember which social provider they used is harder when platforms use different unique identifiers.
+The backend must ensure that a user’s "Avatar" or "Display Name" is synced across platforms immediately after a social login event.
