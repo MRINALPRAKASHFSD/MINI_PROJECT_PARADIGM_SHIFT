@@ -62,3 +62,4 @@ Both frontends should align with the same API contract.
 The backend should validate all incoming data strictly.
 Input validation prevents injection attacks and malformed requests.
 Using environment variables helps secure sensitive credentials.
+Secrets like JWT keys should never be hardcoded.
