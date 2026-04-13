@@ -77,3 +77,4 @@ The backend should implement encryption where necessary.
 Sensitive data must be encrypted at rest and in transit.
 Authentication APIs should follow REST best practices.
 Clear naming conventions improve maintainability.
+The backend should support scalability using load balancing.
