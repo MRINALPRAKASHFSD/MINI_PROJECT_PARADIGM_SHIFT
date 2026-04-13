@@ -20,4 +20,4 @@ Managing "Active Sessions" lists for a user profile requires tracking metadata l
 Password managers and "Auto-fill" features behave differently, sometimes causing the web and mobile frontends to send credentials in slightly different formats.
 The backend must decide whether to use a unified "Identity Provider" service or build custom adapters for each frontend's specific security needs.
 Handling account deletion is legally sensitive; the backend must ensure that tokens for all platforms are purged simultaneously to comply with GDPR/CCPA.
-
+Web browsers enforce "SameSite" cookie attributes that can break cross-domain backend calls, a restriction that doesn't exist for native mobile networking.
