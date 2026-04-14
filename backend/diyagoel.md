@@ -73,3 +73,4 @@ Ensuring secure OAuth integration
 Managing permission revocation properly
 Preventing stale permission data
 Handling offline access scenarios
+Managing access in mobile applications
