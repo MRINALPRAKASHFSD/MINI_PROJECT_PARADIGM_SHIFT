@@ -38,8 +38,7 @@ Backend engineers in this environment often suffer from "mediator burnout." They
 ## The Security Fragmentation Risk
 Trying to secure a shared backend is like trying to lock a house with two entirely different types of doors. The web needs sophisticated CSRF protection and cookie management, while mobile requires robust OAuth flows and hardware-backed key storage. Forcing these two philosophies into a single middleware stack creates a "swiss cheese" security model where an opening created for mobile's convenience might inadvertently become a vulnerability for the web, or vice versa.
 
-## The Tooling Incompatibility
-The developer experience often suffers because debugging tools rarely work equally well for both platforms. A logging strategy that captures the rich headers of a browser might completely miss the unique device metadata sent by a mobile handsuyuyyet. This creates an "observability gapuiioo" where the backend team can see that something is wrong but can't tell if the issue is a bug in the mobile code, a browser-specific quirk, or a genuine server-side failure, leading to hours of wasted investigative 
+
 
 
 
