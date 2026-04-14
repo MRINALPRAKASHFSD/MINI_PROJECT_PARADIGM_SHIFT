@@ -67,3 +67,4 @@ Ensuring proper middleware implementation
 Handling authorization in RESTful services
 Managing GraphQL authorization rules
 Securing microservices communication
+Managing inter-service authorization
