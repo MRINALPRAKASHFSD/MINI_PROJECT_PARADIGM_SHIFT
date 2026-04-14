@@ -42,3 +42,4 @@ Balancing security and usability
 Avoiding overly restrictive access
 Avoiding overly permissive access
 Providing role-based UI access
+Keeping authorization rules updated
