@@ -6,3 +6,4 @@ Restricting access to specific data
 Preventing unauthorized access
 Avoiding privilege escalation
 Maintaining security of sensitive data
+Scaling authorization for large systems
