@@ -30,3 +30,4 @@ Managing role-based access control (RBAC)
 Implementing attribute-based access control (ABAC)
 Handling user-specific permissions
 Providing proper error messages
+Avoiding exposure of sensitive information
