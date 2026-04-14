@@ -38,3 +38,4 @@ Managing authorization in distributed systems
 Securing APIs with proper access control
 Handling third-party integrations securely
 Preventing data leaks
+Balancing security and usability
