@@ -35,8 +35,6 @@ Managing state consistency across devices becomes a logistical nightmare without
 ## The Burnout of the "Middle-Man"
 Backend engineers in this environment often suffer from "mediator burnout." They spend more time in Slack channels and Jira comments negotiating between frontend leads than they do actually writing code. Being the constant point of friction between two competing sets of priorities is emotionally draining. When every technical decision feels like a political compromise, the most talented engineers—those who want to build elegant, focused systems—are often the first to look for the exit.
 
-## The Security Fragmentation Risk
-Trying to secure a shared backend is like trying to lock a house with two entirely different types of doors. The web needs sophisticated CSRF protection and cookie management, while mobile requires robust OAuth flows and hardware-backed key storage. Forcing these two philosophies into a single middleware stack creates a "swiss cheese" security model where an opening created for mobile's convenience might inadvertently become a vulnerability for the web, or vice versa.
 
 
 
