@@ -58,3 +58,4 @@ Implementing location-based restrictions
 Ensuring secure logout and session expiry
 Protecting against session hijacking
 Handling concurrent user sessions
+Managing access in cloud-based systems
