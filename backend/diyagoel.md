@@ -11,3 +11,4 @@ Managing growing number of permissions
 Updating roles and permissions easily
 Handling dynamic permission changes
 Synchronizing with authentication system
+Managing session-based access control
