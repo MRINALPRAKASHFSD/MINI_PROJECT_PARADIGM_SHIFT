@@ -21,3 +21,4 @@ Avoiding redundant permission checks
 Testing all authorization scenarios
 Debugging permission-related issues
 Handling edge cases properly
+Ensuring consistency across frontend and backend
