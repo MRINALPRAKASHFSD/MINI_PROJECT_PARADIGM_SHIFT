@@ -63,18 +63,4 @@ The backend should validate all incoming data strictly.
 Input validation prevents injection attacks and malformed requests.
 Using environment variables helps secure sensitive credentials.
 Secrets like JWT keys should never be hardcoded.
-The backend should implement secure password reset mechanisms.
-Password reset tokens must be unique and time-bound.
-Email verification should be enforced during registration.
-This ensures authenticity of user accounts.
-Both frontends must handle authentication states properly.
-State management libraries can help maintain login sessions.
-The backend should provide a refresh token endpoint.
-This endpoint helps extend user sessions securely.
-Token payloads should remain minimal to reduce overhead.
-Avoid storing sensitive data inside tokens.
-The backend should implement encryption where necessary.
-Sensitive data must be encrypted at rest and in transit.
-Authentication APIs should follow REST best practices.
-Clear naming conventions improve maintainability.
-The backend should support scalability using load balancing.
+The backend should implement secure password reset mechanisms
