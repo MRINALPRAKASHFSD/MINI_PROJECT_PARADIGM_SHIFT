@@ -87,3 +87,4 @@ Handling backward compatibility of permissions
 Managing versioning of authorization rules
 Ensuring secure default settings (least privilege)
 Preventing over-permissioned users
+Handling emergency access (break-glass scenarios)
