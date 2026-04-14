@@ -24,3 +24,4 @@ Handling edge cases properly
 Ensuring consistency across frontend and backend
 Preventing bypass of frontend restrictions
 Maintaining centralized authorization logic
+Avoiding hardcoded permissions
