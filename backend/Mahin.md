@@ -27,8 +27,7 @@ Teams often consolidate backends to save money, but they eventually pay a "compl
 Finding the perfect data balance becomes a constant source of inter-team resentment. The web team wants deep, nested JSON objects to populate complex dashboards in a single request, while the mobile team demands flat, granular endpoints to keep the UI jh snappy on 3G connections. This leads to an API that is either too "heavy" for mobile or too "chatty" for the web, leaving both teams feeling like the backend is a hindrance to their specific platform’s performance goals rather than a foundation.
 
 ## The Erosion of Design Intent
-When a single API serves two masters, the original design intent of the product often gets diluted. A feature designed to be a quick, one-tap action on mobile might be forced to follow a complex, multi-step validation logic built for the web’s administrative portal. This mismatch results in "uncanny valley" user experiences, where the app feels like a website crammed into a phone, and the website feels like an oversized mobile interface, losing the native soul of both platforms.
-
+When a single API serves two masters, the original design intent of the product often gets diluted. A feature designed to be a quick, one-tap action on mobile might be forced to follow a complex, multi-step validation logic built for the web’s administrative portal. This mismatch results in "uncanny valley" user experiences, where the app feels like a website crammed into a phone, and the website feels like an oversized mobile interface, losing 
 
 
 
