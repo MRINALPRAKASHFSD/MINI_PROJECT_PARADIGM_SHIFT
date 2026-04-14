@@ -55,12 +55,3 @@ Each login attempt should be recorded with timestamp and device details.
 This improves monitoring and threat detection capabilities.
 The backend should support rate limiting to prevent brute force attacks.
 Rate limiting must apply uniformly across both frontends.
-The authentication service should be modular for easy updates.
-This allows future integration with additional frontends if needed.
-API versioning should be considered to maintain backward compatibility.
-Both frontends should align with the same API contract.
-The backend should validate all incoming data strictly.
-Input validation prevents injection attacks and malformed requests.
-Using environment variables helps secure sensitive credentials.
-Secrets like JWT keys should never be hardcoded.
-The backend should implement secure password reset mechanisms
