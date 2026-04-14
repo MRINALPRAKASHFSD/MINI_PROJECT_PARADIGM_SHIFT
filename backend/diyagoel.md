@@ -10,3 +10,4 @@ Scaling authorization for large systems
 Managing growing number of permissions
 Updating roles and permissions easily
 Handling dynamic permission changes
+Synchronizing with authentication system
