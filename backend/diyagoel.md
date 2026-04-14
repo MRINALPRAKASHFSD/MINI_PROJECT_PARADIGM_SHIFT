@@ -8,3 +8,4 @@ Avoiding privilege escalation
 Maintaining security of sensitive data
 Scaling authorization for large systems
 Managing growing number of permissions
+Updating roles and permissions easily
