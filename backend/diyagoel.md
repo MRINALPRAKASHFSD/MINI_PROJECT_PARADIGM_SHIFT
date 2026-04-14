@@ -65,3 +65,4 @@ Handling file-level permissions
 Managing access to APIs and endpoints
 Ensuring proper middleware implementation
 Handling authorization in RESTful services
+Managing GraphQL authorization rules
