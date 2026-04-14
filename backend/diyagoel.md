@@ -51,11 +51,3 @@ Preventing unauthorized access through APIs
 Managing access tokens securely
 Ensuring proper encryption of sensitive data
 Avoiding misconfigured access policies
-Handling backward compatibility of permissions
-Managing versioning of authorization rules
-Ensuring secure default settings (least privilege)
-Preventing over-permissioned users
-Handling emergency access (break-glass scenarios)
-Managing audit and compliance requirements
-Ensuring traceability of user actions
-Handling large-scale user bases efficiently
