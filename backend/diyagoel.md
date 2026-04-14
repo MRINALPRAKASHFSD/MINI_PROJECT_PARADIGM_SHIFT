@@ -4,3 +4,4 @@ Defining clear permission levels
 Implementing fine-grained access control
 Restricting access to specific data
 Preventing unauthorized access
+Avoiding privilege escalation
