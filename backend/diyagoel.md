@@ -90,3 +90,4 @@ Preventing over-permissioned users
 Handling emergency access (break-glass scenarios)
 Managing audit and compliance requirements
 Ensuring traceability of user actions
+Handling large-scale user bases efficiently
