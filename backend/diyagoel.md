@@ -55,3 +55,4 @@ Preventing duplicate permission assignments
 Managing temporary access rights
 Handling time-based access control
 Implementing location-based restrictions
+Ensuring secure logout and session expiry
