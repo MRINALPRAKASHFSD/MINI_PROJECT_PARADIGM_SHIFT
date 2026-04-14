@@ -54,3 +54,4 @@ Avoiding role conflicts
 Preventing duplicate permission assignments
 Managing temporary access rights
 Handling time-based access control
+Implementing location-based restrictions
