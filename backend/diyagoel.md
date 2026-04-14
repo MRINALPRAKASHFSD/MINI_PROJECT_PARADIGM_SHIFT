@@ -77,3 +77,4 @@ Managing access in mobile applications
 Ensuring cross-platform consistency
 Handling multi-tenant environments
 Preventing tenant data leakage
+Designing scalable permission storage systems
