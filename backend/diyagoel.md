@@ -40,3 +40,4 @@ Handling third-party integrations securely
 Preventing data leaks
 Balancing security and usability
 Avoiding overly restrictive access
+Avoiding overly permissive access
