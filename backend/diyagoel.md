@@ -84,3 +84,4 @@ Managing access tokens securely
 Ensuring proper encryption of sensitive data
 Avoiding misconfigured access policies
 Handling backward compatibility of permissions
+Managing versioning of authorization rules
