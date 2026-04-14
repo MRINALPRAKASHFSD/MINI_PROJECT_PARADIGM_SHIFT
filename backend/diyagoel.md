@@ -60,3 +60,4 @@ Protecting against session hijacking
 Handling concurrent user sessions
 Managing access in cloud-based systems
 Securing database-level authorization
+Preventing direct database access bypass
