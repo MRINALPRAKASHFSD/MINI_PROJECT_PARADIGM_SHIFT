@@ -17,8 +17,6 @@ In the rush to satisfy both web and mobile deadlines, informal knowledge becomes
 ## The Recruitment Bottleneck
 Finally, this technical friction creates a hiring and onboarding hurdle. New engineers joining the team are often overwhel by the "if-platform" complexity and the sheer volume of "don't-touch-this" warnings in the codebase. Instead of contributing value in their first week, they spend months just learning how to avoid breaking the fragile balance between the two frontends. This slow ramp-up time makes it harder for the company to scale its engineering efforts, as the complexity of the backend grows faster than the team’s ability to teach it.
 
-## The Operational Fog of War
-From a DevOps perspective, the lack of platform isolation creates a distorted feedback loop. When an alert fires at 2:00 AM, the on-call engineer often struggles to identify the victim. Is the database truly struggling, or is a new web-only analytics script inadvertently DDOSing the mobile API? This lack of "fault isolation" means that a surge in web traffic can degrade the experience for a mobile user on the other side of the world, making the system's health feel erratic and unpredictable to everyone involved.
 
 
 
