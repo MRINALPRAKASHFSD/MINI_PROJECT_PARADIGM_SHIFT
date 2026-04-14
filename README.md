@@ -1016,7 +1016,7 @@ Contributions are welcome from all collaborators.
 
 <div align="center">
 
-**Built with ❤️ by the ParadigmShift team**
+**Built with ❤️ by the ParadigmShift Team**
 
 MERN · Socket.io · Firebase · Tailwind CSS · Vercel · 2025–2026
 
