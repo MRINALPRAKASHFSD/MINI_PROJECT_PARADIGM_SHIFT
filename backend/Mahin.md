@@ -46,5 +46,4 @@ Ultimately, the shared backend becomes a "distributed monolith" that stifles the
 
 
 
-## The Versioning Trap
-The backend team often finds themselves trapped in "maintenance purgatory" due to the divergent update cycles of web and mobile. Since you can't force a mobile user to update their app, the backend must carry the weight of legacy code for years. This "zo three-year-old app version used by 2% of the user base effectively freezes the architecture in time, preventing 
+
