@@ -46,3 +46,4 @@ Keeping authorization rules updated
 Training developers on security practices
 Documenting authorization logic clearly
 Handling revoked permissions instantly
+Managing access in microservices architecture
