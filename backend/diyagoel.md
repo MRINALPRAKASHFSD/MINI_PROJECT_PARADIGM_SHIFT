@@ -26,3 +26,4 @@ Preventing bypass of frontend restrictions
 Maintaining centralized authorization logic
 Avoiding hardcoded permissions
 Designing flexible authorization models
+Managing role-based access control (RBAC)
