@@ -23,8 +23,6 @@ From a DevOps perspective, the lack of platform isolation creates a distorted fe
 ## The False Economy of Shared Logic
 Teams often consolidate backends to save money, but they eventually pay a "complexity tax" that far exceeds the cost of separate services. What starts as a streamlined way to share business logic evolves into a tangled web of specialized conditions and platform-specific patches. The supposed efficiency of writing a function once is quickly negated when that same function requires four different unit tests to ensure it doesn't break a specific version of the mobile app or an obscure browser.
 
-## The "Goldilocks" Payload Struggle
-Finding the perfect data balance becomes a constant source of inter-team resentment. The web team wants deep, nested JSON objects to populate complex dashboards in a single request, while the mobile team demands flat, granular endpoints to keep the UI jh snappy on 3G connections. This leads to an API that is either too "heavy" for mobile or too "chatty" for the web, leaving both teams feeling like the backend is a hindrance to their specific platform’s performance goals rather than a 
 
 
 
