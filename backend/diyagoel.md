@@ -76,3 +76,4 @@ Handling offline access scenarios
 Managing access in mobile applications
 Ensuring cross-platform consistency
 Handling multi-tenant environments
+Preventing tenant data leakage
