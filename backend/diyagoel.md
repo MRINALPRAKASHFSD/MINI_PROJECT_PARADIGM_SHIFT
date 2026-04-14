@@ -52,3 +52,4 @@ Managing hierarchical roles (admin > manager > user)
 Handling inheritance of permissions
 Avoiding role conflicts
 Preventing duplicate permission assignments
+Managing temporary access rights
