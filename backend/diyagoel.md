@@ -68,3 +68,4 @@ Handling authorization in RESTful services
 Managing GraphQL authorization rules
 Securing microservices communication
 Managing inter-service authorization
+Handling third-party authentication providers
