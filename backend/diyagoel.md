@@ -79,3 +79,4 @@ Handling multi-tenant environments
 Preventing tenant data leakage
 Designing scalable permission storage systems
 Handling cross-origin access control (CORS issues)
+Preventing unauthorized access through APIs
