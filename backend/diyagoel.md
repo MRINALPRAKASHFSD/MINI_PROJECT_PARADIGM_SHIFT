@@ -20,3 +20,4 @@ Caching permission data efficiently
 Avoiding redundant permission checks
 Testing all authorization scenarios
 Debugging permission-related issues
+Handling edge cases properly
