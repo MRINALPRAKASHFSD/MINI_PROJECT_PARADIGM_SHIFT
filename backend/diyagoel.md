@@ -17,3 +17,4 @@ Preventing token misuse
 Performance overhead due to permission checks
 Optimizing authorization logic
 Caching permission data efficiently
+Avoiding redundant permission checks
