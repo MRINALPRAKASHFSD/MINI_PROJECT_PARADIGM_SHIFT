@@ -6,7 +6,7 @@ Communication breaks down into a series of tickets and "blame-storming" sessions
 
 The "one-size-fits-all" API eventually forces a **compromise in user empathy**. When developers are spread too thin across conflicting requirements, they stop tailoring experiences to the unique nuances of each device. The result is a soul-less interface that feels "clunky" on mobile and "empty" on web—a direct reflection of an exhausted team.
 
-This architectural strain eventually bleeds into **customer perception**, as the "identity crisis" of the backend manifests as a disjointed brand experience. When a user finds a feature on the web that is inexplicably missing or broken on mobile, trust evaporates. The product begins to feel like a collection of mismatched parts rather than a cohesive service.
+This architectural strain eventually bleeds into **customer perception**, as the "identity crisis" of the backend manifests as a disjointed brand experience. When a user finds a feature on the web that is inexplicably missing or broken on mobile, trust evaporates. The product begins to feel like a collection of mismatched parts rather than a cohesi
 
 
 
