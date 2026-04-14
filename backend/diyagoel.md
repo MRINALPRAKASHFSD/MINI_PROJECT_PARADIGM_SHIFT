@@ -49,3 +49,4 @@ Handling revoked permissions instantly
 Managing access in microservices architecture
 Continuously monitoring and improving security
 Managing hierarchical roles (admin > manager > user)
+Handling inheritance of permissions
