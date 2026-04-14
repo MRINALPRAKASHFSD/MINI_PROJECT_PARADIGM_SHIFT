@@ -51,3 +51,4 @@ Continuously monitoring and improving security
 Managing hierarchical roles (admin > manager > user)
 Handling inheritance of permissions
 Avoiding role conflicts
+Preventing duplicate permission assignments
