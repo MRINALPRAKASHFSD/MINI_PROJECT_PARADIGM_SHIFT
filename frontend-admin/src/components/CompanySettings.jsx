@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Save, Settings, Palette, CheckCircle, XCircle } from 'lucide-react';
+import { Save, Settings, Palette } from 'lucide-react';
 import api from '../services/api';
 import './CompanySettings.css';
 
@@ -40,28 +39,40 @@ const CompanySettings = () => {
     }
   };
 
-  if (loading || !settings) return <div className="loading">Loading company settings...</div>;
+  if (loading || !settings) return (
+    <div className="loading-state">
+      <div className="spinner"></div>
+      <p>Loading configuration...</p>
+    </div>
+  );
 
   return (
-    <div className="company-settings-container">
-      <div className="header-section">
-        <h2><Settings size={26} /> Portal Settings</h2>
-        <p>Control the modules and appearance of the Employee Portal globally.</p>
-        {saveStatus === 'saved' && <span style={{ color: '#10b981', marginLeft: '1rem' }}>Saved!</span>}
+    <div className="company-settings">
+      <div className="settings-header">
+        <div>
+          <h1><Settings size={24} /> Portal Configuration</h1>
+          <p>Global control for modules and appearance across the organization.</p>
+        </div>
+        <div className="header-status">
+          {saveStatus === 'saved' && <span className="status-success">Changes saved successfully</span>}
+          {saveStatus === 'error' && <span className="status-error">Error saving changes</span>}
+        </div>
       </div>
 
       <div className="settings-grid">
-        <div className="settings-card">
-          <div className="card-header">
+        <section className="settings-section">
+          <div className="section-header">
             <Settings size={20} />
-            <h3>Feature Modules</h3>
+            <h2>Feature Modules</h2>
           </div>
-          <p>Toggle features available to employees. Disabled features will disappear from their sidebar entirely.</p>
+          <p className="section-desc">Enable or disable specific modules for employees. Hidden modules will not appear in the employee portal.</p>
           
-          <div className="toggles-list">
+          <div className="features-list">
             {Object.keys(settings.features).map((feature) => (
-              <div key={feature} className="toggle-item">
-                <span>{feature.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+              <div key={feature} className="feature-item">
+                <div className="feature-info">
+                  <span className="feature-name">{feature.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                </div>
                 <label className="switch">
                   <input 
                     type="checkbox" 
@@ -76,19 +87,19 @@ const CompanySettings = () => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        <div className="settings-card">
-          <div className="card-header">
+        <section className="settings-section">
+          <div className="section-header">
             <Palette size={20} />
-            <h3>Branding & Theme</h3>
+            <h2>Branding & Identity</h2>
           </div>
-          <p>Set the primary color and dark/light mode preference for your company portal.</p>
+          <p className="section-desc">Customize the visual identity of the portal to match your corporate branding.</p>
           
-          <div className="theme-options">
-            <div className="form-group">
+          <div className="branding-controls">
+            <div className="control-group">
               <label>Primary Brand Color</label>
-              <div className="color-picker-wrapper">
+              <div className="color-control">
                 <input 
                   type="color" 
                   value={settings.theme.primaryColor}
@@ -97,32 +108,35 @@ const CompanySettings = () => {
                     theme: { ...settings.theme, primaryColor: e.target.value }
                   })}
                 />
-                <span>{settings.theme.primaryColor}</span>
+                <code className="color-value">{settings.theme.primaryColor}</code>
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Default Theme Mode</label>
+            <div className="control-group">
+              <label>Default Interface Mode</label>
               <select 
+                className="theme-select"
                 value={settings.theme.mode}
                 onChange={(e) => setSettings({
                   ...settings,
                   theme: { ...settings.theme, mode: e.target.value }
                 })}
-                style={{ background: '#1f2937', color: 'white', padding: '0.8rem', borderRadius: '8px', border: 'none', width: '100%', marginTop: '0.5rem' }}
               >
                 <option value="light">Light Mode</option>
                 <option value="dark">Dark Mode</option>
-                <option value="system">System Default</option>
+                <option value="system">System Preference</option>
               </select>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
-      <button className="save-btn" onClick={handleSave} disabled={saveStatus === 'saving'}>
-        <Save size={18} /> {saveStatus === 'saving' ? 'Saving...' : 'Save All Settings'}
-      </button>
+      <div className="settings-actions">
+        <button className="save-button" onClick={handleSave} disabled={saveStatus === 'saving'}>
+          <Save size={18} />
+          {saveStatus === 'saving' ? 'Saving...' : 'Apply Changes'}
+        </button>
+      </div>
     </div>
   );
 };

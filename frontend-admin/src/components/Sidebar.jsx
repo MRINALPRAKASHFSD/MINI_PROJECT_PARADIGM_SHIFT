@@ -1,202 +1,140 @@
 import { NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Calendar, 
+  CheckSquare, 
+  BarChart3, 
+  Banknote, 
+  Building2, 
+  Megaphone, 
+  Receipt, 
+  FileCheck, 
+  ClipboardList, 
+  Settings,
+  Shield 
+} from 'lucide-react';
 import './Sidebar.css';
 
 function Sidebar() {
   const menuItems = [
     { 
       path: '/dashboard', 
-      icon: '📊', 
+      icon: <LayoutDashboard size={20} />, 
       label: 'Dashboard', 
-      color:  '#4F46E5',
-      bgGradient: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)'
+      color:  '#6366f1'
     },
     { 
       path: '/employees', 
-      icon: '👥', 
+      icon: <Users size={20} />, 
       label: 'Employees', 
-      color: '#7C3AED',
-      bgGradient: 'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)'
+      color: '#8b5cf6'
     },
     { 
       path: '/leaves', 
-      icon: '📋', 
+      icon: <Calendar size={20} />, 
       label: 'Leave Management', 
-      color: '#0891B2',
-      bgGradient: 'linear-gradient(135deg, #0891B2 0%, #06B6D4 100%)'
+      color: '#06b6d4'
     },
     { 
       path: '/attendance', 
-      icon: '✅', 
+      icon: <CheckSquare size={20} />, 
       label: 'Attendance', 
-      color: '#059669',
-      bgGradient: 'linear-gradient(135deg, #059669 0%, #10B981 100%)'
+      color: '#10b981'
     },
     { 
       path: '/reports', 
-      icon: '📈', 
+      icon: <BarChart3 size={20} />, 
       label: 'Reports', 
-      color: '#D97706',
-      bgGradient: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)'
+      color: '#f59e0b'
     },
     { 
       path: '/payroll', 
-      icon: '💰', 
+      icon: <Banknote size={20} />, 
       label:  'Payroll', 
-      color: '#DC2626',
-      bgGradient: 'linear-gradient(135deg, #DC2626 0%, #EF4444 100%)'
+      color: '#ef4444'
     },
     { 
       path: '/departments', 
-      icon: '🏢', 
+      icon: <Building2 size={20} />, 
       label:  'Departments', 
-      color: '#2563EB',
-      bgGradient: 'linear-gradient(135deg, #2563EB 0%, #3B82F6 100%)'
+      color: '#3b82f6'
     },
     { 
       path: '/announcements', 
-      icon: '📢', 
+      icon: <Megaphone size={20} />, 
       label:  'Announcements', 
-      color: '#DB2777',
-      bgGradient: 'linear-gradient(135deg, #DB2777 0%, #EC4899 100%)'
+      color: '#ec4899'
     },
     { 
       path: '/expense-approvals', 
-      icon: '💸', 
+      icon: <Receipt size={20} />, 
       label: 'Expense Approvals', 
-      color: '#0D9488',
-      bgGradient: 'linear-gradient(135deg, #0D9488 0%, #14B8A6 100%)'
+      color: '#14b8a6'
     },
     { 
       path: '/document-verification', 
-      icon: '🛡️', 
+      icon: <FileCheck size={20} />, 
       label: 'Document Verification', 
-      color: '#7C3AED',
-      bgGradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)'
+      color: '#a78bfa'
     },
     { 
       path: '/task-assignment', 
-      icon: '📋', 
+      icon: <ClipboardList size={20} />, 
       label: 'Task Assignment', 
-      color: '#EA580C',
-      bgGradient: 'linear-gradient(135deg, #EA580C 0%, #F97316 100%)'
+      color: '#f97316'
     },
     { 
       path: '/settings', 
-      icon: '⚙️', 
+      icon: <Settings size={20} />, 
       label: 'Portal Settings', 
-      color: '#64748b',
-      bgGradient: 'linear-gradient(135deg, #475569 0%, #334155 100%)'
+      color: '#94a3b8'
     },
   ];
 
   return (
-    <motion.aside 
-      className="sidebar admin-sidebar"
-      initial={{ x: -280, opacity: 0 }}
-      animate={{ x:  0, opacity: 1 }}
-      transition={{ duration: 0.5, type: 'spring', stiffness: 80 }}
-    >
+    <aside className="sidebar admin-sidebar">
       <div className="sidebar-brand">
         <div className="brand-icon-container">
-          <motion.div 
-            className="brand-icon"
-            animate={{ 
-              rotateY: [0, 360],
-            }}
-            transition={{ 
-              duration: 3,
-              repeat: Infinity,
-              repeatDelay: 2
-            }}
-          >
-            🏢
-          </motion. div>
+          <Shield size={28} color="#6366f1" />
         </div>
         <div className="brand-info">
-          <h1 className="brand-title">PARADIGM SHIFT</h1>
-          <p className="brand-subtitle">Admin Control Panel</p>
+          <h1 className="brand-title">PARADIGM</h1>
+          <p className="brand-subtitle">Admin Panel</p>
         </div>
       </div>
 
       <div className="sidebar-divider">
-        <span className="divider-text">MAIN NAVIGATION</span>
+        <span className="divider-text">Navigation</span>
       </div>
 
       <nav className="sidebar-navigation">
-        {menuItems.map((item, index) => (
+        {menuItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
           >
-            {({ isActive }) => (
-              <motion.div
-                className="nav-link-content"
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x:  0, opacity: 1 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ x: 8 }}
-              >
-                <div 
-                  className="nav-icon-wrapper"
-                  style={{ 
-                    background: isActive ? item.bgGradient : 'transparent',
-                    border: isActive ? 'none' : `2px solid ${item.color}40`
-                  }}
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                </div>
-                <span className="nav-text">{item.label}</span>
-                {isActive && (
-                  <motion.div
-                    className="active-bar"
-                    layoutId="activeBar"
-                    style={{ background: item.bgGradient }}
-                    initial={{ scaleY: 0 }}
-                    animate={{ scaleY: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-                <div 
-                  className="nav-glow" 
-                  style={{ 
-                    background: item.bgGradient,
-                    opacity: isActive ? 0.15 : 0
-                  }}
-                />
-              </motion. div>
-            )}
+            <div className="nav-link-content">
+              <span className="nav-icon" style={{ color: item.color }}>{item.icon}</span>
+              <span className="nav-text">{item.label}</span>
+            </div>
           </NavLink>
         ))}
       </nav>
 
-      <div className="sidebar-divider">
-        <span className="divider-text">SYSTEM</span>
-      </div>
-
       <div className="sidebar-footer">
         <div className="system-status">
           <div className="status-indicator">
-            <motion.div 
-              className="status-dot"
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [1, 0.7, 1]
-              }}
-              transition={{ 
-                duration:  2,
-                repeat:  Infinity
-              }}
-            />
-            <span className="status-text">System Online</span>
+            <div className="status-dot" />
+            <span className="status-text">Online</span>
           </div>
           <div className="version-badge">
-            <span className="version-label">v1.0.0</span>
+            <span className="version-label">v1.2.0</span>
           </div>
         </div>
       </div>
-    </motion.aside>
+    </aside>
   );
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Megaphone, Plus, Calendar, Eye, Share2, Edit2, Trash2, X, Filter } from 'lucide-react';
 import './Announcements.css';
 
 function Announcements() {
@@ -13,33 +13,33 @@ function Announcements() {
       postedBy: 'Pratham Verma',
       department: 'HR',
       date: '2026-01-20',
-      icon: '🎉',
+      icon: <Calendar size={18} />,
       color: '#f59e0b',
       views: 145
     },
     {
       id: 2,
-      title:  'New Security Protocols',
+      title: 'New Security Protocols',
       content: 'Updated security protocols are now in effect. All employees must use their access cards for entry and follow the new visitor registration process.',
       type: 'Security',
       priority: 'High',
       postedBy: 'Rohan Kapoor',
       department: 'Admin',
       date: '2026-01-18',
-      icon: '🔒',
+      icon: <Megaphone size={18} />,
       color: '#ef4444',
       views: 203
     },
     {
       id: 3,
       title: 'Employee of the Month - December',
-      content: 'Congratulations to Ishan Singh for being selected as Employee of the Month!  His outstanding contribution to the Finance department has been exceptional.',
+      content: 'Congratulations to Ishan Singh for being selected as Employee of the Month! His outstanding contribution to the Finance department has been exceptional.',
       type: 'Recognition',
       priority: 'Medium',
       postedBy: 'Pratham Verma',
       department: 'HR',
       date: '2026-01-15',
-      icon: '🏆',
+      icon: <Megaphone size={18} />,
       color: '#10b981',
       views: 187
     },
@@ -48,66 +48,14 @@ function Announcements() {
       title: 'Quarterly Town Hall Meeting',
       content: 'Join us for the Q4 Town Hall meeting on January 30th at 3 PM in the main conference hall. CEO will share company updates and Q&A session.',
       type: 'Meeting',
-      priority:  'High',
+      priority: 'High',
       postedBy: 'Diya Sharma',
       department: 'Management',
       date: '2026-01-12',
-      icon: '🎤',
+      icon: <Calendar size={18} />,
       color: '#8b5cf6',
       views: 156
-    },
-    {
-      id: 5,
-      title: 'New Health Insurance Benefits',
-      content: 'Enhanced health insurance coverage is now available for all employees. Please check your email for detailed benefits and enrollment process.',
-      type: 'Benefits',
-      priority: 'Medium',
-      postedBy: 'Pratham Verma',
-      department: 'HR',
-      date: '2026-01-10',
-      icon: '🏥',
-      color: '#06b6d4',
-      views: 198
-    },
-    {
-      id: 6,
-      title: 'Office Renovation Update',
-      content: 'The 3rd floor renovation will begin next week.  Temporary workstations have been arranged on the 2nd floor. Please coordinate with your team leads.',
-      type: 'Facility',
-      priority: 'Medium',
-      postedBy: 'Priya Gupta',
-      department: 'Operations',
-      date: '2026-01-08',
-      icon: '🏗️',
-      color: '#f97316',
-      views: 132
-    },
-    {
-      id: 7,
-      title: 'Training:  Advanced Excel Workshop',
-      content: 'Register for the Advanced Excel workshop scheduled for February 5-6.  Limited seats available. Contact HR for registration.',
-      type: 'Training',
-      priority: 'Low',
-      postedBy: 'Mahin Khan',
-      department: 'Training',
-      date: '2026-01-05',
-      icon: '📚',
-      color: '#667eea',
-      views: 98
-    },
-    {
-      id: 8,
-      title: 'Parking Lot Maintenance',
-      content: 'Parking lot maintenance will be conducted on January 25th.  Please use alternative parking arrangements for that day.',
-      type: 'Facility',
-      priority: 'Low',
-      postedBy: 'Arjun Reddy',
-      department: 'Admin',
-      date: '2026-01-03',
-      icon: '🚗',
-      color: '#64748b',
-      views: 76
-    },
+    }
   ]);
 
   const [filter, setFilter] = useState('All');
@@ -127,220 +75,142 @@ function Announcements() {
   };
 
   return (
-    <div className="announcements">
-      <motion.div 
-        className="announcements-header"
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity:  1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+    <div className="announcements-container">
+      <div className="ann-header">
         <div>
-          <h1>📢 Announcements</h1>
-          <p>Company-wide notifications and updates</p>
+          <h1>Corporate Announcements</h1>
+          <p>Official broadcasts and operational updates for the entire organization.</p>
         </div>
-        <motion.button
-          className="create-announcement-btn"
+        <button
+          className="btn-primary"
           onClick={() => setShowModal(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale:  0.95 }}
         >
-          ➕ Create Announcement
-        </motion.button>
-      </motion. div>
-
-      <motion.div 
-        className="announcements-stats"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity:  1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <div className="stat-card glass">
-          <div className="stat-icon" style={{ background: '#667eea' }}>📢</div>
-          <div className="stat-info">
-            <h3>{announcements.length}</h3>
-            <p>Total Announcements</p>
-          </div>
-        </div>
-        <div className="stat-card glass">
-          <div className="stat-icon" style={{ background:  '#ef4444' }}>🔥</div>
-          <div className="stat-info">
-            <h3>{announcements.filter(a => a.priority === 'High').length}</h3>
-            <p>High Priority</p>
-          </div>
-        </div>
-        <div className="stat-card glass">
-          <div className="stat-icon" style={{ background: '#10b981' }}>👁️</div>
-          <div className="stat-info">
-            <h3>{announcements.reduce((sum, a) => sum + a.views, 0)}</h3>
-            <p>Total Views</p>
-          </div>
-        </div>
-        <div className="stat-card glass">
-          <div className="stat-icon" style={{ background: '#f59e0b' }}>📅</div>
-          <div className="stat-info">
-            <h3>{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</h3>
-            <p>Today</p>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div 
-        className="filter-section glass"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        {['All', 'High', 'Medium', 'Low', 'Holiday', 'Meeting', 'Training']. map(filterType => (
-          <button
-            key={filterType}
-            className={`filter-btn ${filter === filterType ? 'active' :  ''}`}
-            onClick={() => setFilter(filterType)}
-          >
-            {filterType}
-          </button>
-        ))}
-      </motion.div>
-
-      <div className="announcements-grid">
-        <AnimatePresence>
-          {filteredAnnouncements.map((announcement, index) => (
-            <motion.div
-              key={announcement. id}
-              className="announcement-card glass"
-              style={{ '--announcement-color': announcement.color }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity:  1, scale: 1 }}
-              exit={{ opacity: 0, scale:  0.9 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              whileHover={{ scale: 1.02, y: -5 }}
-            >
-              <div className="announcement-header">
-                <div className="announcement-icon" style={{ background: announcement.color }}>
-                  {announcement.icon}
-                </div>
-                <div className="announcement-meta">
-                  <div className="announcement-badges">
-                    <span className="type-badge" style={{ background: announcement.color }}>
-                      {announcement.type}
-                    </span>
-                    <span 
-                      className="priority-badge" 
-                      style={{ background: getPriorityColor(announcement.priority) }}
-                    >
-                      {announcement.priority}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <h3 className="announcement-title">{announcement.title}</h3>
-              <p className="announcement-content">{announcement.content}</p>
-
-              <div className="announcement-footer">
-                <div className="posted-by">
-                  <div className="poster-avatar">{announcement.postedBy. charAt(0)}</div>
-                  <div className="poster-info">
-                    <span className="poster-name">{announcement.postedBy}</span>
-                    <span className="poster-dept">{announcement.department}</span>
-                  </div>
-                </div>
-                <div className="announcement-stats-footer">
-                  <span className="views">👁️ {announcement.views}</span>
-                  <span className="date">📅 {new Date(announcement.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
-                </div>
-              </div>
-
-              <div className="announcement-actions">
-                <motion.button
-                  className="action-btn share"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  title="Share"
-                >
-                  🔗
-                </motion.button>
-                <motion.button
-                  className="action-btn edit"
-                  whileHover={{ scale:  1.1 }}
-                  whileTap={{ scale:  0.9 }}
-                  title="Edit"
-                >
-                  ✏️
-                </motion.button>
-                <motion.button
-                  className="action-btn delete"
-                  whileHover={{ scale:  1.1 }}
-                  whileTap={{ scale:  0.9 }}
-                  title="Delete"
-                >
-                  🗑️
-                </motion.button>
-              </div>
-            </motion. div>
-          ))}
-        </AnimatePresence>
+          <Plus size={18} /> New Announcement
+        </button>
       </div>
 
-      <AnimatePresence>
-        {showModal && (
-          <motion. div 
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity:  1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowModal(false)}
+      <div className="ann-stats-row">
+        <div className="ann-stat-item">
+          <div className="stat-circle" style={{ color: '#6366f1' }}><Megaphone size={20} /></div>
+          <div className="stat-text">
+            <span className="stat-count">{announcements.length}</span>
+            <span className="stat-name">Active Posts</span>
+          </div>
+        </div>
+        <div className="ann-stat-item">
+          <div className="stat-circle" style={{ color: '#ef4444' }}><Filter size={20} /></div>
+          <div className="stat-text">
+            <span className="stat-count">{announcements.filter(a => a.priority === 'High').length}</span>
+            <span className="stat-name">Critical Alerts</span>
+          </div>
+        </div>
+        <div className="ann-stat-item">
+          <div className="stat-circle" style={{ color: '#10b981' }}><Eye size={20} /></div>
+          <div className="stat-text">
+            <span className="stat-count">{announcements.reduce((sum, a) => sum + a.views, 0)}</span>
+            <span className="stat-name">Total Engagement</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="ann-filters">
+        {['All', 'High', 'Medium', 'Low', 'Holiday', 'Meeting', 'Training'].map(type => (
+          <button
+            key={type}
+            className={`ann-filter-tab ${filter === type ? 'active' : ''}`}
+            onClick={() => setFilter(type)}
           >
-            <motion. div 
-              className="modal-content glass"
-              initial={{ scale: 0.8, y: 50 }}
-              animate={{ scale: 1, y:  0 }}
-              exit={{ scale: 0.8, y: 50 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2>📢 Create New Announcement</h2>
-              <form className="announcement-form">
-                <input type="text" placeholder="Announcement Title" className="form-input" />
-                <textarea placeholder="Announcement Content" className="form-textarea" rows="5" />
-                <select className="form-select">
-                  <option>Select Type</option>
-                  <option>Holiday</option>
-                  <option>Meeting</option>
-                  <option>Training</option>
-                  <option>Security</option>
-                  <option>Benefits</option>
-                  <option>Facility</option>
-                  <option>Recognition</option>
-                </select>
-                <select className="form-select">
-                  <option>Select Priority</option>
-                  <option>High</option>
-                  <option>Medium</option>
-                  <option>Low</option>
-                </select>
-                <div className="form-actions">
-                  <motion.button
-                    type="button"
-                    className="cancel-btn"
-                    onClick={() => setShowModal(false)}
-                    whileHover={{ scale:  1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Cancel
-                  </motion. button>
-                  <motion. button
-                    type="submit"
-                    className="submit-btn"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Post Announcement
-                  </motion. button>
+            {type}
+          </button>
+        ))}
+      </div>
+
+      <div className="ann-grid">
+        {filteredAnnouncements.map((ann) => (
+          <div key={ann.id} className="ann-card">
+            <div className="ann-card-header">
+              <div className="ann-category" style={{ color: ann.color, background: `${ann.color}10` }}>
+                {ann.icon}
+                <span>{ann.type}</span>
+              </div>
+              <span 
+                className="ann-priority" 
+                style={{ background: `${getPriorityColor(ann.priority)}10`, color: getPriorityColor(ann.priority) }}
+              >
+                {ann.priority}
+              </span>
+            </div>
+
+            <h3 className="ann-title">{ann.title}</h3>
+            <p className="ann-body">{ann.content}</p>
+
+            <div className="ann-meta-footer">
+              <div className="ann-author">
+                <div className="author-img">{ann.postedBy.charAt(0)}</div>
+                <div className="author-data">
+                  <div className="author-name">{ann.postedBy}</div>
+                  <div className="author-dept">{ann.department}</div>
                 </div>
-              </form>
-            </motion.div>
-          </motion. div>
-        )}
-      </AnimatePresence>
+              </div>
+              <div className="ann-metrics">
+                <span><Eye size={12} /> {ann.views}</span>
+                <span><Calendar size={12} /> {new Date(ann.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+              </div>
+            </div>
+
+            <div className="ann-card-actions">
+              <button className="icon-btn"><Share2 size={16} /></button>
+              <button className="icon-btn"><Edit2 size={16} /></button>
+              <button className="icon-btn delete-btn"><Trash2 size={16} /></button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {showModal && (
+        <div className="modal-backdrop" onClick={() => setShowModal(false)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-top">
+              <h2>New Announcement</h2>
+              <button className="btn-close" onClick={() => setShowModal(false)}><X size={20} /></button>
+            </div>
+            <form className="ann-form">
+              <div className="form-item">
+                <label>Headline</label>
+                <input type="text" placeholder="e.g. System Maintenance Window" />
+              </div>
+              <div className="form-item">
+                <label>Message Content</label>
+                <textarea placeholder="Provide detailed information..." rows="4" />
+              </div>
+              <div className="form-grid">
+                <div className="form-item">
+                  <label>Category</label>
+                  <select>
+                    <option>Holiday</option>
+                    <option>Meeting</option>
+                    <option>Training</option>
+                    <option>Security</option>
+                    <option>Recognition</option>
+                  </select>
+                </div>
+                <div className="form-item">
+                  <label>Urgency Level</label>
+                  <select>
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                  </select>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn-ghost" onClick={() => setShowModal(false)}>Discard</button>
+                <button type="submit" className="btn-primary">Broadcast Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

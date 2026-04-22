@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useDataStore } from '../store/dataStore';
+import { Calendar, Clock, FileText, Check, X, Plane, TreePalm, Stethoscope, User, Baby } from 'lucide-react';
 import './LeaveManagement.css';
 
 function LeaveManagement() {
@@ -28,167 +28,119 @@ function LeaveManagement() {
 
   const getStatusColor = (status) => {
     switch((status || '').toLowerCase()) {
-      case 'approved': return '#4ade80';
-      case 'rejected': return '#f87171';
-      case 'pending': return '#fbbf24';
-      default:  return '#64748b';
+      case 'approved': return '#10b981';
+      case 'rejected': return '#ef4444';
+      case 'pending': return '#f59e0b';
+      default: return '#64748b';
     }
   };
 
   const getLeaveTypeIcon = (type) => {
     switch(type) {
-      case 'Sick Leave': return '🏥';
-      case 'Casual Leave': return '🌴';
-      case 'Vacation': return '✈️';
-      case 'Personal Leave': return '👤';
-      case 'Maternity Leave': return '👶';
-      default: return '📅';
+      case 'Sick Leave': return <Stethoscope size={18} />;
+      case 'Casual Leave': return <TreePalm size={18} />;
+      case 'Vacation': return <Plane size={18} />;
+      case 'Personal Leave': return <User size={18} />;
+      case 'Maternity Leave': return <Baby size={18} />;
+      default: return <Calendar size={18} />;
     }
   };
 
   return (
-    <div className="leave-management">
-      <motion.div 
-        className="leave-header"
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+    <div className="leave-management-container">
+      <div className="lm-header">
         <div>
-          <h1>📅 Leave Management</h1>
+          <h1>Leave Management</h1>
           <p>Manage and approve employee leave requests</p>
         </div>
-        <div className="leave-stats">
-          <div className="stat-badge pending">
-            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'pending').length}</span>
-            <span className="badge-label">Pending</span>
+        <div className="lm-stats">
+          <div className="stat-pill pending">
+            <span className="pill-val">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'pending').length}</span>
+            <span className="pill-lab">Pending</span>
           </div>
-          <div className="stat-badge approved">
-            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'approved').length}</span>
-            <span className="badge-label">Approved</span>
+          <div className="stat-pill approved">
+            <span className="pill-val">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'approved').length}</span>
+            <span className="pill-lab">Approved</span>
           </div>
-          <div className="stat-badge rejected">
-            <span className="badge-value">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'rejected').length}</span>
-            <span className="badge-label">Rejected</span>
+          <div className="stat-pill rejected">
+            <span className="pill-val">{leaveRequests.filter(r => (r.status || '').toLowerCase() === 'rejected').length}</span>
+            <span className="pill-lab">Rejected</span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div 
-        className="filter-section glass"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity:  1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <button 
-          className={`filter-btn ${filter === 'All' ? 'active' : ''}`}
-          onClick={() => setFilter('All')}
-        >
-          All ({leaveRequests.length})
-        </button>
-        <button 
-          className={`filter-btn ${filter === 'Pending' ? 'active' : ''}`}
-          onClick={() => setFilter('Pending')}
-        >
-          Pending ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'pending').length})
-        </button>
-        <button 
-          className={`filter-btn ${filter === 'Approved' ? 'active' : ''}`}
-          onClick={() => setFilter('Approved')}
-        >
-          Approved ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'approved').length})
-        </button>
-        <button 
-          className={`filter-btn ${filter === 'Rejected' ?  'active' : ''}`}
-          onClick={() => setFilter('Rejected')}
-        >
-          Rejected ({leaveRequests.filter(r => (r.status || '').toLowerCase() === 'rejected').length})
-        </button>
-      </motion.div>
-
-      <div className="leave-requests-grid">
-        {filteredRequests.map((request, index) => (
-          <motion.div
-            key={request. id}
-            className="leave-card glass"
-            initial={{ opacity:  0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            whileHover={{ scale: 1.02, boxShadow: '0 15px 40px rgba(0, 0, 0, 0.15)' }}
+      <div className="lm-filters">
+        {['All', 'Pending', 'Approved', 'Rejected'].map(f => (
+          <button 
+            key={f}
+            className={`lm-filter-tab ${filter === f ? 'active' : ''}`}
+            onClick={() => setFilter(f)}
           >
-            <div className="leave-card-header">
-              <div className="employee-info">
-                <div className="employee-avatar">{request.name.charAt(0)}</div>
+            {f} {f === 'All' ? `(${leaveRequests.length})` : `(${leaveRequests.filter(r => (r.status || '').toLowerCase() === f.toLowerCase()).length})`}
+          </button>
+        ))}
+      </div>
+
+      <div className="lm-grid">
+        {filteredRequests.map((request) => (
+          <div key={request.id} className="lm-card">
+            <div className="lm-card-top">
+              <div className="lm-requester">
+                <div className="lm-avatar">{request.name.charAt(0)}</div>
                 <div>
                   <h3>{request.name}</h3>
-                  <p className="applied-date">Applied on {new Date(request.appliedOn).toLocaleDateString('en-IN')}</p>
+                  <p>Applied {new Date(request.appliedOn).toLocaleDateString('en-IN')}</p>
                 </div>
               </div>
-              <span 
-                className="status-badge"
-                style={{ background: getStatusColor(request.status) }}
-              >
-                <span style={{textTransform:'capitalize'}}>{request.status || 'Pending'}</span>
+              <span className="lm-status" style={{ background: `${getStatusColor(request.status)}20`, color: getStatusColor(request.status) }}>
+                {request.status || 'Pending'}
               </span>
             </div>
 
-            <div className="leave-details">
-              <div className="detail-row">
-                <span className="detail-icon">{getLeaveTypeIcon(request.type)}</span>
-                <div className="detail-info">
-                  <span className="detail-label">Leave Type</span>
-                  <span className="detail-value">{request.type}</span>
+            <div className="lm-details">
+              <div className="lm-detail">
+                <span className="lm-icon">{getLeaveTypeIcon(request.type)}</span>
+                <div className="lm-info">
+                  <label>Type</label>
+                  <span>{request.type}</span>
                 </div>
               </div>
-
-              <div className="detail-row">
-                <span className="detail-icon">📆</span>
-                <div className="detail-info">
-                  <span className="detail-label">Duration</span>
-                  <span className="detail-value">
+              <div className="lm-detail">
+                <span className="lm-icon"><Calendar size={18} /></span>
+                <div className="lm-info">
+                  <label>Period</label>
+                  <span>
                     {request.from ? new Date(request.from).toLocaleDateString('en-IN') : 'N/A'} - {request.to ? new Date(request.to).toLocaleDateString('en-IN') : 'N/A'}
                   </span>
                 </div>
               </div>
-
-              <div className="detail-row">
-                <span className="detail-icon">⏰</span>
-                <div className="detail-info">
-                  <span className="detail-label">Total Days</span>
-                  <span className="detail-value">{request.days} {request.days === 1 ? 'day' : 'days'}</span>
+              <div className="lm-detail">
+                <span className="lm-icon"><Clock size={18} /></span>
+                <div className="lm-info">
+                  <label>Days</label>
+                  <span>{request.days} {request.days === 1 ? 'day' : 'days'}</span>
                 </div>
               </div>
-
-              <div className="detail-row reason-row">
-                <span className="detail-icon">📝</span>
-                <div className="detail-info">
-                  <span className="detail-label">Reason</span>
-                  <span className="detail-value">{request.reason}</span>
+              <div className="lm-detail full">
+                <span className="lm-icon"><FileText size={18} /></span>
+                <div className="lm-info">
+                  <label>Reason</label>
+                  <span>{request.reason}</span>
                 </div>
               </div>
             </div>
 
             {(request.status || '').toLowerCase() === 'pending' && (
-              <div className="leave-actions">
-                <motion.button
-                  className="approve-btn"
-                  onClick={() => handleApprove(request.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ✅ Approve
-                </motion.button>
-                <motion.button
-                  className="reject-btn"
-                  onClick={() => handleReject(request.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ❌ Reject
-                </motion.button>
+              <div className="lm-actions">
+                <button className="btn-approve" onClick={() => handleApprove(request.id)}>
+                  <Check size={16} /> Approve
+                </button>
+                <button className="btn-reject" onClick={() => handleReject(request.id)}>
+                  <X size={16} /> Reject
+                </button>
               </div>
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

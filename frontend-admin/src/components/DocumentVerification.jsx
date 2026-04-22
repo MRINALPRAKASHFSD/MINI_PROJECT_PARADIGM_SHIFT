@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useDataStore } from '../store/dataStore';
 import { FileCheck2, FileX2, Clock, Search, Shield, Download, Eye, AlertTriangle } from 'lucide-react';
 import './DocumentVerification.css';
@@ -32,126 +31,163 @@ function DocumentVerification() {
     return matchF && matchS;
   });
 
-  const counts = { verified: docs.filter(d => (d.status || '').toLowerCase() === 'verified').length, pending: docs.filter(d => (d.status || '').toLowerCase() === 'pending').length, rejected: docs.filter(d => (d.status || '').toLowerCase() === 'rejected').length };
+  const counts = { 
+    verified: docs.filter(d => (d.status || '').toLowerCase() === 'verified').length, 
+    pending: docs.filter(d => (d.status || '').toLowerCase() === 'pending').length, 
+    rejected: docs.filter(d => (d.status || '').toLowerCase() === 'rejected').length 
+  };
+  
+  const complianceRate = docs.length > 0 ? Math.round(counts.verified / docs.length * 100) : 0;
+
   return (
     <div className="doc-verification">
-      <motion.div className="dv-header" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+      <div className="dv-header">
         <div>
-          <h1><Shield size={28} style={{ display: 'inline', verticalAlign: 'middle' }} /> Document Verification</h1>
-          <p>Verify and manage employee documents for compliance</p>
+          <h1><Shield size={24} /> Document Compliance</h1>
+          <p>Systematic verification of employee documentation and regulatory compliance.</p>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Stats */}
-      <motion.div className="dv-stats" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+      <div className="dv-stats-grid">
         <div className="dv-stat-card">
-          <div className="dv-stat-icon verified"><FileCheck2 size={22} /></div>
-          <div className="dv-stat-val">{counts.verified}</div>
-          <div className="dv-stat-label">Verified</div>
+          <div className="dv-stat-icon verified"><FileCheck2 size={20} /></div>
+          <div className="dv-stat-info">
+            <div className="dv-stat-val">{counts.verified}</div>
+            <div className="dv-stat-label">Verified Docs</div>
+          </div>
         </div>
         <div className="dv-stat-card">
-          <div className="dv-stat-icon pending"><Clock size={22} /></div>
-          <div className="dv-stat-val">{counts.pending}</div>
-          <div className="dv-stat-label">Pending Review</div>
+          <div className="dv-stat-icon pending"><Clock size={20} /></div>
+          <div className="dv-stat-info">
+            <div className="dv-stat-val">{counts.pending}</div>
+            <div className="dv-stat-label">Pending Review</div>
+          </div>
         </div>
         <div className="dv-stat-card">
-          <div className="dv-stat-icon rejected"><FileX2 size={22} /></div>
-          <div className="dv-stat-val">{counts.rejected}</div>
-          <div className="dv-stat-label">Rejected</div>
+          <div className="dv-stat-icon rejected"><FileX2 size={20} /></div>
+          <div className="dv-stat-info">
+            <div className="dv-stat-val">{counts.rejected}</div>
+            <div className="dv-stat-label">Action Required</div>
+          </div>
         </div>
         <div className="dv-stat-card">
-          <div className="dv-stat-icon total"><Shield size={22} /></div>
-          <div className="dv-stat-val">{Math.round(counts.verified / docs.length * 100)}%</div>
-          <div className="dv-stat-label">Compliance Rate</div>
+          <div className="dv-stat-icon total"><Shield size={20} /></div>
+          <div className="dv-stat-info">
+            <div className="dv-stat-val">{complianceRate}%</div>
+            <div className="dv-stat-label">Compliance Rate</div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Filter */}
-      <motion.div className="dv-filters" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-        <div className="dv-search">
-          <Search size={16} />
-          <input placeholder="Search by employee or document..." value={search} onChange={e => setSearch(e.target.value)} />
+      <div className="dv-controls">
+        <div className="dv-search-box">
+          <Search size={18} />
+          <input 
+            placeholder="Filter by employee, document ID, or category..." 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+          />
         </div>
-        <div className="dv-tabs">
+        <div className="dv-filter-tabs">
           {['All', 'Pending', 'Verified', 'Rejected'].map(f => (
-            <button key={f} className={`dv-tab ${filter === f ? 'active' : ''}`} onClick={() => setFilter(f)}>
+            <button 
+              key={f} 
+              className={`dv-tab-btn ${filter === f ? 'active' : ''}`} 
+              onClick={() => setFilter(f)}
+            >
               {f}
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      {/* Document cards */}
-      <div className="dv-grid">
-        {filtered.map((doc, i) => (
-          <motion.div key={doc.id} className="dv-card glass" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 * i }}>
-            <div className="dv-card-top">
-              <div className="dv-card-cat" style={{ background: `${CAT_COLORS[doc.category] || '#64748b'}18`, color: CAT_COLORS[doc.category] || '#64748b' }}>
-                {doc.category || 'Document'}
-              </div>
-              <span className={`dv-status ${(doc.status || '').toLowerCase()}`}>
-                {(doc.status || '').toLowerCase() === 'verified' && <FileCheck2 size={12} />}
-                {(doc.status || '').toLowerCase() === 'pending' && <Clock size={12} />}
-                {(doc.status || '').toLowerCase() === 'rejected' && <AlertTriangle size={12} />}
-                <span style={{textTransform:'capitalize'}}>{doc.status || 'Pending'}</span>
+      <div className="dv-card-container">
+        {filtered.map((doc) => (
+          <div key={doc.id} className="dv-document-card">
+            <div className="dv-doc-top">
+              <span className="dv-doc-category" style={{ borderLeft: `3px solid ${CAT_COLORS[doc.category] || '#64748b'}` }}>
+                {doc.category || 'Standard'}
+              </span>
+              <span className={`dv-badge ${(doc.status || '').toLowerCase()}`}>
+                <span className="badge-dot"></span>
+                {doc.status || 'Pending'}
               </span>
             </div>
 
-            <h3 className="dv-card-title">{doc.docName || doc.fileName}</h3>
+            <h3 className="dv-doc-title">{doc.docName || doc.fileName}</h3>
 
-            <div className="dv-card-emp">
-              <div className="dv-card-avatar">{(doc.employeeName || doc.employee || '?').charAt(0)}</div>
-              <div>
-                <div className="dv-card-name">{doc.employeeName || doc.employee}</div>
-                <div className="dv-card-dept">{doc.dept || 'Engineering'} · {doc.empId || 'EMPX'}</div>
+            <div className="dv-doc-owner">
+              <div className="owner-avatar">{(doc.employeeName || doc.employee || '?').charAt(0)}</div>
+              <div className="owner-details">
+                <div className="owner-name">{doc.employeeName || doc.employee}</div>
+                <div className="owner-meta">{doc.dept || 'Department'} · {doc.empId || 'EMP ID'}</div>
               </div>
             </div>
 
-            <div className="dv-card-meta">
-              <span>{doc.fileName}</span>
-              <span>{doc.size || '1.0 MB'}</span>
-              <span>{doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+            <div className="dv-doc-meta-info">
+              <div className="meta-item">
+                <span className="meta-label">File:</span>
+                <span className="meta-value">{doc.fileName}</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-label">Date:</span>
+                <span className="meta-value">
+                  {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString('en-GB') : 'N/A'}
+                </span>
+              </div>
             </div>
 
-            <div className="dv-card-actions">
-              <button className="dv-view-btn" onClick={() => setSelectedDoc(doc)}><Eye size={14} /> View</button>
-              <button className="dv-dl-btn"><Download size={14} /></button>
+            <div className="dv-doc-footer">
+              <button className="btn-secondary" onClick={() => setSelectedDoc(doc)}><Eye size={14} /> Review</button>
+              <button className="btn-icon"><Download size={14} /></button>
               {(doc.status || '').toLowerCase() === 'pending' && (
-                <>
-                  <button className="dv-verify-btn" onClick={() => handleVerify(doc.id)}><FileCheck2 size={14} /> Verify</button>
-                  <button className="dv-reject-btn" onClick={() => handleReject(doc.id)}><FileX2 size={14} /></button>
-                </>
+                <div className="action-group">
+                  <button className="btn-approve" onClick={() => handleVerify(doc.id)}><FileCheck2 size={14} /> Approve</button>
+                  <button className="btn-reject-icon" onClick={() => handleReject(doc.id)}><FileX2 size={14} /></button>
+                </div>
               )}
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
-      {filtered.length === 0 && <div className="dv-empty">No documents found matching your criteria.</div>}
+      {filtered.length === 0 && (
+        <div className="dv-no-results">
+          <Shield size={48} />
+          <p>No documents match the current security filters.</p>
+        </div>
+      )}
 
-      {/* Detail Modal */}
       {selectedDoc && (
-        <div className="dv-modal-overlay" onClick={() => setSelectedDoc(null)}>
-          <motion.div className="dv-modal" onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-            <h2>{selectedDoc.docName || selectedDoc.fileName}</h2>
-            <div className="dv-modal-body">
-              <div className="dv-modal-row"><span>Employee</span><strong>{selectedDoc.employeeName || selectedDoc.employee} ({selectedDoc.empId || 'EMP00X'})</strong></div>
-              <div className="dv-modal-row"><span>Department</span><strong>{selectedDoc.dept || 'Engineering'}</strong></div>
-              <div className="dv-modal-row"><span>Category</span><strong>{selectedDoc.category}</strong></div>
-              <div className="dv-modal-row"><span>File</span><strong>{selectedDoc.fileName} ({selectedDoc.size || '1.0 MB'})</strong></div>
-              <div className="dv-modal-row"><span>Uploaded</span><strong>{selectedDoc.uploadedAt ? new Date(selectedDoc.uploadedAt).toLocaleDateString('en-IN') : 'N/A'}</strong></div>
-              <div className="dv-modal-row"><span>Status</span><span className={`dv-status ${(selectedDoc.status || '').toLowerCase()}`} style={{textTransform:'capitalize'}}>{selectedDoc.status || 'Pending'}</span></div>
+        <div className="dv-overlay" onClick={() => setSelectedDoc(null)}>
+          <div className="dv-modal-window" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Document Detail</h2>
+              <button className="modal-close" onClick={() => setSelectedDoc(null)}>&times;</button>
             </div>
-            <div className="dv-modal-actions">
+            <div className="modal-content">
+              <div className="detail-row"><span>Document Name</span><strong>{selectedDoc.docName || selectedDoc.fileName}</strong></div>
+              <div className="detail-row"><span>Employee</span><strong>{selectedDoc.employeeName || selectedDoc.employee}</strong></div>
+              <div className="detail-row"><span>Employee ID</span><strong>{selectedDoc.empId || 'N/A'}</strong></div>
+              <div className="detail-row"><span>Department</span><strong>{selectedDoc.dept || 'N/A'}</strong></div>
+              <div className="detail-row"><span>Category</span><strong>{selectedDoc.category}</strong></div>
+              <div className="detail-row"><span>File Size</span><strong>{selectedDoc.size || '1.0 MB'}</strong></div>
+              <div className="detail-row"><span>Upload Date</span><strong>{selectedDoc.uploadedAt ? new Date(selectedDoc.uploadedAt).toLocaleString() : 'N/A'}</strong></div>
+              <div className="detail-row">
+                <span>Current Status</span>
+                <span className={`dv-badge ${(selectedDoc.status || '').toLowerCase()}`}>{selectedDoc.status || 'Pending'}</span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-secondary" onClick={() => setSelectedDoc(null)}>Close</button>
               {(selectedDoc.status || '').toLowerCase() === 'pending' && (
                 <>
-                  <button className="dv-verify-btn" onClick={() => { handleVerify(selectedDoc.id); setSelectedDoc(null); }}><FileCheck2 size={14} /> Verify Document</button>
-                  <button className="dv-reject-btn" onClick={() => { handleReject(selectedDoc.id); setSelectedDoc(null); }}><FileX2 size={14} /> Reject</button>
+                  <button className="btn-approve" onClick={() => { handleVerify(selectedDoc.id); setSelectedDoc(null); }}>Approve Verification</button>
+                  <button className="btn-reject" onClick={() => { handleReject(selectedDoc.id); setSelectedDoc(null); }}>Reject</button>
                 </>
               )}
-              <button className="dv-close-btn" onClick={() => setSelectedDoc(null)}>Close</button>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </div>

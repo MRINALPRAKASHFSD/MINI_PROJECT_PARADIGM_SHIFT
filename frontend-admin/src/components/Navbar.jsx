@@ -47,7 +47,7 @@ function Navbar() {
           </div>
         </div>
 
-        <button className="logout-btn glass-button" onClick={handleLogout}>
+        <button className="logout-btn" onClick={handleLogout}>
           <LogOut size={16} />
           <span>Logout</span>
         </button>

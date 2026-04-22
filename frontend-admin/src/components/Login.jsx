@@ -48,11 +48,8 @@ function Login() {
 
   return (
     <div className="admin-login-page">
-      {/* Background effects */}
+      {/* Background pattern */}
       <div className="login-bg">
-        <div className="login-orb login-orb-1" />
-        <div className="login-orb login-orb-2" />
-        <div className="login-orb login-orb-3" />
         <div className="login-grid-pattern" />
       </div>
 

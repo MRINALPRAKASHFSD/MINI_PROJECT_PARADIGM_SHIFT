@@ -18,7 +18,6 @@ import Announcements from './components/Announcements';
 import ExpenseApprovals from './components/ExpenseApprovals';
 import DocumentVerification from './components/DocumentVerification';
 import TaskAssignment from './components/TaskAssignment';
-import VideoBackground from './components/VideoBackground';
 import CompanySettings from './components/CompanySettings';
 import './App.css';
 
@@ -56,7 +55,6 @@ function App() {
           </Routes>
         ) : (
           <>
-            <VideoBackground />
             <Navbar />
             <div className="app-container">
               <Sidebar />
