@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDataStore } from '../store/dataStore';
-import { Calendar, Clock, FileText, Check, X, Plane, TreePalm, Stethoscope, User, Baby } from 'lucide-react';
+import { Calendar, Clock, FileText, Check, X, Plane, TreePalm, Stethoscope, User, Baby, Filter } from 'lucide-react';
 import './LeaveManagement.css';
 
 function LeaveManagement() {
-  const { leaves, approveLeave, rejectLeave } = useDataStore();
+  const { leaves, approveLeave, rejectLeave, fetchAll } = useDataStore();
   const [filter, setFilter] = useState('All');
+
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
 
   const leaveRequests = leaves || [];
 
@@ -25,13 +29,12 @@ function LeaveManagement() {
     ? leaveRequests 
     : leaveRequests.filter(req => (req.status || '').toLowerCase() === filter.toLowerCase());
 
-
   const getStatusColor = (status) => {
     switch((status || '').toLowerCase()) {
       case 'approved': return '#10b981';
       case 'rejected': return '#ef4444';
       case 'pending': return '#f59e0b';
-      default: return '#64748b';
+      default: return '#94a3b8';
     }
   };
 
@@ -51,7 +54,7 @@ function LeaveManagement() {
       <div className="lm-header">
         <div>
           <h1>Leave Management</h1>
-          <p>Manage and approve employee leave requests</p>
+          <p>Review and process employee leave applications efficiently.</p>
         </div>
         <div className="lm-stats">
           <div className="stat-pill pending">
@@ -81,68 +84,75 @@ function LeaveManagement() {
         ))}
       </div>
 
-      <div className="lm-grid">
-        {filteredRequests.map((request) => (
-          <div key={request.id} className="lm-card">
-            <div className="lm-card-top">
-              <div className="lm-requester">
-                <div className="lm-avatar">{request.name.charAt(0)}</div>
-                <div>
-                  <h3>{request.name}</h3>
-                  <p>Applied {new Date(request.appliedOn).toLocaleDateString('en-IN')}</p>
+      {filteredRequests.length === 0 ? (
+        <div className="empty-state">
+          <Filter size={48} color="#334155" />
+          <p>No {filter !== 'All' ? filter.toLowerCase() : ''} leave requests found.</p>
+        </div>
+      ) : (
+        <div className="lm-grid">
+          {filteredRequests.map((request) => (
+            <div key={request.id} className="lm-card">
+              <div className="lm-card-top">
+                <div className="lm-requester">
+                  <div className="lm-avatar">{request.name.charAt(0)}</div>
+                  <div>
+                    <h3>{request.name}</h3>
+                    <p>Applied {new Date(request.appliedOn).toLocaleDateString('en-IN')}</p>
+                  </div>
                 </div>
+                <span className="lm-status" style={{ background: `${getStatusColor(request.status)}20`, color: getStatusColor(request.status) }}>
+                  {request.status || 'Pending'}
+                </span>
               </div>
-              <span className="lm-status" style={{ background: `${getStatusColor(request.status)}20`, color: getStatusColor(request.status) }}>
-                {request.status || 'Pending'}
-              </span>
-            </div>
 
-            <div className="lm-details">
-              <div className="lm-detail">
-                <span className="lm-icon">{getLeaveTypeIcon(request.type)}</span>
-                <div className="lm-info">
-                  <label>Type</label>
-                  <span>{request.type}</span>
+              <div className="lm-details">
+                <div className="lm-detail">
+                  <span className="lm-icon">{getLeaveTypeIcon(request.type)}</span>
+                  <div className="lm-info">
+                    <label>Type</label>
+                    <span>{request.type}</span>
+                  </div>
+                </div>
+                <div className="lm-detail">
+                  <span className="lm-icon"><Calendar size={18} /></span>
+                  <div className="lm-info">
+                    <label>Period</label>
+                    <span>
+                      {request.from ? new Date(request.from).toLocaleDateString('en-IN') : 'N/A'} - {request.to ? new Date(request.to).toLocaleDateString('en-IN') : 'N/A'}
+                    </span>
+                  </div>
+                </div>
+                <div className="lm-detail">
+                  <span className="lm-icon"><Clock size={18} /></span>
+                  <div className="lm-info">
+                    <label>Days</label>
+                    <span>{request.days} {request.days === 1 ? 'day' : 'days'}</span>
+                  </div>
+                </div>
+                <div className="lm-detail full">
+                  <span className="lm-icon"><FileText size={18} /></span>
+                  <div className="lm-info">
+                    <label>Reason</label>
+                    <span>{request.reason}</span>
+                  </div>
                 </div>
               </div>
-              <div className="lm-detail">
-                <span className="lm-icon"><Calendar size={18} /></span>
-                <div className="lm-info">
-                  <label>Period</label>
-                  <span>
-                    {request.from ? new Date(request.from).toLocaleDateString('en-IN') : 'N/A'} - {request.to ? new Date(request.to).toLocaleDateString('en-IN') : 'N/A'}
-                  </span>
-                </div>
-              </div>
-              <div className="lm-detail">
-                <span className="lm-icon"><Clock size={18} /></span>
-                <div className="lm-info">
-                  <label>Days</label>
-                  <span>{request.days} {request.days === 1 ? 'day' : 'days'}</span>
-                </div>
-              </div>
-              <div className="lm-detail full">
-                <span className="lm-icon"><FileText size={18} /></span>
-                <div className="lm-info">
-                  <label>Reason</label>
-                  <span>{request.reason}</span>
-                </div>
-              </div>
-            </div>
 
-            {(request.status || '').toLowerCase() === 'pending' && (
-              <div className="lm-actions">
-                <button className="btn-approve" onClick={() => handleApprove(request.id)}>
-                  <Check size={16} /> Approve
-                </button>
-                <button className="btn-reject" onClick={() => handleReject(request.id)}>
-                  <X size={16} /> Reject
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              {(request.status || '').toLowerCase() === 'pending' && (
+                <div className="lm-actions">
+                  <button className="btn-approve" onClick={() => handleApprove(request.id)}>
+                    <Check size={16} /> Approve
+                  </button>
+                  <button className="btn-reject" onClick={() => handleReject(request.id)}>
+                    <X size={16} /> Reject
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
