@@ -595,47 +595,7 @@ curl http://localhost:5050/api/health
 
 ---
 
-## ⚙️ Environment Variables
 
-### `backend/.env`
-
-```env
-PORT=5050
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/paradigmshift
-JWT_SECRET=your_jwt_secret_here
-JWT_REFRESH_SECRET=your_refresh_secret_here
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
-CORS_ORIGINS=http://localhost:5173,http://localhost:5174
-FIREBASE_PROJECT_ID=your_firebase_project_id
-FIREBASE_CLIENT_EMAIL=your_service_account_email
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-CLOUD_STORAGE_BUCKET=your_storage_bucket_name
-```
-
-### `frontend-admin/.env`
-
-```env
-VITE_API_BASE_URL=http://localhost:5050/api
-VITE_SOCKET_URL=http://localhost:5050
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-```
-
-### `frontend-employee/.env`
-
-```env
-VITE_API_BASE_URL=http://localhost:5050/api
-VITE_SOCKET_URL=http://localhost:5050
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-```
-
-> ⚠️ Never commit `.env` files to version control. Add all production secrets via the Vercel dashboard environment variables per app.
-
----
 
 ## 📡 API Reference
 
