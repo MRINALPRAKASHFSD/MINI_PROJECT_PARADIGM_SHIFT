@@ -54,7 +54,9 @@ io.on('connection', (socket) => {
 });
 
 // ── Security & parsing ──────────────────────────────────────
-app.use(helmet());
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));

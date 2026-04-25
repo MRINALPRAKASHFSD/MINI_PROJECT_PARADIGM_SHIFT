@@ -96,7 +96,7 @@ const Notifications = () => {
               <div style={{ width: '80px', height: '80px', borderRadius: '30px', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
                 <BellOff size={40} style={{ color: 'var(--text-muted)', opacity: 0.3 }} />
               </div>
-              <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: '0 0 8px' }}>Void Detected</h3>
+              <h3 className="rgb-text" style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px' }}>Void Detected</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '15px', fontWeight: '500', maxWidth: '300px', margin: '0 auto' }}>You've cleared your notification deck. Enjoy the peace.</p>
             </motion.div>
           ) : (

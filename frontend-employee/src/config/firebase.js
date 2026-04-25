@@ -117,10 +117,7 @@ export async function registerWithEmail(email, password, displayName, isCompany 
   }
 }
 
-export async function loginWithGoogle() {
-  // Google OAuth not available with custom backend — show message
-  return { success: false, error: 'Google login is not available. Please use email/password.' };
-}
+// Use signInWithGooglePlatform instead of loginWithGoogle for Google OAuth functionality.
 
 export async function loginWithMicrosoft() {
   return { success: false, error: 'Microsoft login is not available. Please use email/password.' };

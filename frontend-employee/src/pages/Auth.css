@@ -23,7 +23,7 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(102, 126, 234, 0.6);
+  background: rgba(45, 212, 191, 0.4);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -52,12 +52,12 @@
 .brand-logo {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 20px 60px rgba(45, 212, 191, 0.2);
 }
 
 .logo-icon {
@@ -68,7 +68,7 @@
   font-size: 3. 5rem;
   font-weight: 900;
   line-height: 1.1;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   -webkit-background-clip: text;
   -webkit-text-fill-color:  transparent;
   margin:  0;
@@ -102,7 +102,7 @@
 .feature-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -135,7 +135,7 @@
 .stat-card h3 {
   font-size: 1.75rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   -webkit-background-clip: text;
   -webkit-text-fill-color:  transparent;
   margin: 0 0 0.5rem 0;
@@ -174,14 +174,14 @@
 .header-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
   color: white;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 30px rgba(45, 212, 191, 0.2);
 }
 
 .form-header h2 {
@@ -229,9 +229,9 @@
 
 .input-wrapper input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #2dd4bf;
   background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
 }
 
 .input-wrapper input::placeholder {
@@ -317,7 +317,7 @@
 }
 
 .forgot-link {
-  color: #667eea;
+  color: #2dd4bf;
   text-decoration:  none;
   font-weight: 600;
   transition: opacity 0.2s;
@@ -343,7 +343,7 @@
 .submit-btn {
   width: 100%;
   padding: 0.938rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
   color: white;
   border: none;
   border-radius: 10px;
@@ -355,7 +355,7 @@
   justify-content: center;
   gap: 0.5rem;
   transition: all 0.2s;
-  box-shadow:  0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow:  0 4px 15px rgba(45, 212, 191, 0.2);
 }
 
 .submit-btn:disabled {
@@ -379,7 +379,7 @@
 }
 
 .link-primary {
-  color: #667eea;
+  color: #2dd4bf;
   text-decoration:  none;
   font-weight:  700;
   transition: opacity 0.2s;

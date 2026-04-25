@@ -164,7 +164,7 @@ const Documents = () => {
           {filtered.length === 0 && (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '100px 40px', background: 'rgba(255,255,255,0.01)', borderRadius: '32px', border: '2px dashed var(--border-glass)' }}>
               <FileText size={64} style={{ opacity: 0.1, marginBottom: '24px' }} />
-              <p style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-muted)' }}>No matches in your vault.</p>
+              <p className="rgb-text" style={{ fontSize: '20px', fontWeight: '800' }}>No matches in your vault.</p>
             </div>
           )}
         </div>

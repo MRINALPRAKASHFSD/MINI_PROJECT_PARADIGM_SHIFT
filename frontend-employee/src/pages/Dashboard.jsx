@@ -70,32 +70,31 @@ const Dashboard = () => {
     .slice(0, 4);
 
   return (
-    <div className="dashboard-container">
-      {/* Background Ambient Glows */}
-      <div className="ambient-glow p-glow" style={{ top: '10%', left: '5%', background: 'var(--primary-glow)' }} />
-      <div className="ambient-glow s-glow" style={{ bottom: '15%', right: '5%', background: 'var(--secondary-glow)' }} />
+    <div className="dashboard-pro dark">
+      {/* Premium Background Elements */}
+      <div className="animated-background">
+        <div className="grid-pattern" />
+        <div className="gradient-orb orb-1" />
+        <div className="gradient-orb orb-2" />
+        <div className="gradient-orb orb-3" />
+      </div>
 
-      <header className="dashboard-header">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="hero-text">{greeting}, {firstName}</h1>
-          <p className="sub-text">{now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-        </motion.div>
-        
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="clock-display glass-panel">
-          <div className="time-text">{now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
-          <div className="timezone-tag">IST</div>
-        </motion.div>
-      </header>
+      <div className="pro-main">
+        <header className="dashboard-header" style={{ marginBottom: '40px', position: 'relative', zIndex: 10 }}>
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <h1 className="hero-text" style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px', marginBottom: '8px' }}>{greeting}, {firstName}</h1>
+            <p className="sub-text" style={{ fontSize: '1.1rem', opacity: 0.7 }}>{now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+          </motion.div>
+        </header>
 
-      <div className="dashboard-grid-top">
-        <div className="widget-wrapper">
+        <div className="dashboard-grid-top" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '32px' }}>
           <ClockWidget />
-        </div>
         
-        <div className="glass-panel balance-widget">
-          <div className="widget-header">
+        <div className="glass-card pro-card balance-widget">
+          <div className="card-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px', marginBottom: '20px' }}>
+            <Calendar size={20} style={{ color: 'var(--primary)' }} />
             <h3>Attendance & Leave</h3>
-            <button className="btn-link" onClick={() => navigate('/leave')}>Manage <ArrowRight size={14} /></button>
+            <button className="btn-link" style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => navigate('/leave')}>Manage <ArrowRight size={14} /></button>
           </div>
           
           <div className="balance-grid">
@@ -130,7 +129,9 @@ const Dashboard = () => {
 
       <div className="stats-row">
         <div onClick={() => navigate('/time-tracker')} className="stat-card-smooth glass-panel highlight">
-          <Clock className="stat-icon" />
+          <div className="stat-icon-wrapper icon-teal">
+            <Clock className="stat-icon" />
+          </div>
           <div className="stat-content">
             <span className="stat-label">Today's Focus</span>
             <div className="stat-value">{formatDur(todaySeconds)}</div>
@@ -139,13 +140,15 @@ const Dashboard = () => {
         </div>
 
         {[
-          { label: 'Tasks Done', value: `${completedTasks}/${totalTasks}`, icon: CheckSquare, color: 'var(--primary)', path: '/tasks' },
-          { label: 'My Active', value: myTasks.filter(t => t.status !== 'completed').length, icon: Target, color: 'var(--secondary)', path: '/tasks', extra: overdueTasks.length > 0 ? `${overdueTasks.length} overdue` : null },
-          { label: 'Weekly Log', value: formatDur(weekSeconds), icon: TrendingUp, color: '#0ea5e9', path: '/analytics' },
-          { label: 'Day Streak', value: 5, icon: Flame, color: '#f97316', centered: true }
+          { label: 'Tasks Done', value: `${completedTasks}/${totalTasks}`, icon: CheckSquare, color: '#2dd4bf', path: '/tasks', iconClass: 'icon-teal' },
+          { label: 'My Active', value: myTasks.filter(t => t.status !== 'completed').length, icon: Target, color: '#0ea5e9', path: '/tasks', iconClass: 'icon-blue', extra: overdueTasks.length > 0 ? `${overdueTasks.length} overdue` : null },
+          { label: 'Weekly Log', value: formatDur(weekSeconds), icon: TrendingUp, color: '#8b5cf6', path: '/analytics', iconClass: 'icon-purple' },
+          { label: 'Day Streak', value: 5, icon: Flame, color: '#f97316', iconClass: 'icon-orange' }
         ].map((s, i) => (
           <div key={i} onClick={() => s.path && navigate(s.path)} className={`stat-card-smooth glass-panel ${s.centered ? 'centered' : ''}`}>
-            <s.icon className="stat-icon" style={{ color: s.color }} />
+            <div className={`stat-icon-wrapper ${s.iconClass}`}>
+              <s.icon className="stat-icon" style={{ color: s.color }} />
+            </div>
             <div className="stat-content">
               <span className="stat-label">{s.label}</span>
               <div className="stat-value">{s.value}</div>
@@ -198,7 +201,7 @@ const Dashboard = () => {
                 </div>
               );
             })}
-            {deadlines.length === 0 && <div className="empty-state">No upcoming deadlines 🎉</div>}
+            {deadlines.length === 0 && <div className="empty-state rgb-text">No upcoming deadlines 🎉</div>}
           </div>
         </div>
 
@@ -221,7 +224,8 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Dashboard;

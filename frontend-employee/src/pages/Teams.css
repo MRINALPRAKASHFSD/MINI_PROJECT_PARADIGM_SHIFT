@@ -1,8 +1,10 @@
-.teams-container {
+.teams-page {
   min-height: 100vh;
-  background: #0a0a0f;
-  color: #e4e4e7;
-  padding: 2rem;
+  color: var(--text-primary);
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .teams-header {
@@ -459,23 +461,60 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Layout Utility Additions */
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 2rem;
+  text-align: center;
+}
+
+.rgb-text {
+  background: linear-gradient(
+    to right,
+    #ff0000,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #ff00ff,
+    #ff0000
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: rgbShift 5s linear infinite;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+@keyframes rgbShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
 @media (max-width: 768px) {
-  .teams-container {
-    padding: 1rem;
+  .teams-page {
+    padding: 1.5rem 1rem;
   }
   
-  .teams-header {
+  .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
   
   .teams-grid,
-  .members-grid {
+  .member-list {
     grid-template-columns: 1fr;
   }
   
-  .detail-grid {
-    grid-template-columns: 1fr;
+  .modal-stats {
+    flex-direction: column;
   }
 }
