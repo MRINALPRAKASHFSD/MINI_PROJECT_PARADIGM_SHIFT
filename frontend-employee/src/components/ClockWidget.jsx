@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { Clock, Play, Square, Timer, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -18,10 +18,7 @@ const ClockWidget = () => {
 
   const fetchTodayStatus = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('/api/attendance/today', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get('/attendance/today');
       if (res.data.attendance) {
         setAttendance(res.data.attendance);
         if (res.data.attendance.checkOut) {
@@ -42,10 +39,7 @@ const ClockWidget = () => {
   const handleClockIn = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const res = await axios.post('/api/attendance/clock-in', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.post('/attendance/clock-in', {});
       setAttendance(res.data.attendance);
       setStatus('clocked_in');
       toast.success('Clocked in successfully!');
@@ -59,10 +53,7 @@ const ClockWidget = () => {
   const handleClockOut = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const res = await axios.post('/api/attendance/clock-out', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.post('/attendance/clock-out', {});
       setAttendance(res.data.attendance);
       setStatus('clocked_out');
       toast.success('Clocked out successfully!');
