@@ -7,8 +7,9 @@ import {
   CheckSquare, Clock, Camera, TrendingUp, Calendar,
   BarChart3, Zap, Bell, Target, AlertTriangle,
   Activity, Quote, Users, Coffee, IndianRupee,
-  FileText, Palmtree, FolderOpen, Wallet, Flame
+  FileText, Palmtree, FolderOpen, Wallet, Flame, Info
 } from 'lucide-react';
+import ClockWidget from '../components/ClockWidget';
 import './Dashboardpro.css';
 
 // different quotes each refresh — feels hand-picked
@@ -114,6 +115,53 @@ const Dashboard = () => {
             {now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
           </div>
           <div style={{ fontSize: '12px', color: '#64748b', letterSpacing: '2px', fontWeight: '700', marginTop: '2px' }}>IST</div>
+        </div>
+      </div>
+
+      {/* ── ATTENDANCE & LEAVE QUICK VIEW ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2.8fr', gap: '20px', marginBottom: '24px' }}>
+        <ClockWidget />
+        
+        <div style={{ 
+          background: 'rgba(15,23,42,0.5)', 
+          borderRadius: '16px', 
+          padding: '22px', 
+          border: '1px solid rgba(255,255,255,0.05)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: '#94a3b8' }}>Leave Balances</h3>
+            <button 
+              onClick={() => navigate('/leave')}
+              style={{ fontSize: '12px', color: '#4f46e5', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              View History
+            </button>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            {[
+              { label: 'Casual Leave', value: user?.leaveBalances?.casual || 12, max: 12, color: '#3b82f6' },
+              { label: 'Earned Leave', value: user?.leaveBalances?.earned || 15, max: 15, color: '#10b981' },
+              { label: 'Sick Leave', value: user?.leaveBalances?.sick || 10, max: 10, color: '#ef4444' }
+            ].map((item, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '600', textTransform: 'uppercase' }}>{item.label}</span>
+                  <span style={{ fontSize: '16px', fontWeight: '700', color: '#f1f5f9' }}>{item.value}</span>
+                </div>
+                <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(item.value / item.max) * 100}%` }}
+                    style={{ height: '100%', background: item.color }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

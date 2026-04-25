@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDataStore } from '../store/dataStore';
+import { useAuthStore } from '../store/authStore';
 import { formatDistanceToNow } from 'date-fns';
 import { Calendar, Plus, X, Clock, CheckCircle, XCircle, AlertCircle, Briefcase, Sun, Thermometer, Home, ChevronDown } from 'lucide-react';
 
@@ -18,7 +19,9 @@ const STATUS_BADGE = {
 };
 
 const LeaveManagement = () => {
-  const { leaves, leaveBalances, applyLeave, cancelLeave } = useDataStore();
+  const { user } = useAuthStore();
+  const { leaves, applyLeave, cancelLeave } = useDataStore();
+  const leaveBalances = user?.leaveBalances || { casual: 0, earned: 0, sick: 0, total: 0 };
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ type: 'Casual Leave', from: '', to: '', reason: '' });
   const [tab, setTab] = useState('overview');

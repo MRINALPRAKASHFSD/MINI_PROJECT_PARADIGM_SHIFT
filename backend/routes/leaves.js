@@ -1,5 +1,6 @@
 const express = require('express');
 const Leave = require('../models/Leave');
+const User = require('../models/User');
 const { auth, authorize } = require('../middleware/auth');
 
 const router = express.Router();
@@ -36,8 +37,35 @@ router.post('/', auth, async (req, res) => {
 // PUT /api/leaves/:id/approve — admin approves
 router.put('/:id/approve', auth, authorize('admin', 'hr'), async (req, res) => {
   try {
-    const leave = await Leave.findByIdAndUpdate(req.params.id, { status: 'approved', approvedBy: req.user._id }, { new: true });
+    const leave = await Leave.findById(req.params.id);
     if (!leave) return res.status(404).json({ error: 'Leave not found.' });
+    if (leave.status !== 'pending') return res.status(400).json({ error: 'Leave already processed.' });
+
+    // Deduct from balance
+    const employee = await User.findById(leave.employee);
+    if (employee) {
+      const typeKey = leave.type.toLowerCase().split(' ')[0]; // 'casual', 'sick', 'vacation' -> map to balance keys
+      const balanceMap = {
+        'casual': 'casual',
+        'sick': 'sick',
+        'vacation': 'earned', // vacation maps to earned
+        'personal': 'casual'  // personal maps to casual
+      };
+      
+      const key = balanceMap[typeKey] || 'casual';
+      if (employee.leaveBalances[key] >= leave.days) {
+        employee.leaveBalances[key] -= leave.days;
+        employee.leaveBalances.total -= leave.days;
+        await employee.save();
+      } else {
+        // Optional: warn or prevent? For now just allow negative or handle
+      }
+    }
+
+    leave.status = 'approved';
+    leave.approvedBy = req.user._id;
+    await leave.save();
+
     req.app.get('io').emit('DATA_UPDATED', { type: 'LEAVES' });
     res.json({ leave });
   } catch (err) {

@@ -56,6 +56,14 @@ const userSchema = new mongoose.Schema({
     taskReminders: { type: Boolean, default: true },
     weeklyReports: { type: Boolean, default: false },
     projectUpdates: { type: Boolean, default: true }
+  },
+  
+  // Leave Balances
+  leaveBalances: {
+    casual: { type: Number, default: 12 },
+    earned: { type: Number, default: 15 },
+    sick: { type: Number, default: 10 },
+    total: { type: Number, default: 37 }
   }
 }, { timestamps: true });
 
