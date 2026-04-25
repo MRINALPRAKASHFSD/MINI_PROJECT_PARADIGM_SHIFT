@@ -143,7 +143,7 @@ const ClockWidget = () => {
               </div>
               <div>
                 <p className="font-bold text-sm">Shift Completed</p>
-                <p className="text-xs text-emerald-100">{attendance?.hoursWorked} Hours Worked today</p>
+                <p className="text-xs text-emerald-100">{attendance?.hoursWorked.toFixed(2)} Hours Worked today</p>
               </div>
             </motion.div>
           )}
