@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Clock, Play, Square, Timer, CheckCircle } from 'lucide-react';
+import { Clock, Play, Square, Timer, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -40,9 +40,11 @@ const ClockWidget = () => {
     try {
       setLoading(true);
       const res = await api.post('/attendance/clock-in', {});
-      setAttendance(res.data.attendance);
-      setStatus('clocked_in');
-      toast.success('Clocked in successfully!');
+      if (res.data.attendance) {
+        setAttendance(res.data.attendance);
+        setStatus('clocked_in');
+        toast.success('Shift started! Have a great day.');
+      }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to clock in');
     } finally {
@@ -54,9 +56,11 @@ const ClockWidget = () => {
     try {
       setLoading(true);
       const res = await api.post('/attendance/clock-out', {});
-      setAttendance(res.data.attendance);
-      setStatus('clocked_out');
-      toast.success('Clocked out successfully!');
+      if (res.data.attendance) {
+        setAttendance(res.data.attendance);
+        setStatus('clocked_out');
+        toast.success('Shift completed. Rest well!');
+      }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to clock out');
     } finally {
@@ -66,7 +70,9 @@ const ClockWidget = () => {
 
   if (loading && !attendance) {
     return (
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 animate-pulse h-40" />
+      <div className="glass-panel" style={{ height: '230px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="pulse" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 20px var(--primary-glow)' }} />
+      </div>
     );
   }
 
@@ -74,30 +80,60 @@ const ClockWidget = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden bg-slate-900/60 backdrop-blur-xl rounded-[24px] p-6 text-white shadow-2xl border border-white/10 flex flex-col justify-between"
+      className="glass-panel attendance-widget"
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'space-between',
+        height: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: '32px',
+        border: '1px solid var(--border-glass)',
+        background: 'rgba(15,23,42,0.3)'
+      }}
     >
-      <div className="flex justify-between items-start">
+      {/* Loading Overlay */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <div className="pulse" style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 20px var(--primary-glow)' }} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Decorative Background Elements */}
+      <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '150px', height: '150px', background: 'var(--primary-glow)', filter: 'blur(60px)', opacity: 0.2 }} />
+      
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Daily Attendance</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: status === 'clocked_in' ? '#10b981' : 'var(--primary)', boxShadow: status === 'clocked_in' ? '0 0 15px #10b981' : '0 0 10px var(--primary-glow)' }} />
+            <span style={{ fontSize: '12px', fontWeight: '900', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+              {status === 'clocked_in' ? 'Shift Active' : status === 'clocked_out' ? 'System Standby' : 'Ready to Start'}
+            </span>
           </div>
-          <h2 className="text-4xl font-black tracking-tight text-slate-100">
-            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            <span className="text-sm font-medium text-slate-500 ml-2">
+          <h2 style={{ fontSize: '42px', fontWeight: '900', margin: 0, letterSpacing: '-2px', color: '#fff', fontFamily: '"JetBrains Mono", monospace' }}>
+            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).split(' ')[0]}
+            <span style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-muted)', marginLeft: '10px', verticalAlign: 'baseline', letterSpacing: '0' }}>
               {currentTime.toLocaleTimeString([], { second: '2-digit' })}
             </span>
           </h2>
-          <p className="text-sm font-semibold text-slate-500 mt-1">
-            {currentTime.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })}
+          <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginTop: '6px', fontWeight: '600' }}>
+            {currentTime.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'short' })}
           </p>
         </div>
-        <div className="p-3 bg-indigo-500/10 rounded-2xl border border-indigo-500/20">
-          <Clock className="w-6 h-6 text-indigo-400" />
+        <div style={{ width: '52px', height: '52px', background: 'rgba(255,255,255,0.03)', borderRadius: '18px', border: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.2)' }}>
+          <Clock size={26} style={{ color: 'var(--primary)', filter: 'drop-shadow(0 0 8px var(--primary-glow))' }} />
         </div>
       </div>
 
-      <div className="mt-8">
+      <div style={{ marginTop: '40px', zIndex: 1 }}>
         <AnimatePresence mode="wait">
           {status === 'idle' && (
             <motion.button
@@ -107,61 +143,112 @@ const ClockWidget = () => {
               exit={{ opacity: 0, y: -10 }}
               onClick={handleClockIn}
               disabled={loading}
-              className="group relative w-full py-4 bg-white text-slate-900 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-slate-100 transition-all shadow-[0_10px_20px_-5px_rgba(255,255,255,0.2)] active:scale-95 disabled:opacity-50 overflow-hidden"
+              style={{ 
+                width: '100%', 
+                padding: '20px', 
+                background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '20px',
+                fontSize: '16px',
+                fontWeight: '900',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '14px',
+                cursor: 'pointer',
+                boxShadow: '0 12px 30px var(--primary-glow)',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              whileHover={{ scale: 1.02, boxShadow: '0 20px 40px var(--primary-glow)' }}
+              whileTap={{ scale: 0.98 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <Play className="w-5 h-5 fill-current text-indigo-600" />
-              <span className="tracking-tight">Clock In for Today</span>
+              <Play size={20} fill="currentColor" strokeWidth={3} /> Start Shift
             </motion.button>
           )}
 
           {status === 'clocked_in' && (
             <motion.div
               key="clocked-in-area"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-4"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
             >
-              <div className="flex items-center justify-between px-4 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                <div className="flex items-center gap-2">
-                  <Timer className="w-4 h-4 text-indigo-400" />
-                  <span className="text-sm font-medium text-indigo-200">Session Active</span>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                padding: '16px 24px', 
+                background: 'rgba(16,185,129,0.05)', 
+                border: '1px solid rgba(16,185,129,0.15)', 
+                borderRadius: '20px' 
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div className="pulse" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} />
+                  <span style={{ fontSize: '14px', fontWeight: '800', color: '#10b981' }}>Live Session</span>
                 </div>
-                <span className="text-xs font-bold text-slate-400">Since {attendance?.checkIn}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)' }}>
+                  <Timer size={14} />
+                  <span style={{ fontSize: '12px', fontWeight: '700' }}>In: {attendance?.checkIn}</span>
+                </div>
               </div>
-              <button
+              <motion.button
                 onClick={handleClockOut}
                 disabled={loading}
-                className="w-full py-4 bg-rose-500 text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-rose-600 transition-all shadow-[0_10px_20px_-5px_rgba(244,63,94,0.3)] active:scale-95 disabled:opacity-50"
+                style={{ 
+                  width: '100%', 
+                  padding: '20px', 
+                  background: 'rgba(244,63,94,0.05)',
+                  color: '#f43f5e',
+                  border: '1px solid rgba(244,63,94,0.1)',
+                  borderRadius: '20px',
+                  fontSize: '16px',
+                  fontWeight: '900',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '14px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+                whileHover={{ background: 'rgba(244,63,94,0.1)', borderColor: 'rgba(244,63,94,0.3)', scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Square className="w-5 h-5 fill-current" />
-                <span className="tracking-tight">Clock Out</span>
-              </button>
+                <Square size={20} fill="currentColor" /> End Shift
+              </motion.button>
             </motion.div>
           )}
 
           {status === 'clocked_out' && (
             <motion.div
               key="clocked-out"
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 flex items-center gap-4"
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05))', 
+                border: '1px solid rgba(16,185,129,0.2)', 
+                borderRadius: '24px', 
+                padding: '24px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '20px' 
+              }}
             >
-              <div className="p-3 bg-emerald-500 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                <CheckCircle className="w-6 h-6 text-white" />
+              <div style={{ width: '56px', height: '56px', background: '#10b981', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(16,185,129,0.3)' }}>
+                <CheckCircle size={32} color="#fff" strokeWidth={3} />
               </div>
               <div>
-                <p className="font-bold text-slate-100">Shift Completed</p>
-                <p className="text-sm font-medium text-emerald-400/80">{attendance?.hoursWorked.toFixed(2)} Hours Logged</p>
+                <p style={{ margin: 0, fontWeight: '900', color: '#fff', fontSize: '18px', letterSpacing: '-0.5px' }}>Mission Complete</p>
+                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#10b981', fontWeight: '700' }}>
+                  <Sparkles size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+                  {attendance?.hoursWorked?.toFixed(2) || '0.00'} Hours Logged
+                </p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -top-20 -left-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
     </motion.div>
   );
 };

@@ -36,20 +36,20 @@ const Layout = () => {
   }, [companySettings?.theme]);
 
   const menuItems = [
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: '#3B82F6', gradient: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)' },
-    { path: '/workspace', icon: Blocks, label: 'My Workspace', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 100%)' },
-    { path: '/teams', icon: Users, label: 'Teams', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)' },
-    companySettings?.features?.enableTasks !== false && { path: '/tasks', icon: CheckSquare, label: 'Tasks', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)' },
-    companySettings?.features?.enableTimeTracking !== false && { path: '/time-tracker', icon: Clock, label: 'Time Tracker', color: '#06B6D4', gradient: 'linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%)' },
-    { path: '/submit-proof', icon: Camera, label: 'Submit Proof', color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
-    { path: '/notifications', icon: Bell, label: 'Notifications', color: '#EF4444', gradient: 'linear-gradient(135deg, #EF4444 0%, #F87171 100%)', badge: unreadCount || null },
-    companySettings?.features?.enableLeaves !== false && { path: '/leave', icon: Palmtree, label: 'Leave', color: '#10B981', gradient: 'linear-gradient(135deg, #10B981 0%, #6EE7B7 100%)' },
-    { path: '/reports', icon: FileText, label: 'Reports', color: '#EC4899', gradient: 'linear-gradient(135deg, #EC4899 0%, #F472B6 100%)' },
-    { path: '/analytics', icon: BarChart3, label: 'Analytics', color: '#6366F1', gradient: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)' },
-    companySettings?.features?.enablePayroll !== false && { path: '/payslips', icon: IndianRupee, label: 'Payslips', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%)' },
-    companySettings?.features?.enableExpenses !== false && { path: '/expenses', icon: Receipt, label: 'Expenses', color: '#F97316', gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)' },
-    companySettings?.features?.enableDocuments !== false && { path: '/documents', icon: FolderOpen, label: 'Documents', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%)' },
-    companySettings?.features?.enableMeetings !== false && { path: '/meetings', icon: Calendar, label: 'Meetings', color: '#F43F5E', gradient: 'linear-gradient(135deg, #F43F5E 0%, #FB7185 100%)' },
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/workspace', icon: Blocks, label: 'My Workspace' },
+    { path: '/teams', icon: Users, label: 'Teams' },
+    companySettings?.features?.enableTasks !== false && { path: '/tasks', icon: CheckSquare, label: 'Tasks' },
+    companySettings?.features?.enableTimeTracking !== false && { path: '/time-tracker', icon: Clock, label: 'Time Tracker' },
+    { path: '/submit-proof', icon: Camera, label: 'Submit Proof' },
+    { path: '/notifications', icon: Bell, label: 'Notifications', badge: unreadCount || null },
+    companySettings?.features?.enableLeaves !== false && { path: '/leave', icon: Palmtree, label: 'Leave' },
+    { path: '/reports', icon: FileText, label: 'Reports' },
+    { path: '/analytics', icon: BarChart3, label: 'Analytics' },
+    companySettings?.features?.enablePayroll !== false && { path: '/payslips', icon: IndianRupee, label: 'Payslips' },
+    companySettings?.features?.enableExpenses !== false && { path: '/expenses', icon: Receipt, label: 'Expenses' },
+    companySettings?.features?.enableDocuments !== false && { path: '/documents', icon: FolderOpen, label: 'Documents' },
+    companySettings?.features?.enableMeetings !== false && { path: '/meetings', icon: Calendar, label: 'Meetings' },
   ].filter(Boolean);
 
   const handleLogout = async () => {
@@ -70,148 +70,80 @@ const Layout = () => {
     || (location.pathname === '/profile' ? 'Profile' : location.pathname === '/calendar' ? 'Calendar' : location.pathname === '/settings' ? 'Settings' : 'Dashboard');
 
   return (
-    <div className={`layout-container ${darkMode ? 'dark' : 'light'}`}>
-      {/* Background — CSS only, no JS animations */}
-      <div className="layout-background">
-        <div className="gradient-orb orb-1" />
-        <div className="gradient-orb orb-2" />
-        <div className="grid-pattern" />
-      </div>
-
+    <div className={`layout-container ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <div className="noise-overlay" />
       {/* ── SIDEBAR ─────────────────────────────────────────── */}
-      <aside className="sidebar glass-sidebar" style={{ width: sidebarOpen ? 320 : 100, transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-        {/* Header */}
-        <div className="sidebar-header">
-          <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
-            <div className="logo-icon" style={{ background: companySettings?.theme?.primaryColor || 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>
-              <Sparkles size={22} strokeWidth={2.5} />
-            </div>
-            {sidebarOpen && <span className="logo-text" style={{ transition: 'opacity 0.2s', letterSpacing: '0.5px' }}>Paradigm Shift</span>}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
+          <div className="logo-icon">
+            <Sparkles size={20} />
           </div>
-          <button className="sidebar-toggle glass-btn" onClick={() => setSidebarOpen(!sidebarOpen)} style={{ transition: 'transform 0.2s' }}>
-            {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          <span className="logo-text">Paradigm Shift</span>
         </div>
 
-        {sidebarOpen && (
-          <div className="sidebar-divider">
-            <Sparkles size={12} className="divider-icon" />
-            <span>NAVIGATION</span>
-          </div>
-        )}
-
-        {/* Nav Items — CSS transitions only, no framer-motion per item */}
         <nav className="sidebar-nav">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
-              <button key={item.path} data-label={item.label}
+              <button key={item.path} 
                 className={`nav-item ${isActive ? 'active' : ''}`}
-                onClick={() => navigate(item.path)}
-                style={{ transition: 'all 0.15s ease' }}>
-                <div className="nav-icon"
-                  style={{
-                    background: isActive ? item.gradient : 'transparent',
-                    border: isActive ? 'none' : `2px solid ${item.color}40`,
-                    boxShadow: isActive ? `0 6px 20px ${item.color}50` : 'none',
-                    transition: 'all 0.2s ease',
-                  }}>
-                  <item.icon size={20} strokeWidth={2.5} />
+                onClick={() => navigate(item.path)}>
+                <div className="nav-icon">
+                  <item.icon size={20} />
                   {item.badge && (
                     <span className="nav-badge">{item.badge > 99 ? '99+' : item.badge}</span>
                   )}
                 </div>
-                {sidebarOpen && <span className="nav-label">{item.label}</span>}
+                <span className="nav-label">{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Bottom Section */}
-        <div className="sidebar-bottom">
-          {sidebarOpen && (
-            <div className="sidebar-divider">
-              <Sparkles size={12} className="divider-icon" />
-              <span>ACCOUNT</span>
-            </div>
-          )}
-
-          <button className="nav-item" data-label="Settings"
-            style={{ transition: 'all 0.15s ease' }}
-            onClick={() => navigate('/settings')}>
-            <div className="nav-icon" style={{ border: '2px solid rgba(148,163,184,0.3)', transition: 'all 0.2s' }}>
-              <Settings size={20} strokeWidth={2.5} />
-            </div>
-            {sidebarOpen && <span className="nav-label">Settings</span>}
+        <div className="sidebar-footer">
+          <button className="nav-item" onClick={() => navigate('/settings')}>
+            <div className="nav-icon"><Settings size={20} /></div>
+            <span className="nav-label">Settings</span>
           </button>
-
-          <button className="nav-item" data-label="Profile"
-            style={{ transition: 'all 0.15s ease' }}
-            onClick={() => navigate('/profile')}>
-            <div className="nav-icon" style={{ border: '2px solid rgba(148,163,184,0.3)', transition: 'all 0.2s' }}>
-              <User size={20} strokeWidth={2.5} />
-            </div>
-            {sidebarOpen && <span className="nav-label">Profile</span>}
+          <button className="nav-item" onClick={() => navigate('/profile')}>
+            <div className="nav-icon"><User size={20} /></div>
+            <span className="nav-label">Profile</span>
           </button>
-
-          <button className="nav-item logout-item" data-label="Logout"
-            style={{ transition: 'all 0.15s ease' }}
-            onClick={handleLogout}>
-            <div className="nav-icon" style={{ border: '2px solid rgba(239,68,68,0.3)', color: '#ef4444', transition: 'all 0.2s' }}>
-              <LogOut size={20} strokeWidth={2.5} />
-            </div>
-            {sidebarOpen && <span className="nav-label" style={{ color: '#ef4444' }}>Logout</span>}
+          <button className="nav-item logout-item" onClick={handleLogout} style={{ color: '#ef4444' }}>
+            <div className="nav-icon"><LogOut size={20} /></div>
+            <span className="nav-label">Logout</span>
           </button>
-
-          {sidebarOpen && (
-            <div className="status-bar">
-              <div className="status-dot" />
-              <span>System Online</span>
-            </div>
-          )}
-          {sidebarOpen && (
-            <div style={{ textAlign: 'center', padding: '12px 0 8px', fontSize: '12px', fontWeight: '700', color: '#475569', letterSpacing: '2px', textTransform: 'uppercase', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-              Paradigm Shift&trade;
-            </div>
-          )}
         </div>
       </aside>
 
       {/* ── MAIN CONTENT ────────────────────────────────────── */}
-      <div className="main-content" style={{ marginLeft: sidebarOpen ? 320 : 100, transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-        {/* Top Bar */}
-        <header className="topbar glass-topbar">
+      <div className="main-content">
+        <header className="topbar">
           <div className="topbar-left">
-            <button className="mobile-menu-btn glass-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+            <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
               <Menu size={22} />
             </button>
             <h2 className="page-title">{pageTitle}</h2>
-            {user?.companyName && (
-              <span className="workspace-badge" style={{ marginLeft: '16px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', padding: '4px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
-                {user.companyName}
-              </span>
-            )}
           </div>
           <div className="topbar-right">
-            <button className="topbar-btn glass-btn" onClick={() => setDarkMode(!darkMode)} style={{ transition: 'transform 0.2s' }}>
+            <button className="topbar-btn" onClick={() => setDarkMode(!darkMode)}>
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <button className="topbar-btn glass-btn notification-btn" onClick={() => navigate('/notifications')} style={{ transition: 'transform 0.2s' }}>
+            <button className="topbar-btn" onClick={() => navigate('/notifications')}>
               <Bell size={20} />
               {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
             </button>
-            <div className="user-profile glass-profile" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
+            <div className="user-profile" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
               <div className="user-avatar">{renderUserInitial()}</div>
               <div className="user-info">
-                <span className="user-name">{renderUserName()}</span>
-                <span className="user-role">Developer</span>
+                <span className="user-name" style={{ fontSize: '14px', fontWeight: '600' }}>{renderUserName()}</span>
+                <span className="user-role" style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block' }}>Developer</span>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page Content — simple fade */}
-        <main className="page-content">
+        <main className="page-container">
           <Outlet />
         </main>
       </div>

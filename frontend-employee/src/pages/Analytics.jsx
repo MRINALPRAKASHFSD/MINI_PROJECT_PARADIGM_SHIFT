@@ -1,29 +1,29 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useDataStore } from '../store/dataStore';
-import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import { BarChart3, TrendingUp, Clock, CheckSquare, Target, Award, Activity, Zap } from 'lucide-react';
-import './AnalyticsSimple.css';
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { BarChart3, TrendingUp, Clock, CheckSquare, Target, Award, Activity, Zap, Info, ArrowUpRight } from 'lucide-react';
 
-const CHART_COLORS = ['#3b82f6', '#10b981', '#a855f7', '#f59e0b', '#ec4899', '#06b6d4'];
+// New Cyber Blue & Violet Palette for charts
+const CHART_COLORS = ['#4f46e5', '#8b5cf6', '#a855f7', '#6366f1', '#7c3aed', '#4338ca'];
 
 const Analytics = () => {
   const { tasks, timeEntries } = useDataStore();
   const [timeRange, setTimeRange] = useState('month');
 
-  // ── Computed stats ──────────────────────────────────────────
+  // Computed stats
   const completed = tasks.filter(t => t.status === 'completed').length;
   const total = tasks.length;
   const totalHours = Math.round(timeEntries.reduce((s, e) => s + e.seconds, 0) / 3600);
 
   const performanceStats = [
-    { label: 'Productivity Score', value: `${total > 0 ? Math.round((completed / total) * 100) : 0}%`, change: '+5%', trend: 'up', icon: TrendingUp, color: '#10b981' },
-    { label: 'Tasks Efficiency', value: `${completed}/${total}`, change: `${completed} done`, trend: 'up', icon: CheckSquare, color: '#3b82f6' },
+    { label: 'Productivity Score', value: `${total > 0 ? Math.round((completed / total) * 100) : 0}%`, change: '+5%', trend: 'up', icon: TrendingUp, color: 'var(--primary)' },
+    { label: 'Tasks Efficiency', value: `${completed}/${total}`, change: `${completed} done`, trend: 'up', icon: CheckSquare, color: 'var(--secondary)' },
     { label: 'Hours Logged', value: `${totalHours}h`, change: `${timeEntries.length} entries`, trend: 'up', icon: Clock, color: '#a855f7' },
-    { label: 'Quality Score', value: '96%', change: '+2%', trend: 'up', icon: Award, color: '#f97316' },
+    { label: 'Quality Score', value: '96%', change: '+2%', trend: 'up', icon: Award, color: '#6366f1' },
   ];
 
-  // ── Weekly hours chart (from real entries) ──────────────────
+  // Weekly hours chart
   const weeklyData = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i));
     const dateStr = d.toISOString().split('T')[0];
@@ -31,7 +31,7 @@ const Analytics = () => {
     return { day: d.toLocaleDateString('en-IN', { weekday: 'short' }), hours: Math.round(hours * 10) / 10 };
   });
 
-  // ── Project breakdown (from real entries) ──────────────────
+  // Project breakdown
   const projectMap = {};
   timeEntries.forEach(e => {
     projectMap[e.project] = (projectMap[e.project] || 0) + e.seconds;
@@ -42,7 +42,7 @@ const Analytics = () => {
   const totalProjectHours = projectBreakdown.reduce((s, p) => s + p.hours, 0);
   const projectPie = projectBreakdown.map(p => ({ ...p, percentage: totalProjectHours > 0 ? Math.round((p.hours / totalProjectHours) * 100) : 0 }));
 
-  // ── Productivity trend (last 14 days) ──────────────────────
+  // Productivity trend
   const productivityTrend = Array.from({ length: 14 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (13 - i));
     const dateStr = d.toISOString().split('T')[0];
@@ -56,186 +56,219 @@ const Analytics = () => {
     };
   });
 
-  // ── Task status pie ────────────────────────────────────────
+  // Task status pie
   const taskStatusPie = [
-    { name: 'To Do', value: tasks.filter(t => t.status === 'todo').length, color: '#3b82f6' },
-    { name: 'In Progress', value: tasks.filter(t => t.status === 'inProgress').length, color: '#eab308' },
+    { name: 'To Do', value: tasks.filter(t => t.status === 'todo').length, color: 'var(--primary)' },
+    { name: 'In Progress', value: tasks.filter(t => t.status === 'inProgress').length, color: 'var(--secondary)' },
     { name: 'Review', value: tasks.filter(t => t.status === 'review').length, color: '#a855f7' },
     { name: 'Completed', value: tasks.filter(t => t.status === 'completed').length, color: '#10b981' },
   ].filter(s => s.value > 0);
 
   const skillsData = [
-    { skill: 'Coding', score: 95, color: '#3b82f6' },
-    { skill: 'Problem Solving', score: 88, color: '#10b981' },
-    { skill: 'Communication', score: 92, color: '#a855f7' },
-    { skill: 'Time Mgmt', score: 85, color: '#f97316' },
-    { skill: 'Teamwork', score: 90, color: '#ec4899' },
-    { skill: 'Leadership', score: 78, color: '#eab308' },
+    { skill: 'Coding', score: 95 },
+    { skill: 'Problem Solving', score: 88 },
+    { skill: 'Communication', score: 92 },
+    { skill: 'Time Mgmt', score: 85 },
+    { skill: 'Teamwork', score: 90 },
+    { skill: 'Leadership', score: 78 },
   ];
 
-  const cardStyle = { background: 'var(--surface-panel)', borderRadius: '20px', padding: '28px', border: '1px solid var(--border-soft)' };
-
   return (
-    <div style={{ padding: '24px', color: 'var(--text-primary)', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', minHeight: '100vh', position: 'relative' }}>
+      {/* Background Ambient Glows */}
+      <div className="ambient-glow" style={{ top: '10%', left: '5%', background: 'var(--primary-glow)', width: '400px', height: '400px' }} />
+      <div className="ambient-glow" style={{ bottom: '20%', right: '10%', background: 'var(--secondary-glow)', width: '350px', height: '350px' }} />
+
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #6366f1, #818cf8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <BarChart3 size={28} color="#fff" />
-          </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '20px', position: 'relative', zIndex: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ width: '64px', height: '64px', borderRadius: '20px', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 25px var(--primary-glow)' }}>
+            <BarChart3 size={32} color="#fff" />
+          </motion.div>
           <div>
-            <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '700' }}>Analytics</h1>
-            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px' }}>Your performance insights</p>
+            <h1 style={{ margin: 0, fontSize: '34px', fontWeight: '800', letterSpacing: '-1px' }}>Performance Insights</h1>
+            <p style={{ margin: '4px 0 0', color: 'var(--text-muted)', fontSize: '15px', fontWeight: '500' }}>Deep dive into your productivity and efficiency metrics</p>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="glass-panel" style={{ display: 'flex', gap: '8px', padding: '6px', borderRadius: '16px', border: '1px solid var(--border-glass)', background: 'rgba(255,255,255,0.02)' }}>
           {['week', 'month', 'year'].map(r => (
             <button key={r} onClick={() => setTimeRange(r)}
-              style={{ padding: '8px 20px', borderRadius: '10px', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: timeRange === r ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' : 'var(--btn-ghost-bg)', color: timeRange === r ? '#fff' : 'var(--text-secondary)', textTransform: 'capitalize', transition: 'all 0.2s' }}>
+              style={{ padding: '10px 24px', borderRadius: '12px', border: 'none', fontSize: '14px', fontWeight: '800', cursor: 'pointer', background: timeRange === r ? 'var(--primary)' : 'transparent', color: timeRange === r ? '#fff' : 'var(--text-secondary)', textTransform: 'capitalize', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               {r}
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      {/* Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '24px' }}>
+      {/* Stats Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px' }}>
         {performanceStats.map((stat, i) => (
-          <div key={i} style={{ ...cardStyle, padding: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: `${stat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: stat.color }}>
-                <stat.icon size={22} />
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}
+            className="glass-panel stat-card-smooth" style={{ borderRadius: '28px', padding: '28px', border: '1px solid var(--border-glass)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: `${stat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: stat.color, border: `1px solid ${stat.color}30` }}>
+                <stat.icon size={26} />
               </div>
-              <span style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '8px', fontWeight: '600', background: 'rgba(16,185,129,0.15)', color: '#10b981' }}>{stat.change}</span>
+              <span style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '10px', fontWeight: '800', background: 'rgba(79,70,229,0.1)', color: 'var(--primary)' }}>{stat.change}</span>
             </div>
-            <div style={{ fontSize: '28px', fontWeight: '700' }}>{stat.value}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label}</div>
-          </div>
+            <div style={{ fontSize: '36px', fontWeight: '900', color: 'var(--text-primary)', letterSpacing: '-1px' }}>{stat.value}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '8px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px' }}>{stat.label}</div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Charts Row 1: Trend + Weekly */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', marginBottom: '24px' }}>
-        <div style={cardStyle}>
-          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <TrendingUp size={20} style={{ color: '#10b981' }} /> Productivity Trend (14 days)
-          </h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <AreaChart data={productivityTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--btn-ghost-bg)" />
-              <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }} />
-              <defs>
-                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <Area type="monotone" dataKey="score" stroke="#10b981" fill="url(#areaGrad)" strokeWidth={2} name="Score" />
-              <Area type="monotone" dataKey="hours" stroke="#3b82f6" fill="none" strokeWidth={2} strokeDasharray="4 4" name="Hours" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Main Charts Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '24px', marginBottom: '24px' }}>
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="glass-panel" style={{ borderRadius: '32px', padding: '36px', border: '1px solid var(--border-glass)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <TrendingUp size={24} style={{ color: 'var(--primary)' }} /> Productivity Pulse
+            </h3>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', fontWeight: '800' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)' }} /> Efficiency</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--secondary)' }} /> Work Hours</div>
+            </div>
+          </div>
+          <div style={{ height: '320px', width: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={productivityTrend}>
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11, fontWeight: '700' }} axisLine={false} tickLine={false} dy={15} />
+                <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11, fontWeight: '700' }} axisLine={false} tickLine={false} dx={-10} />
+                <Tooltip 
+                  contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--border-glass)', borderRadius: '20px', backdropFilter: 'blur(30px)', color: 'var(--text-primary)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', padding: '16px' }} 
+                  itemStyle={{ fontWeight: '800', fontSize: '14px' }}
+                />
+                <Area type="monotone" dataKey="score" stroke="var(--primary)" fill="url(#areaGrad)" strokeWidth={4} name="Efficiency Score" />
+                <Area type="monotone" dataKey="hours" stroke="var(--secondary)" fill="none" strokeWidth={3} strokeDasharray="6 6" name="Work Hours" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
 
-        <div style={cardStyle}>
-          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Activity size={20} style={{ color: '#3b82f6' }} /> Weekly Hours
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="glass-panel" style={{ borderRadius: '32px', padding: '36px', border: '1px solid var(--border-glass)' }}>
+          <h3 style={{ margin: '0 0 32px', fontSize: '20px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Activity size={24} style={{ color: 'var(--secondary)' }} /> Weekly Activity
           </h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={weeklyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--btn-ghost-bg)" />
-              <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} unit="h" />
-              <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
-                formatter={(v) => [`${v}h`, 'Hours']} />
-              <Bar dataKey="hours" radius={[6, 6, 0, 0]}>
-                {weeklyData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <div style={{ height: '320px', width: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: '700' }} axisLine={false} tickLine={false} dy={15} />
+                <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: '700' }} axisLine={false} tickLine={false} unit="h" dx={-10} />
+                <Tooltip 
+                  contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--border-glass)', borderRadius: '20px', backdropFilter: 'blur(30px)', padding: '12px' }}
+                  formatter={(v) => [`${v}h`, 'Log Hours']} 
+                />
+                <Bar dataKey="hours" radius={[12, 12, 0, 0]} barSize={36}>
+                  {weeklyData.map((_, i) => <Cell key={i} fill={i === 6 ? 'var(--primary)' : CHART_COLORS[i % CHART_COLORS.length]} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Charts Row 2: Project Pie + Task Status + Skills */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px' }}>
-        {/* Project Breakdown */}
-        <div style={cardStyle}>
-          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600' }}>Project Time</h3>
-          {projectPie.length > 0 ? (
-            <>
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie data={projectPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="hours" nameKey="name" paddingAngle={2}>
-                    {projectPie.map((p, i) => <Cell key={i} fill={p.color} />)}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
-                    formatter={(v) => [`${v}h`, 'Hours']} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                {projectPie.map((p, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: p.color }} />
-                      <span>{p.name}</span>
-                    </div>
-                    <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>{p.hours}h ({p.percentage}%)</span>
-                  </div>
-                ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+        {/* Project Pie */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel" style={{ borderRadius: '32px', padding: '36px', border: '1px solid var(--border-glass)' }}>
+          <h3 style={{ margin: '0 0 28px', fontSize: '18px', fontWeight: '800' }}>Project Allocation</h3>
+          <div style={{ height: '220px', position: 'relative' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={projectPie} cx="50%" cy="50%" innerRadius={65} outerRadius={95} dataKey="hours" nameKey="name" paddingAngle={5} stroke="none">
+                  {projectPie.map((p, i) => <Cell key={i} fill={p.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--border-glass)', borderRadius: '16px', backdropFilter: 'blur(20px)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+              <div style={{ fontSize: '28px', fontWeight: '900', color: 'var(--primary)' }}>{totalHours}h</div>
+              <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total logged</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
+            {projectPie.map((p, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.03)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: p.color }} />
+                  <span style={{ fontSize: '14px', fontWeight: '700' }}>{p.name}</span>
+                </div>
+                <span style={{ fontSize: '14px', fontWeight: '800' }}>{p.percentage}%</span>
               </div>
-            </>
-          ) : <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>No data yet</p>}
-        </div>
+            ))}
+          </div>
+        </motion.div>
 
-        {/* Task Status */}
-        <div style={cardStyle}>
-          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600' }}>Task Status</h3>
-          {taskStatusPie.length > 0 ? (
-            <>
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie data={taskStatusPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name" paddingAngle={2}>
-                    {taskStatusPie.map((s, i) => <Cell key={i} fill={s.color} />)}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--btn-ghost-border)', borderRadius: '12px', color: 'var(--text-primary)' }} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                {taskStatusPie.map((s, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: s.color }} />
-                      <span>{s.name}</span>
-                    </div>
-                    <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>{s.value} tasks</span>
-                  </div>
-                ))}
+        {/* Task Lifecycle */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-panel" style={{ borderRadius: '32px', padding: '36px', border: '1px solid var(--border-glass)' }}>
+          <h3 style={{ margin: '0 0 28px', fontSize: '18px', fontWeight: '800' }}>Task Dynamics</h3>
+          <div style={{ height: '220px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={taskStatusPie} cx="50%" cy="50%" innerRadius={65} outerRadius={95} dataKey="value" nameKey="name" paddingAngle={5} stroke="none">
+                  {taskStatusPie.map((s, i) => <Cell key={i} fill={s.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: 'var(--surface-panel)', border: '1px solid var(--border-glass)', borderRadius: '16px', backdropFilter: 'blur(20px)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginTop: '32px' }}>
+            {taskStatusPie.map((s, i) => (
+              <div key={i} style={{ padding: '14px', borderRadius: '18px', background: `${s.color}08`, border: `1px solid ${s.color}20` }}>
+                <div style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '4px' }}>{s.name}</div>
+                <div style={{ fontSize: '20px', fontWeight: '900', color: s.color }}>{s.value}</div>
               </div>
-            </>
-          ) : <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>No tasks</p>}
-        </div>
+            ))}
+          </div>
+        </motion.div>
 
-        {/* Skills Radar (as bars) */}
-        <div style={cardStyle}>
-          <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Zap size={20} style={{ color: '#f59e0b' }} /> Skills
+        {/* Skills Growth */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-panel" style={{ borderRadius: '32px', padding: '36px', border: '1px solid var(--border-glass)' }}>
+          <h3 style={{ margin: '0 0 32px', fontSize: '18px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Zap size={22} style={{ color: 'var(--primary)' }} /> Competency Matrix
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             {skillsData.map((skill, i) => (
               <div key={i}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px' }}>
-                  <span>{skill.skill}</span>
-                  <span style={{ color: skill.color, fontWeight: '600' }}>{skill.score}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '13px' }}>
+                  <span style={{ fontWeight: '800' }}>{skill.skill}</span>
+                  <span style={{ color: 'var(--primary)', fontWeight: '900' }}>{skill.score}%</span>
                 </div>
-                <div style={{ height: '8px', borderRadius: '4px', background: 'var(--border-soft)', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', borderRadius: '4px', background: skill.color, width: `${skill.score}%`, transition: 'width 1s ease' }} />
+                <div style={{ height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.03)', overflow: 'hidden' }}>
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${skill.score}%` }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.4 + i * 0.1 }} style={{ height: '100%', background: 'linear-gradient(90deg, var(--primary), var(--secondary))', borderRadius: '4px', boxShadow: `0 0 15px ${CHART_COLORS[0]}40` }} />
                 </div>
               </div>
             ))}
           </div>
+          <div style={{ marginTop: '36px', padding: '24px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(79,70,229,0.1), transparent)', border: '1px solid rgba(79,70,229,0.15)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--primary)', fontWeight: '900', fontSize: '15px' }}>
+              <Award size={20} /> Performance Milestone
+            </div>
+            <p style={{ margin: '10px 0 0', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', fontWeight: '600' }}>
+              Your coding efficiency index has surged by <span style={{ color: 'var(--primary)', fontWeight: '800' }}>14%</span> since the last sprint cycle. Keep it up!
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="glass-panel" style={{ marginTop: '40px', padding: '28px 36px', borderRadius: '24px', border: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ padding: '12px', background: 'rgba(79,70,229,0.1)', borderRadius: '14px' }}><Info size={24} color="var(--primary)" /></div>
+          <div>
+            <div style={{ fontSize: '16px', fontWeight: '800' }}>Automated Insights Generation</div>
+            <div style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: '600' }}>Next comprehensive report scheduled for April 30, 2026</div>
+          </div>
         </div>
+        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ padding: '12px 28px', borderRadius: '14px', background: 'var(--primary)', color: '#fff', border: 'none', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 20px var(--primary-glow)' }}>
+          Export Detailed PDF <ArrowUpRight size={18} />
+        </motion.button>
       </div>
     </div>
   );
