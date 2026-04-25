@@ -143,8 +143,25 @@ const Layout = () => {
           </div>
         </header>
 
-        <main className="page-container">
-          <Outlet />
+        <main className="page-container" style={{ position: 'relative' }}>
+          {companySettings?.maintenanceMode ? (
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              justifyContent: 'center', zIndex: 50, color: 'white',
+              textAlign: 'center', padding: '2rem'
+            }}>
+              <Settings size={64} style={{ color: 'var(--primary)', marginBottom: '1rem', animation: 'spin 4s linear infinite' }} />
+              <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>System Maintenance</h2>
+              <p style={{ color: 'var(--text-muted)', maxWidth: '500px' }}>
+                The employee portal is currently undergoing scheduled maintenance and updates by the administration.
+                Please check back later. We apologize for the inconvenience.
+              </p>
+            </div>
+          ) : (
+            <Outlet />
+          )}
         </main>
       </div>
     </div>

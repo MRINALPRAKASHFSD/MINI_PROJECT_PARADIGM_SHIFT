@@ -28,7 +28,8 @@ const CompanySettings = () => {
     try {
       await api.put('/settings', {
         theme: settings.theme,
-        features: settings.features
+        features: settings.features,
+        maintenanceMode: settings.maintenanceMode
       });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus(''), 2000);
@@ -60,6 +61,36 @@ const CompanySettings = () => {
       </div>
 
       <div className="settings-grid">
+        <section className="settings-section">
+          <div className="section-header">
+            <Settings size={20} />
+            <h2>System Controls</h2>
+          </div>
+          <p className="section-desc">Global access controls for the entire employee portal.</p>
+          
+          <div className="features-list">
+            <div className="feature-item" style={{ borderLeft: '4px solid #ef4444' }}>
+              <div className="feature-info">
+                <span className="feature-name" style={{ color: '#ef4444', fontWeight: 'bold' }}>Maintenance Mode</span>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  Block all employee access to the portal. Admin access remains active.
+                </span>
+              </div>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  checked={settings.maintenanceMode}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    maintenanceMode: e.target.checked
+                  })}
+                />
+                <span className="slider round"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
         <section className="settings-section">
           <div className="section-header">
             <Settings size={20} />

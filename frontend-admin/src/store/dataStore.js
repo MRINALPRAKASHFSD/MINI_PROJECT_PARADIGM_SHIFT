@@ -9,6 +9,7 @@ export const useDataStore = create((set, get) => ({
   documents: [],
   attendance: [],
   departments: [],
+  announcements: [],
   dashboardStats: {},
   dashboardActivities: [],
   _loaded: false,
@@ -26,6 +27,7 @@ export const useDataStore = create((set, get) => ({
         docsRes, 
         attendanceRes,
         departmentsRes,
+        announcementsRes,
         dashboardRes
       ] = await Promise.allSettled([
         api.get('/employees'),
@@ -35,6 +37,7 @@ export const useDataStore = create((set, get) => ({
         api.get('/documents'),
         api.get('/attendance'),
         api.get('/departments'),
+        api.get('/announcements'),
         api.get('/dashboard/stats')
       ]);
 
@@ -88,6 +91,7 @@ export const useDataStore = create((set, get) => ({
           employeeName: a.employeeName || a.employee?.name || 'Unknown',
         })),
         departments: extract(departmentsRes, 'departments').map(d => ({ ...d, id: d._id || d.id })),
+        announcements: extract(announcementsRes, 'announcements').map(a => ({ ...a, id: a._id || a.id })),
         dashboardStats: dashboardRes.status === 'fulfilled' ? dashboardRes.value.data.stats : {},
         dashboardActivities: dashboardRes.status === 'fulfilled' ? dashboardRes.value.data.activities : [],
         _loaded: true,
@@ -185,6 +189,21 @@ export const useDataStore = create((set, get) => ({
     try {
       await api.delete(`/tasks/${id}`);
       set(s => ({ tasks: s.tasks.filter(t => t.id !== id) }));
+    } catch (e) { throw e; }
+  },
+
+  // Announcements
+  addAnnouncement: async (data) => {
+    try {
+      const res = await api.post('/announcements', data);
+      const ann = { ...res.data.announcement, id: res.data.announcement._id };
+      set(s => ({ announcements: [ann, ...s.announcements] }));
+    } catch (e) { throw e; }
+  },
+  deleteAnnouncement: async (id) => {
+    try {
+      await api.delete(`/announcements/${id}`);
+      set(s => ({ announcements: s.announcements.filter(a => a.id !== id) }));
     } catch (e) { throw e; }
   }
 }));

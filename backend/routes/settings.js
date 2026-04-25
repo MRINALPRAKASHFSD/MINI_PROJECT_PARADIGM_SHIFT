@@ -34,7 +34,7 @@ router.put('/', auth, authorize('admin'), async (req, res) => {
       return res.status(400).json({ error: 'User is not assigned to a company.' });
     }
 
-    const { theme, features } = req.body;
+    const { theme, features, maintenanceMode } = req.body;
     
     let settings = await CompanySettings.findOne({ companyName });
     if (!settings) {
@@ -43,6 +43,7 @@ router.put('/', auth, authorize('admin'), async (req, res) => {
 
     if (theme) settings.theme = { ...settings.theme, ...theme };
     if (features) settings.features = { ...settings.features, ...features };
+    if (typeof maintenanceMode !== 'undefined') settings.maintenanceMode = maintenanceMode;
 
     await settings.save();
 

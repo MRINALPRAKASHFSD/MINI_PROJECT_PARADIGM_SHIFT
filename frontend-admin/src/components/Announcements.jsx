@@ -1,76 +1,44 @@
 import { useState } from 'react';
 import { Megaphone, Plus, Calendar, Eye, Share2, Edit2, Trash2, X, Filter } from 'lucide-react';
+import { useDataStore } from '../store/dataStore';
 import './Announcements.css';
 
 function Announcements() {
-  const [announcements, setAnnouncements] = useState([
-    {
-      id: 1,
-      title: 'Republic Day Holiday Notice',
-      content: 'The office will remain closed on 26th January 2026 for Republic Day celebrations. Regular operations will resume on 27th January.',
-      type: 'Holiday',
-      priority: 'High',
-      postedBy: 'Pratham Verma',
-      department: 'HR',
-      date: '2026-01-20',
-      icon: <Calendar size={18} />,
-      color: '#f59e0b',
-      views: 145
-    },
-    {
-      id: 2,
-      title: 'New Security Protocols',
-      content: 'Updated security protocols are now in effect. All employees must use their access cards for entry and follow the new visitor registration process.',
-      type: 'Security',
-      priority: 'High',
-      postedBy: 'Rohan Kapoor',
-      department: 'Admin',
-      date: '2026-01-18',
-      icon: <Megaphone size={18} />,
-      color: '#ef4444',
-      views: 203
-    },
-    {
-      id: 3,
-      title: 'Employee of the Month - December',
-      content: 'Congratulations to Ishan Singh for being selected as Employee of the Month! His outstanding contribution to the Finance department has been exceptional.',
-      type: 'Recognition',
-      priority: 'Medium',
-      postedBy: 'Pratham Verma',
-      department: 'HR',
-      date: '2026-01-15',
-      icon: <Megaphone size={18} />,
-      color: '#10b981',
-      views: 187
-    },
-    {
-      id: 4,
-      title: 'Quarterly Town Hall Meeting',
-      content: 'Join us for the Q4 Town Hall meeting on January 30th at 3 PM in the main conference hall. CEO will share company updates and Q&A session.',
-      type: 'Meeting',
-      priority: 'High',
-      postedBy: 'Diya Sharma',
-      department: 'Management',
-      date: '2026-01-12',
-      icon: <Calendar size={18} />,
-      color: '#8b5cf6',
-      views: 156
-    }
-  ]);
-
+  const { announcements, addAnnouncement, deleteAnnouncement } = useDataStore();
   const [filter, setFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
+  const [newAnn, setNewAnn] = useState({ title: '', content: '', category: 'General', priority: 'medium' });
 
   const filteredAnnouncements = filter === 'All' 
     ? announcements 
-    : announcements.filter(ann => ann.priority === filter || ann.type === filter);
+    : announcements.filter(ann => ann.priority === filter.toLowerCase() || ann.category === filter);
 
   const getPriorityColor = (priority) => {
-    switch(priority) {
-      case 'High': return '#ef4444';
-      case 'Medium': return '#f59e0b';
-      case 'Low': return '#10b981';
+    switch(priority?.toLowerCase()) {
+      case 'high': return '#ef4444';
+      case 'medium': return '#f59e0b';
+      case 'low': return '#10b981';
       default: return '#64748b';
+    }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    if (!newAnn.title || !newAnn.content) return;
+    try {
+      await addAnnouncement(newAnn);
+      setShowModal(false);
+      setNewAnn({ title: '', content: '', category: 'General', priority: 'medium' });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteAnnouncement(id);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -129,9 +97,9 @@ function Announcements() {
         {filteredAnnouncements.map((ann) => (
           <div key={ann.id} className="ann-card">
             <div className="ann-card-header">
-              <div className="ann-category" style={{ color: ann.color, background: `${ann.color}10` }}>
-                {ann.icon}
-                <span>{ann.type}</span>
+              <div className="ann-category" style={{ color: '#10b981', background: '#10b98110' }}>
+                <Megaphone size={16} />
+                <span>{ann.category || 'General'}</span>
               </div>
               <span 
                 className="ann-priority" 
@@ -146,22 +114,22 @@ function Announcements() {
 
             <div className="ann-meta-footer">
               <div className="ann-author">
-                <div className="author-img">{ann.postedBy.charAt(0)}</div>
+                <div className="author-img">{ann.authorName?.charAt(0) || 'U'}</div>
                 <div className="author-data">
-                  <div className="author-name">{ann.postedBy}</div>
-                  <div className="author-dept">{ann.department}</div>
+                  <div className="author-name">{ann.authorName || 'Unknown'}</div>
+                  <div className="author-dept">Admin</div>
                 </div>
               </div>
               <div className="ann-metrics">
-                <span><Eye size={12} /> {ann.views}</span>
-                <span><Calendar size={12} /> {new Date(ann.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                <span><Eye size={12} /> {ann.views || 0}</span>
+                <span><Calendar size={12} /> {new Date(ann.createdAt || Date.now()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
               </div>
             </div>
 
             <div className="ann-card-actions">
               <button className="icon-btn"><Share2 size={16} /></button>
               <button className="icon-btn"><Edit2 size={16} /></button>
-              <button className="icon-btn delete-btn"><Trash2 size={16} /></button>
+              <button className="icon-btn delete-btn" onClick={() => handleDelete(ann.id)}><Trash2 size={16} /></button>
             </div>
           </div>
         ))}
@@ -174,32 +142,51 @@ function Announcements() {
               <h2>New Announcement</h2>
               <button className="btn-close" onClick={() => setShowModal(false)}><X size={20} /></button>
             </div>
-            <form className="ann-form">
+            <form className="ann-form" onSubmit={handleCreate}>
               <div className="form-item">
                 <label>Headline</label>
-                <input type="text" placeholder="e.g. System Maintenance Window" />
+                <input 
+                  type="text" 
+                  placeholder="e.g. System Maintenance Window" 
+                  value={newAnn.title}
+                  onChange={(e) => setNewAnn({ ...newAnn, title: e.target.value })}
+                  required
+                />
               </div>
               <div className="form-item">
                 <label>Message Content</label>
-                <textarea placeholder="Provide detailed information..." rows="4" />
+                <textarea 
+                  placeholder="Provide detailed information..." 
+                  rows="4"
+                  value={newAnn.content}
+                  onChange={(e) => setNewAnn({ ...newAnn, content: e.target.value })}
+                  required
+                />
               </div>
               <div className="form-grid">
                 <div className="form-item">
                   <label>Category</label>
-                  <select>
-                    <option>Holiday</option>
-                    <option>Meeting</option>
-                    <option>Training</option>
-                    <option>Security</option>
-                    <option>Recognition</option>
+                  <select
+                    value={newAnn.category}
+                    onChange={(e) => setNewAnn({ ...newAnn, category: e.target.value })}
+                  >
+                    <option value="General">General</option>
+                    <option value="HR">HR</option>
+                    <option value="IT">IT</option>
+                    <option value="Event">Event</option>
+                    <option value="Policy">Policy</option>
+                    <option value="Urgent">Urgent</option>
                   </select>
                 </div>
                 <div className="form-item">
                   <label>Urgency Level</label>
-                  <select>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
+                  <select
+                    value={newAnn.priority}
+                    onChange={(e) => setNewAnn({ ...newAnn, priority: e.target.value })}
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
                   </select>
                 </div>
               </div>

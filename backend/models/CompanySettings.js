@@ -19,7 +19,8 @@ const companySettingsSchema = new mongoose.Schema({
     enableTasks: { type: Boolean, default: true },
     enableDocuments: { type: Boolean, default: true },
     enableMeetings: { type: Boolean, default: true }
-  }
+  },
+  maintenanceMode: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('CompanySettings', companySettingsSchema);
