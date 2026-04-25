@@ -159,7 +159,7 @@ const Documents = () => {
                 </motion.button>
               </div>
             </motion.div>
-          ))}
+          ); })}
           
           {filtered.length === 0 && (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '100px 40px', background: 'rgba(255,255,255,0.01)', borderRadius: '32px', border: '2px dashed var(--border-glass)' }}>
