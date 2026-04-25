@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import { useDataStore } from '../store/dataStore';
 import { useNavigate } from 'react-router-dom';
