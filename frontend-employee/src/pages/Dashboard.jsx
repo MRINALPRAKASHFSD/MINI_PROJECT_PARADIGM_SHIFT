@@ -120,25 +120,26 @@ const Dashboard = () => {
       </div>
 
       {/* ── ATTENDANCE & LEAVE QUICK VIEW ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2.8fr', gap: '20px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '32px' }}>
         <ClockWidget />
         
         <div style={{ 
-          background: 'rgba(15,23,42,0.5)', 
-          borderRadius: '16px', 
-          padding: '22px', 
-          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'rgba(15,23,42,0.6)', 
+          borderRadius: '24px', 
+          padding: '24px', 
+          border: '1px solid rgba(255,255,255,0.08)',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center'
+          backdropFilter: 'blur(10px)',
+          boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: '#94a3b8' }}>Leave Balances</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>Leave Balances</h3>
             <button 
               onClick={() => navigate('/leave')}
-              style={{ fontSize: '12px', color: '#4f46e5', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{ fontSize: '13px', color: '#6366f1', fontWeight: '700', background: 'rgba(99, 102, 241, 0.1)', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer' }}
             >
-              View History
+              Details
             </button>
           </div>
           

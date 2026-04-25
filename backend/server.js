@@ -134,7 +134,7 @@ app.use((err, req, res, _next) => {
 });
 
 // ── Database & start ────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 async function connectDB() {
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/paradigm_shift';

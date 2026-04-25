@@ -66,6 +66,7 @@ function App() {
 
   return (
     <Router>
+      <Toaster position="top-right" reverseOrder={false} />
       {isAuthenticated && <CompanySetupModal />}
       <ReminderEngine />
       <Routes>
