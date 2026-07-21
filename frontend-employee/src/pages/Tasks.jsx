@@ -10,7 +10,8 @@ const COLUMNS = [
   { id: 'todo', title: 'To Do', color: '#4f46e5', icon: '📋' },
   { id: 'inProgress', title: 'In Progress', color: '#8b5cf6', icon: '⚡' },
   { id: 'review', title: 'Review', color: '#0ea5e9', icon: '👀' },
-  { id: 'completed', title: 'Completed', color: '#10b981', icon: '✅' }
+  { id: 'completed', title: 'Completed', color: '#10b981', icon: '✅' },
+  { id: 'cancelled', title: 'Cancelled', color: '#ef4444', icon: '⛔' }
 ];
 const PRIORITY_COLORS = { high: '#f43f5e', medium: '#f59e0b', low: '#10b981' };
 const TEAM = ['Rajesh Kumar', 'Priya Sharma', 'Vikram Patel', 'Ananya Gupta', 'Sneha Iyer', 'Arjun Reddy', 'Deepika Nair', 'Amit Joshi', 'Kavita Deshmukh', 'Rohit Saxena'];
@@ -52,6 +53,7 @@ const Tasks = () => {
     { label: 'Working On', value: tasks.filter(t => t.status === 'inProgress').length, color: 'var(--secondary)', icon: Clock },
     { label: 'In Review', value: tasks.filter(t => t.status === 'review').length, color: '#0ea5e9', icon: Eye },
     { label: 'Finalized', value: tasks.filter(t => t.status === 'completed').length, color: '#10b981', icon: Save },
+    { label: 'Cancelled', value: tasks.filter(t => t.status === 'cancelled').length, color: '#ef4444', icon: Trash2 },
   ];
 
   const openAddModal = (col) => {
@@ -90,6 +92,11 @@ const Tasks = () => {
     if (d === 0) return { text: 'Due today', color: '#f59e0b' };
     if (d <= 2) return { text: `${d}d left`, color: '#f59e0b' };
     return { text: `${d}d left`, color: '#10b981' };
+  };
+
+  const handleDelete = (taskId) => {
+    deleteTask(taskId);
+    setOpenMenuId(null);
   };
 
   const inputStyle = { width: '100%', padding: '14px 18px', borderRadius: '16px', border: '1px solid var(--btn-ghost-border)', background: 'var(--btn-ghost-bg)', color: 'var(--text-primary)', fontSize: '15px', outline: 'none', transition: 'all 0.3s' };

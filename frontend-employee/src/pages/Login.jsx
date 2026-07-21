@@ -35,7 +35,7 @@ const Login = () => {
     const result = await loginWithEmail(email, password);
 
     if (result.success) {
-      setUser(result.user, result.token);
+      setUser(result.user, result.token, result.refreshToken);
       navigate('/dashboard');
     } else {
       // If it looks like a network error (no response)
@@ -55,7 +55,7 @@ const Login = () => {
 
     if (result.success) {
       if (result.user) {
-        setUser(result.user, result.token);
+        setUser(result.user, result.token, result.refreshToken);
         navigate('/dashboard');
       }
     } else {

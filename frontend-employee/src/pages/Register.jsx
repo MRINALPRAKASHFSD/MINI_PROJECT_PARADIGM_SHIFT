@@ -56,7 +56,7 @@ const Register = () => {
     const result = await registerWithEmail(formData.email, formData.password, formData.name, isCompany, formData.companyName);
 
     if (result.success) {
-      setUser(result.user, result.token);
+      setUser(result.user, result.token, result.refreshToken);
       navigate('/dashboard');
     } else {
       // If it looks like a network error (no response)
@@ -77,7 +77,7 @@ const Register = () => {
 
     if (result.success) {
       if (result.user) {
-        setUser(result.user, result.token);
+        setUser(result.user, result.token, result.refreshToken);
         navigate('/dashboard');
       }
     } else {

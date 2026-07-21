@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera,
@@ -13,64 +13,37 @@ import {
   Download,
   Trash2
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useDataStore } from '../store/dataStore';
 import './SubmitProof.css';
-
-// ============================================================
-// Static data
-// ============================================================
-const INITIAL_PROOFS = [
-  {
-    id: 1,
-    task: 'Dashboard UI Redesign',
-    description: 'Completed glassmorphism dashboard layout for Priya Sharma',
-    files: [{ name: 'dashboard_v2.png', url: '#' }],
-    status: 'approved',
-    date: '2026-03-28',
-    time: '02:30 PM',
-    submittedAt: Date.now() - 86400000,
-  },
-  {
-    id: 2,
-    task: 'Razorpay Integration Testing',
-    description: 'All payment endpoints tested and verified with ₹1 test transactions',
-    files: [{ name: 'razorpay_tests.png', url: '#' }, { name: 'coverage.png', url: '#' }],
-    status: 'pending',
-    date: '2026-03-27',
-    time: '11:15 AM',
-    submittedAt: Date.now() - 172800000,
-  },
-  {
-    id: 3,
-    task: 'Code Review - Aadhaar KYC Module',
-    description: 'Reviewed OTP verification and eKYC flow implementation',
-    files: [{ name: 'review_notes.png', url: '#' }],
-    status: 'approved',
-    date: '2026-03-26',
-    time: '04:45 PM',
-    submittedAt: Date.now() - 259200000,
-  },
-  {
-    id: 4,
-    task: 'Bug Fix - UPI Payment Gateway',
-    description: 'Fixed INR currency rounding issue in checkout flow',
-    files: [{ name: 'bugfix_proof.png', url: '#' }],
-    status: 'rejected',
-    date: '2026-03-25',
-    time: '09:30 AM',
-    submittedAt: Date.now() - 345600000,
-  },
-];
 
 // ============================================================
 // SubmitProof Component
 // ============================================================
 const SubmitProof = () => {
+  const { documents, addDocument, deleteDocument, fetchAll } = useDataStore();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [description, setDescription] = useState('');
   const [taskName, setTaskName] = useState('');
-  const [submittedProofs, setSubmittedProofs] = useState(INITIAL_PROOFS);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
+
+  const submittedProofs = useMemo(() => (
+    [...documents].map((doc) => ({
+      id: doc.id || doc._id,
+      task: doc.name,
+      description: '',
+      files: [{ name: doc.fileName || doc.name, url: '#' }],
+      status: doc.status || 'pending',
+      date: doc.createdAt ? new Date(doc.createdAt).toISOString().split('T')[0] : '',
+      time: doc.createdAt ? new Date(doc.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+      submittedAt: doc.createdAt ? new Date(doc.createdAt).getTime() : Date.now(),
+    })).sort((a, b) => b.submittedAt - a.submittedAt)
+  ), [documents]);
 
   const stats = {
     total: submittedProofs.length,
@@ -101,12 +74,17 @@ const SubmitProof = () => {
   };
 
   const handleFiles = (files) => {
-    const fileArray = Array.from(files).map(file => ({
-      file,
-      preview: URL.createObjectURL(file),
-      name: file.name,
-      size: (file.size / 1024 / 1024).toFixed(2) + ' MB'
-    }));
+    const fileArray = Array.from(files)
+      .filter(file => file.size <= 10 * 1024 * 1024)
+      .map(file => ({
+        file,
+        preview: URL.createObjectURL(file),
+        name: file.name,
+        size: (file.size / 1024 / 1024).toFixed(2) + ' MB'
+      }));
+    if (fileArray.length !== files.length) {
+      toast.error('Some files were skipped (max size: 10MB).');
+    }
     setSelectedFiles(prev => [...prev, ...fileArray]);
   };
 
@@ -115,32 +93,30 @@ const SubmitProof = () => {
   };
 
   // --- Submit (local state only) ---
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!taskName || selectedFiles.length === 0) {
-      alert("Task name and file(s) required");
+      toast.error('Task name and file(s) are required.');
       return;
     }
     setUploading(true);
-
-    // Simulate upload delay
-    setTimeout(() => {
-      const proofData = {
-        id: Date.now(),
-        task: taskName,
-        description,
-        files: selectedFiles.map(f => ({ name: f.name, url: f.preview })),
-        status: 'pending',
-        submittedAt: Date.now(),
-        date: new Date().toISOString().split('T')[0],
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setSubmittedProofs(prev => [proofData, ...prev]);
+    try {
+      await Promise.all(selectedFiles.map((f) => addDocument({
+        name: taskName,
+        category: 'Other',
+        fileName: f.name,
+        size: f.size,
+        notes: description,
+      })));
+      toast.success('Proof uploaded successfully.');
       setTaskName('');
       setDescription('');
       setSelectedFiles([]);
+      await fetchAll(true);
+    } catch {
+      toast.error('Failed to upload proof. Please try again.');
+    } finally {
       setUploading(false);
-    }, 800);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -152,8 +128,8 @@ const SubmitProof = () => {
     }
   };
 
-  const handleDeleteProof = (proofId) => {
-    setSubmittedProofs(prev => prev.filter(p => p.id !== proofId));
+  const handleDeleteProof = async (proofId) => {
+    await deleteDocument(proofId);
   };
 
   return (

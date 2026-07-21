@@ -39,6 +39,7 @@ export async function signInWithGooglePlatform() {
     });
     
     localStorage.setItem('token', data.token);
+    if (data.refreshToken) localStorage.setItem('refresh_token', data.refreshToken);
     return {
       success: true,
       user: {
@@ -54,6 +55,7 @@ export async function signInWithGooglePlatform() {
         ...data.user,
       },
       token: data.token,
+      refreshToken: data.refreshToken || null,
     };
   } catch (error) {
     console.error("Google Auth Error:", error);
@@ -80,6 +82,7 @@ export async function loginWithEmail(email, password) {
         ...data.user,
       },
       token: data.token,
+      refreshToken: data.refreshToken || null,
     };
   } catch (error) {
     const msg = error.response?.data?.error || 'Login failed. Check your credentials.';
@@ -110,6 +113,7 @@ export async function registerWithEmail(email, password, displayName, isCompany 
         ...data.user,
       },
       token: data.token,
+      refreshToken: data.refreshToken || null,
     };
   } catch (error) {
     const msg = error.response?.data?.error || 'Registration failed.';

@@ -42,6 +42,19 @@ function App() {
   const fetchAll = useDataStore((state) => state.fetchAll);
 
   React.useEffect(() => {
+    let pollingId = null;
+    const startPolling = () => {
+      if (pollingId) return;
+      pollingId = window.setInterval(() => {
+        fetchAll(true);
+      }, 30000);
+    };
+    const stopPolling = () => {
+      if (!pollingId) return;
+      window.clearInterval(pollingId);
+      pollingId = null;
+    };
+
     if (isAuthenticated) {
       // Connect to unified company room
       if (useAuthStore.getState().user?.companyName) {
@@ -57,10 +70,17 @@ function App() {
       socket.on('newMessage', (msg) => {
         useDataStore.getState().addMessage(msg);
       });
+
+      socket.on('connect', stopPolling);
+      socket.on('disconnect', startPolling);
+      if (!socket.connected) startPolling();
     }
     return () => {
       socket.off('DATA_UPDATED');
       socket.off('newMessage');
+      socket.off('connect', stopPolling);
+      socket.off('disconnect', startPolling);
+      stopPolling();
     };
   }, [isAuthenticated, fetchAll]);
 
