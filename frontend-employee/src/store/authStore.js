@@ -6,17 +6,20 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       token: null,
+      refreshToken: null,
       isAuthenticated: false,
       loading: false,
 
-      setUser: (user, token) => {
+      setUser: (user, token, refreshToken = null) => {
         set({
           user,
           token: token || null,
+          refreshToken: refreshToken || null,
           isAuthenticated: !!user,
           loading: false,
         });
         if (token) localStorage.setItem('token', token);
+        if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
       },
 
       setLoading: (loading) => set({ loading }),
@@ -35,7 +38,8 @@ export const useAuthStore = create(
 
       logout: () => {
         localStorage.removeItem('token');
-        set({ user: null, token: null, isAuthenticated: false });
+        localStorage.removeItem('refresh_token');
+        set({ user: null, token: null, refreshToken: null, isAuthenticated: false });
       },
     }),
     {
@@ -43,6 +47,7 @@ export const useAuthStore = create(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
+        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     }

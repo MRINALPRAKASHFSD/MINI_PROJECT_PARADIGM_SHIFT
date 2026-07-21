@@ -5,7 +5,8 @@ export const authService = {
     const response = await api.post('/auth/login', { email, password });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data. user));
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.data.refreshToken) localStorage.setItem('refresh_token', response.data.refreshToken);
     }
     return response.data;
   },
@@ -14,13 +15,15 @@ export const authService = {
     const response = await api.post('/auth/register', userData);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data. user));
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.data.refreshToken) localStorage.setItem('refresh_token', response.data.refreshToken);
     }
     return response.data;
   },
 
   logout: () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
   },
 

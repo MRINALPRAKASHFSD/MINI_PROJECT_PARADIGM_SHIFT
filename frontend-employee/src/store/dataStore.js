@@ -207,10 +207,13 @@ export const useDataStore = create(
           const { data } = await api.post('/documents', doc);
           const newDoc = { ...data.document, id: data.document._id, verified: false, uploadedAt: ts() };
           set(s => ({ documents: [newDoc, ...s.documents] }));
+          return newDoc;
         } catch {
+          const newDoc = { ...doc, title: doc.name, id: id(), uploadedAt: ts(), verified: false, type: 'Personal Doc' };
           set(s => ({
-            documents: [{ ...doc, title: doc.name, id: id(), uploadedAt: ts(), verified: false, type: 'Personal Doc' }, ...s.documents],
+            documents: [newDoc, ...s.documents],
           }));
+          return newDoc;
         }
       },
       deleteDocument: async (docId) => {
