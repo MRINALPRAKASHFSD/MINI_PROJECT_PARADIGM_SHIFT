@@ -70,7 +70,7 @@ const ProfileSetup = () => {
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="profile-setup-container dark">
+    <div className="profile-setup-container">
       <div className="setup-background">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>

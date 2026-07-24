@@ -70,7 +70,7 @@ const Dashboard = () => {
     .slice(0, 4);
 
   return (
-    <div className="dashboard-pro dark">
+    <div className="dashboard-pro">
       {/* Premium Background Elements */}
       <div className="animated-background">
         <div className="grid-pattern" />

@@ -1,27 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Premium Arctic Cyan & Sky Blue Theme */
-  --primary: #2dd4bf;
-  --primary-glow: rgba(45, 212, 191, 0.3);
-  --secondary: #0ea5e9;
-  --secondary-glow: rgba(14, 165, 233, 0.3);
+  /* Soft Dark Mode (Inviting Deep Slate) */
+  --primary: #14b8a6; /* Softer Teal */
+  --primary-glow: rgba(20, 184, 166, 0.15);
+  --secondary: #38bdf8; /* Softer Sky Blue */
+  --secondary-glow: rgba(56, 189, 248, 0.15);
   
-  /* Modern Dark Surface */
-  --bg-deep: #0a0b14;
-  --bg-sidebar: rgba(15, 16, 28, 0.8);
+  --bg-deep: #0b0f19; /* Soft navy-slate */
+  --bg-sidebar: rgba(17, 24, 39, 0.85); /* Dark slate */
   --surface-panel: rgba(255, 255, 255, 0.04);
-  --surface-inset: rgba(0, 0, 0, 0.2);
+  --surface-inset: rgba(0, 0, 0, 0.25);
   
   /* Text & Accents */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-primary: #f1f5f9; /* Soft slate-100 */
+  --text-secondary: #cbd5e1; /* Soft slate-300 */
+  --text-muted: #94a3b8; /* Soft slate-400 */
+  --border-glass: rgba(255, 255, 255, 0.05);
   
   /* Button Styles */
-  --btn-ghost-bg: rgba(255, 255, 255, 0.03);
-  --btn-ghost-border: rgba(255, 255, 255, 0.08);
+  --btn-ghost-bg: rgba(255, 255, 255, 0.02);
+  --btn-ghost-border: rgba(255, 255, 255, 0.05);
   
   --font-main: 'Plus Jakarta Sans', sans-serif;
   
@@ -29,6 +28,80 @@
   --warning: #f59e0b;
   --danger: #f43f5e;
   --info: #06b6d4;
+
+  /* Theme-specific gradients and grids */
+  --bg-gradient-1: rgba(79, 70, 229, 0.06);
+  --bg-gradient-2: rgba(139, 92, 246, 0.05);
+  --grid-opacity: 0.1;
+  
+  /* Glass card overrides */
+  --glass-card-bg: rgba(255, 255, 255, 0.04);
+  --glass-card-bg-hover: rgba(255, 255, 255, 0.07);
+  --glass-card-border: rgba(255, 255, 255, 0.08);
+  --glass-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --glass-card-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  --glass-light-bg: rgba(255, 255, 255, 0.02);
+  --glass-light-border: rgba(255, 255, 255, 0.05);
+  
+  --text-header: #ffffff;
+  --welcome-card-bg: linear-gradient(135deg, rgba(20, 184, 166, 0.06) 0%, rgba(56, 189, 248, 0.06) 100%);
+  --welcome-card-border: rgba(255, 255, 255, 0.04);
+  --orb-opacity: 0.3;
+
+  /* Metric Card Gradients - Soft Dark Mode */
+  --metric-green-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(30, 41, 59, 0.95) 100%);
+  --metric-blue-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(30, 41, 59, 0.95) 100%);
+  --metric-purple-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(30, 41, 59, 0.95) 100%);
+  --metric-orange-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(30, 41, 59, 0.95) 100%);
+}
+
+:root.light {
+  /* Soft Light Mode (Clean Warm Slate) */
+  --primary: #0d9488; /* Teal 600 */
+  --primary-glow: rgba(13, 148, 136, 0.1);
+  --secondary: #0284c7; /* Sky 600 */
+  --secondary-glow: rgba(2, 132, 199, 0.1);
+  
+  --bg-deep: #f8fafc; /* Slate 50 (Soft off-white) */
+  --bg-sidebar: rgba(255, 255, 255, 0.9); /* Solid white, slight transparency */
+  --surface-panel: rgba(15, 23, 42, 0.02);
+  --surface-inset: rgba(15, 23, 42, 0.04);
+  
+  /* Text & Accents */
+  --text-primary: #1e293b; /* Slate 800 */
+  --text-secondary: #475569; /* Slate 600 */
+  --text-muted: #64748b; /* Slate 500 */
+  --border-glass: rgba(15, 23, 42, 0.06);
+  
+  /* Button Styles */
+  --btn-ghost-bg: rgba(15, 23, 42, 0.02);
+  --btn-ghost-border: rgba(15, 23, 42, 0.05);
+  
+  --bg-gradient-1: rgba(99, 102, 241, 0.04);
+  --bg-gradient-2: rgba(139, 92, 246, 0.03);
+  --grid-opacity: 0.04;
+  
+  /* Glass card overrides */
+  --glass-card-bg: rgba(255, 255, 255, 0.85);
+  --glass-card-bg-hover: rgba(255, 255, 255, 0.95);
+  --glass-card-border: rgba(15, 23, 42, 0.06);
+  --glass-card-shadow: 0 4px 20px rgba(15, 23, 42, 0.03), 0 10px 40px rgba(15, 23, 42, 0.015);
+  --glass-card-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  --glass-light-bg: rgba(255, 255, 255, 0.7);
+  --glass-light-border: rgba(15, 23, 42, 0.05);
+
+  --text-header: #0f172a; /* Slate 900 */
+  --welcome-card-bg: linear-gradient(135deg, rgba(13, 148, 136, 0.04) 0%, rgba(2, 132, 199, 0.04) 100%);
+  --welcome-card-border: rgba(15, 23, 42, 0.05);
+  --orb-opacity: 0.15;
+
+  /* Metric Card Gradients - Soft Light Mode */
+  --metric-green-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #ffffff 100%);
+  --metric-blue-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, #ffffff 100%);
+  --metric-purple-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, #ffffff 100%);
+  --metric-orange-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, #ffffff 100%);
 }
 
 * {
@@ -44,8 +117,8 @@ body {
   background-color: var(--bg-deep);
   color: var(--text-primary);
   background-image: 
-    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 0% 0%, var(--bg-gradient-1) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, var(--bg-gradient-2) 0%, transparent 40%);
   background-attachment: fixed;
   letter-spacing: -0.01em;
   overflow-x: hidden;
@@ -61,7 +134,7 @@ body::after {
     linear-gradient(90deg, var(--border-glass) 1px, transparent 1px);
   background-size: 50px 50px;
   mask-image: radial-gradient(circle at center, black, transparent 80%);
-  opacity: 0.15;
+  opacity: var(--grid-opacity);
   z-index: -1;
   pointer-events: none;
 }
@@ -101,15 +174,15 @@ body::after {
 
 /* Glass morphism - refined and subtle */
 .glass {
-  background: var(--bg-surface);
+  background: var(--glass-card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glass);
+  border: 1px solid var(--glass-card-border);
 }
 
 /* Gradient text - Arctic theme */
 .gradient-text {
-  background: linear-gradient(135deg, #2dd4bf 0%, #0ea5e9 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -117,11 +190,11 @@ body::after {
 
 /* Glass Panel Utility */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-light-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-light-border);
+  box-shadow: var(--glass-card-shadow);
   border-radius: 24px;
 }
 

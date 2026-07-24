@@ -19,19 +19,19 @@
 .period-btn {
   padding: 0.625rem 1.5rem;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  color: #94A3B8;
+  background: var(--btn-ghost-bg);
+  border: 2px solid var(--btn-ghost-border);
+  color: var(--text-secondary);
   font-size: 0.9375rem;
-  font-weight:  600;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .period-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #F1F5F9;
+  background: var(--glass-card-bg-hover);
+  border-color: var(--glass-card-border);
+  color: var(--text-primary);
 }
 
 .period-btn.active {
@@ -50,18 +50,15 @@
 }
 
 .analytics-metric-card {
-  background: linear-gradient(135deg, 
-    rgba(30, 41, 59, 0.95) 0%, 
-    rgba(15, 23, 42, 0.95) 100%
-  );
-  backdrop-filter:  blur(20px);
-  border: 2px solid;
+  background: var(--glass-card-bg);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--glass-card-border);
   border-radius: 20px;
   padding: 1.75rem;
   position: relative;
   overflow: hidden;
   transition: all 0.4s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--glass-card-shadow);
 }
 
 .analytics-metric-card::before {
@@ -77,63 +74,51 @@
 }
 
 .analytics-metric-card:hover::before {
-  opacity:  1;
+  opacity: 1;
 }
 
 /* Green Theme - Productivity */
 .analytics-metric-card.green {
-  border-color: rgba(16, 185, 129, 0.4);
-  background: linear-gradient(135deg, 
-    rgba(16, 185, 129, 0.12) 0%, 
-    rgba(30, 41, 59, 0.95) 100%
-  );
+  border-color: rgba(16, 185, 129, 0.3);
+  background: var(--metric-green-bg);
 }
 
 .analytics-metric-card.green:hover {
-  border-color: rgba(16, 185, 129, 0.6);
-  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.2);
 }
 
 /* Blue Theme - Tasks */
 .analytics-metric-card.blue {
-  border-color: rgba(59, 130, 246, 0.4);
-  background: linear-gradient(135deg, 
-    rgba(59, 130, 246, 0.12) 0%, 
-    rgba(30, 41, 59, 0.95) 100%
-  );
+  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--metric-blue-bg);
 }
 
 .analytics-metric-card.blue:hover {
-  border-color:  rgba(59, 130, 246, 0.6);
-  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
 }
 
 /* Purple Theme - Goals */
 .analytics-metric-card.purple {
-  border-color: rgba(139, 92, 246, 0.4);
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.12) 0%, 
-    rgba(30, 41, 59, 0.95) 100%
-  );
+  border-color: rgba(139, 92, 246, 0.3);
+  background: var(--metric-purple-bg);
 }
 
 .analytics-metric-card.purple:hover {
-  border-color: rgba(139, 92, 246, 0.6);
-  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
 }
 
 /* Orange Theme - Quality */
 .analytics-metric-card.orange {
-  border-color: rgba(245, 158, 11, 0.4);
-  background: linear-gradient(135deg, 
-    rgba(245, 158, 11, 0.12) 0%, 
-    rgba(30, 41, 59, 0.95) 100%
-  );
+  border-color: rgba(245, 158, 11, 0.3);
+  background: var(--metric-orange-bg);
 }
 
 .analytics-metric-card.orange:hover {
-  border-color: rgba(245, 158, 11, 0.6);
-  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.2);
 }
 
 .analytics-metric-header {
