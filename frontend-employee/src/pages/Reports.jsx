@@ -78,7 +78,7 @@ const Reports = () => {
   };
 
   return (
-    <div className="reports-container dark">
+    <div className="reports-container">
       <div className="reports-header">
         <div className="header-left">
           <motion.div 

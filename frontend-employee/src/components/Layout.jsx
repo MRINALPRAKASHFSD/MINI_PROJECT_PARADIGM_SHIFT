@@ -13,7 +13,10 @@ import './Layout.css';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true;
+  });
   const { user, logout: clearUser } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,6 +25,18 @@ const Layout = () => {
   const notifications = useDataStore(s => s.notifications);
   const companySettings = useDataStore(s => s.companySettings);
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     // Sync theme settings and system mode

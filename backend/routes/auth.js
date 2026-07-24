@@ -16,8 +16,13 @@ router.post('/register', async (req, res) => {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ error: 'Email already registered.' });
 
-    const count = await User.countDocuments();
-    const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
+    const lastUser = await User.findOne({ employeeId: /^EMP/ }).sort({ createdAt: -1 });
+    let nextNum = 1;
+    if (lastUser && lastUser.employeeId) {
+      const num = parseInt(lastUser.employeeId.replace('EMP', ''), 10);
+      if (!isNaN(num)) nextNum = num + 1;
+    }
+    const employeeId = `EMP${String(nextNum).padStart(3, '0')}`;
 
     const user = await User.create({ 
       name, 
@@ -69,8 +74,13 @@ router.post('/google', async (req, res) => {
 
     // If no user exists, auto-register them
     if (!user) {
-      const count = await User.countDocuments();
-      const employeeId = `EMP${String(count + 1).padStart(3, '0')}`;
+      const lastUser = await User.findOne({ employeeId: /^EMP/ }).sort({ createdAt: -1 });
+      let nextNum = 1;
+      if (lastUser && lastUser.employeeId) {
+        const num = parseInt(lastUser.employeeId.replace('EMP', ''), 10);
+        if (!isNaN(num)) nextNum = num + 1;
+      }
+      const employeeId = `EMP${String(nextNum).padStart(3, '0')}`;
       const randomPassword = crypto.randomBytes(16).toString('hex');
       
       user = await User.create({

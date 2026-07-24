@@ -1,70 +1,74 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { motion } from 'framer-motion';
-import { 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  User, 
-  ArrowRight,
-  Briefcase,
-  CheckCircle2,
-  Shield,
-  Zap
-} from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 import { registerWithEmail, signInWithGooglePlatform } from '../config/firebase';
 import './Auth.css';
 
+const HERO_SLIDES = [
+  {
+    image: '/images/hero_dunes.png',
+    title: 'Capturing Moments, Creating Memories',
+    subtitle: 'Streamline your daily workflow with intelligent workspace tools.'
+  },
+  {
+    image: '/images/hero_abstract.png',
+    title: 'Empowering Teams, Redefining Productivity',
+    subtitle: 'Seamless collaboration and real-time project analytics.'
+  },
+  {
+    image: '/images/hero_minimal.png',
+    title: 'Elevate Your Paradigm Shift Experience',
+    subtitle: 'Enterprise security, high performance, and total control.'
+  }
+];
+
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    companyName: ''
-  });
-  const [isCompany, setIsCompany] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(true);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // Hero Card Carousel Auto-Slide
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (!agreeTerms) {
+      setError('Please agree to the Terms & Conditions to proceed.');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
       return;
     }
 
     setIsLoading(true);
 
-    const result = await registerWithEmail(formData.email, formData.password, formData.name, isCompany, formData.companyName);
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    const result = await registerWithEmail(email, password, fullName || email.split('@')[0]);
 
     if (result.success) {
-      setUser(result.user, result.token, result.refreshToken);
+      setUser(result.user, result.token);
       navigate('/dashboard');
     } else {
-      // If it looks like a network error (no response)
-      if (result.error === 'Network Error' || result.error.includes('Error: Network Error')) {
-        setError('Cannot connect to the server. Please ensure the backend is running on port 5050.');
-      } else {
-        setError(result.error);
-      }
+      setError(result.error);
     }
     setIsLoading(false);
   };
@@ -77,7 +81,7 @@ const Register = () => {
 
     if (result.success) {
       if (result.user) {
-        setUser(result.user, result.token, result.refreshToken);
+        setUser(result.user, result.token);
         navigate('/dashboard');
       }
     } else {
@@ -86,427 +90,178 @@ const Register = () => {
     setIsLoading(false);
   };
 
-  const passwordStrength = () => {
-    const password = formData.password;
-    if (!password) return { strength: 0, label: '' };
-    
-    let strength = 0;
-    if (password.length >= 6) strength++;
-    if (password.length >= 10) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[^a-zA-Z\d]/.test(password)) strength++;
-
-    const labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
-    const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
-    
-    return { strength, label: labels[strength - 1] || '', color: colors[strength - 1] || '#ef4444' };
-  };
-
-  const strength = passwordStrength();
-
   return (
-    <div className="auth-container dark">
-      <div className="auth-background">
-        <div className="gradient-orb orb-1"></div>
-        <div className="gradient-orb orb-2"></div>
-        <div className="gradient-orb orb-3"></div>
-        <div className="grid-pattern"></div>
+    <div className="auth-container">
+      <div className="auth-wrapper">
         
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="floating-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
+        {/* Left Side: Aesthetic Hero Image Slider Card */}
+        <div className="auth-hero-card">
+          {HERO_SLIDES.map((slide, idx) => (
+            <div
+              key={idx}
+              className="hero-slide-bg"
+              style={{
+                backgroundImage: `url(${slide.image})`,
+                opacity: currentSlide === idx ? 1 : 0,
+                transform: currentSlide === idx ? 'scale(1.02)' : 'scale(1.0)'
+              }}
+            />
+          ))}
+          <div className="hero-overlay" />
 
-      <div className="auth-content">
-        <motion.div 
-          className="auth-branding"
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.div 
-            className="brand-logo"
-            whileHover={{ scale: 1.05, rotate: 5 }}
-          >
-            <motion.div
-              className="logo-icon"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            >
-              <Briefcase size={48} />
-            </motion.div>
-          </motion.div>
+          <div className="hero-content">
+            <h2 className="hero-title">{HERO_SLIDES[currentSlide].title}</h2>
+            <p className="hero-subtitle">{HERO_SLIDES[currentSlide].subtitle}</p>
 
-          <motion.h1 
-            className="brand-title"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Join Our Team
-          </motion.h1>
+            <div className="hero-pagination">
+              {HERO_SLIDES.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className={`pagination-dot ${currentSlide === idx ? 'active' : 'inactive'}`}
+                  onClick={() => setCurrentSlide(idx)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
 
-          <motion.p 
-            className="brand-subtitle"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Create your account and start your journey
-          </motion.p>
-
-          <motion.div 
-            className="features-list"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            {[
-              { icon: Shield, text: 'Enterprise-grade security' },
-              { icon: Zap, text: 'Lightning-fast performance' },
-              { icon: Briefcase, text: 'Professional tools' }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                className="feature-item"
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                whileHover={{ x: 10 }}
-              >
-                <div className="feature-icon">
-                  <feature.icon size={20} />
-                </div>
-                <span>{feature.text}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        <motion.div 
-          className="auth-form-container"
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="auth-form-card">
-            <motion.div 
-              className="form-header"
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="header-icon">
-                <User size={32} />
-              </div>
-              <h2>Create Account</h2>
-              <p>Fill in your details to get started</p>
-            </motion.div>
-
-            <form onSubmit={handleSubmit}>
-              <motion.div
-                className="form-group mode-toggle"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.35 }}
-                style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}
-              >
-                <div 
-                  onClick={() => setIsCompany(!isCompany)}
-                  style={{
-                    width: '46px',
-                    height: '24px',
-                    borderRadius: '12px',
-                    backgroundColor: isCompany ? '#3b82f6' : 'rgba(255,255,255,0.1)',
-                    position: 'relative',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.3s'
-                  }}
-                >
-                  <motion.div
-                    animate={{ x: isCompany ? 22 : 2 }}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      backgroundColor: 'white',
-                      borderRadius: '50%',
-                      position: 'absolute',
-                      top: '2px',
-                    }}
-                  />
-                </div>
-                <span style={{ fontSize: '14px', color: '#e2e8f0', fontWeight: '500' }}>
-                  {isCompany ? 'Registering a Company' : 'Registering as Employee'}
+        {/* Right Side: Sleek Registration Form (Matching user's reference image) */}
+        <div className="auth-form-wrapper">
+          <div className="auth-card">
+            
+            <div className="auth-header">
+              <h1>Create an account</h1>
+              <p>
+                Already have an account?
+                <span className="auth-switch-link" onClick={() => navigate('/')}>
+                  Log in
                 </span>
-              </motion.div>
+              </p>
+            </div>
 
-              <AnimatePresence>
-                {isCompany && (
-                  <motion.div
-                    className="form-group"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    style={{ overflow: 'hidden' }}
-                  >
-                    <label>
-                      <Briefcase size={18} />
-                      Company Name
-                    </label>
-                    <div className="input-wrapper">
-                      <input
-                        type="text"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        placeholder="Paradigm Shift Inc."
-                        required={isCompany}
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <motion.div 
-                className="form-group"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <label>
-                  <User size={18} />
-                  Full Name
-                </label>
-                <div className="input-wrapper">
+            <form className="auth-form" onSubmit={handleSubmit}>
+              
+              {/* 2 Column Row for First Name & Last Name */}
+              <div className="form-row-2col">
+                <div className="input-field-group">
                   <input
                     type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
+                    className="input-style"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     required
                   />
-                  {formData.name && (
-                    <motion.div
-                      className="input-check"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                    >
-                      <CheckCircle2 size={18} />
-                    </motion.div>
-                  )}
                 </div>
-              </motion.div>
-
-              <motion.div 
-                className="form-group"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <label>
-                  <Mail size={18} />
-                  Email Address
-                </label>
-                <div className="input-wrapper">
+                <div className="input-field-group">
                   <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@company.com"
-                    required
+                    type="text"
+                    className="input-style"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                   />
-                  {formData.email && (
-                    <motion.div
-                      className="input-check"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                    >
-                      <CheckCircle2 size={18} />
-                    </motion.div>
-                  )}
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div 
-                className="form-group"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                <label>
-                  <Lock size={18} />
-                  Password
-                </label>
-                <div className="input-wrapper">
+              {/* Email Input */}
+              <div className="input-field-group">
+                <input
+                  type="email"
+                  className="input-style"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Password Input with Eye Toggle */}
+              <div className="input-field-group">
+                <div className="password-input-wrapper">
                   <input
                     type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Create a strong password"
+                    className="input-style"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <button
                     type="button"
-                    className="password-toggle"
+                    className="eye-toggle-btn"
                     onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {formData.password && (
-                  <motion.div 
-                    className="password-strength"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <div className="strength-bar">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`strength-segment ${i < strength.strength ? 'active' : ''}`}
-                          style={{ backgroundColor: i < strength.strength ? strength.color : undefined }}
-                        />
-                      ))}
-                    </div>
-                    <span style={{ color: strength.color }}>{strength.label}</span>
-                  </motion.div>
-                )}
-              </motion.div>
+              </div>
 
-              <motion.div 
-                className="form-group"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.7 }}
-              >
-                <label>
-                  <Lock size={18} />
-                  Confirm Password
-                </label>
-                <div className="input-wrapper">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Confirm your password"
-                    required
-                  />
-                  {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                    <motion.div
-                      className="input-check"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                    >
-                      <CheckCircle2 size={18} />
-                    </motion.div>
-                  )}
-                </div>
-              </motion.div>
+              {/* Terms Checkbox */}
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                />
+                <span>
+                  I agree to the{' '}
+                  <span className="terms-link" onClick={() => alert('Terms & Conditions: Standard employee portal access guidelines apply.')}>
+                    Terms & Conditions
+                  </span>
+                </span>
+              </label>
 
-              {error && (
-                <motion.div 
-                  className="error-message"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                >
-                  {error}
-                </motion.div>
-              )}
+              {error && <div className="auth-error-alert">{error}</div>}
 
-              <motion.button
-                type="submit"
-                className="submit-btn"
-                disabled={isLoading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8 }}
-              >
-                {isLoading ? (
-                  <motion.div
-                    className="loading-spinner"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  />
-                ) : (
-                  <>
-                    Create Account
-                    <ArrowRight size={20} />
-                  </>
-                )}
-              </motion.button>
+              {/* Submit Action Button */}
+              <button type="submit" className="btn-primary-purple" disabled={isLoading}>
+                {isLoading ? <div className="btn-spinner" /> : 'Create account'}
+              </button>
+
             </form>
 
-            <motion.div 
-              className="social-login"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.85 }}
-            >
-              <div className="divider">
-                <span>Or register with</span>
-              </div>
-              <div className="social-buttons">
-                <button 
-                  type="button" 
-                  className="social-btn google"
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                >
-                  <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
-                      <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
-                      <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>
-                      <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/>
-                      <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
-                    </g>
-                  </svg>
-                  Continue with Google
-                </button>
-              </div>
-            </motion.div>
+            {/* Social Divider */}
+            <div className="social-divider">
+              <span>Or register with</span>
+            </div>
 
-            <motion.div 
-              className="form-footer"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.9 }}
-            >
-              <p>
-                Already have an account?{' '}
-                <span
-                  className="link-primary"
-                  style={{ color: "#3b82f6", cursor: "pointer", fontWeight: "600" }}
-                  onClick={() => navigate('/login')}
-                >
-                  Sign in here
-                </span>
-              </p>
-            </motion.div>
+            {/* Social Login Buttons */}
+            <div className="social-buttons-grid">
+              <button
+                type="button"
+                className="social-btn-dark"
+                onClick={handleGoogleLogin}
+                disabled={isLoading}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                Google
+              </button>
+
+              <button
+                type="button"
+                className="social-btn-dark"
+                onClick={() => setError('Apple authentication is coming soon. Please use Google or Email/Password.')}
+                disabled={isLoading}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.13c.67-.82 1.13-1.96.99-3.13-1 .04-2.2.67-2.9 1.49-.62.72-1.16 1.88-1.01 3.01 1.12.09 2.25-.55 2.92-1.37z" />
+                </svg>
+                Apple
+              </button>
+            </div>
+
           </div>
-        </motion.div>
+        </div>
+
       </div>
     </div>
   );

@@ -460,3 +460,116 @@
 .timer-controls button:hover {
   transform: scale(1.05);
 }
+
+/* ==================== SOFT LIGHT MODE OVERRIDES ==================== */
+.light .workspace-widget {
+  background: var(--glass-card-bg);
+  border-color: var(--glass-card-border);
+  box-shadow: var(--glass-card-shadow);
+}
+
+.light .workspace-widget:hover {
+  border-color: var(--glass-card-border);
+}
+
+.light .widget-header h3 {
+  color: var(--text-header);
+}
+
+.light .text-btn {
+  color: var(--text-muted);
+}
+
+.light .list-item {
+  background: var(--surface-panel);
+  border-color: var(--border-glass);
+}
+
+.light .list-item:hover {
+  background: var(--glass-card-bg-hover);
+}
+
+.light .task-title, 
+.light .doc-title {
+  color: var(--text-primary);
+}
+
+.light .spotify-input-overlay {
+  background: var(--surface-inset);
+}
+
+.light .spotify-input-overlay p {
+  color: var(--text-primary);
+}
+
+.light .input-row input {
+  background: #ffffff;
+  border-color: var(--border-glass);
+  color: var(--text-primary);
+}
+
+.light .timer-mode-toggles {
+  background: var(--surface-inset);
+}
+
+.light .timer-mode-toggles button {
+  color: var(--text-secondary);
+}
+
+.light .timer-mode-toggles button.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.light .timer-bg {
+  stroke: var(--border-glass);
+}
+
+.light .timer-text h1 {
+  color: var(--text-header);
+}
+
+.light .timer-text p {
+  color: var(--text-secondary);
+}
+
+.light .timer-controls button {
+  background: #ffffff;
+  border-color: var(--border-glass);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.light .inline-task-form, 
+.light .inline-doc-form {
+  background: var(--surface-inset);
+  border-color: var(--border-glass);
+}
+
+.light .inline-task-form input[type="text"], 
+.light .inline-doc-form input[type="text"] {
+  background: #ffffff;
+  border-color: var(--border-glass);
+  color: var(--text-primary);
+}
+
+.light .form-row select, 
+.light .form-row input,
+.light .input-with-icon {
+  background: #ffffff;
+  border-color: var(--border-glass);
+  color: var(--text-primary);
+}
+
+.light .input-with-icon input {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.light .small-btn {
+  background: #ffffff;
+  border-color: var(--border-glass);
+  color: var(--text-secondary);
+}
+

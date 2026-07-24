@@ -3,16 +3,14 @@
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-}
-
-.dashboard-pro.dark {
-  background: radial-gradient(circle at 50% -20%, #0f172a 0%, #020617 100%);
-  color: #f8fafc;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ==================== ANIMATED BACKGROUND ==================== */
 .animated-background {
-  position:  fixed;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -26,8 +24,9 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
-  opacity: 0.4;
+  opacity: var(--orb-opacity);
   animation: orbFloat 20s ease-in-out infinite;
+  transition: opacity 0.3s ease;
 }
 
 .orb-1 {
@@ -45,11 +44,11 @@
   background: radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, transparent 70%);
   bottom: -300px;
   right: -250px;
-  animation-delay:  5s;
+  animation-delay: 5s;
 }
 
 .orb-3 {
-  width:  500px;
+  width: 500px;
   height: 500px;
   background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
   top: 50%;
@@ -74,52 +73,52 @@
   width: 100%;
   height: 100%;
   background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.03) 49px, rgba(255,255,255,0.03) 50px),
-    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.03) 49px, rgba(255,255,255,0.03) 50px);
+    repeating-linear-gradient(0deg, transparent, transparent 49px, var(--grid-pattern-color) 49px, var(--grid-pattern-color) 50px),
+    repeating-linear-gradient(90deg, transparent, transparent 49px, var(--grid-pattern-color) 49px, var(--grid-pattern-color) 50px);
   opacity: 0.3;
 }
 
 /* ==================== GLASSMORPHISM EFFECTS ==================== */
 .glass-card {
-  background:  rgba(255, 255, 255, 0.08);
+  background: var(--glass-card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--glass-card-border);
   border-radius: 20px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    var(--glass-card-shadow),
+    var(--glass-card-inset-shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--glass-card-bg-hover);
+  border-color: var(--glass-card-border);
   box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    var(--glass-card-shadow),
+    var(--glass-card-inset-shadow);
 }
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-light-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-light-border);
   border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .glass-button {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--btn-ghost-bg);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter:  blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--btn-ghost-border);
   transition: all 0.3s ease;
 }
 
 .glass-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--glass-light-bg);
+  border-color: var(--glass-card-border);
 }
 
 /* ==================== MAIN CONTAINER ==================== */
@@ -127,7 +126,7 @@
   position: relative;
   z-index: 1;
   padding: 2rem;
-  max-width:  1600px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -137,8 +136,8 @@
   margin-bottom: 2.5rem;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(45, 212, 191, 0.08) 0%, rgba(14, 165, 233, 0.08) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--welcome-card-bg);
+  border: 1px solid var(--welcome-card-border);
 }
 
 .welcome-content {
@@ -152,26 +151,25 @@
 .welcome-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #2dd4bf 0%, #0ea5e9 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 12px 32px rgba(45, 212, 191, 0.25);
+  box-shadow: 0 12px 32px var(--primary-glow);
 }
 
 .welcome-text h2 {
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #F1F5F9;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  color: var(--text-header);
 }
 
 .welcome-text p {
-  font-size:  1rem;
-  color: rgba(241, 245, 249, 0.8);
+  font-size: 1rem;
+  color: var(--text-secondary);
 }
 
 .welcome-glow {
@@ -180,7 +178,7 @@
   right: -20%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
   border-radius: 50%;
   z-index: 1;
   pointer-events: none;

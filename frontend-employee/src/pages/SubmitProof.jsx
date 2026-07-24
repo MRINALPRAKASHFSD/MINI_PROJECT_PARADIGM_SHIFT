@@ -133,7 +133,7 @@ const SubmitProof = () => {
   };
 
   return (
-    <div className="submit-proof-container dark">
+    <div className="submit-proof-container">
       <div className="proof-header">
         <div className="header-left">
           <motion.div 

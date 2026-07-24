@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -13,12 +14,30 @@ import {
   Shield,
   TrendingUp,
   Award,
-  Rocket
+  Rocket,
+  Sun,
+  Moon
 } from 'lucide-react';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true;
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   const features = [
     {
@@ -124,15 +143,36 @@ const LandingPage = () => {
             <span className="logo-text">Employee Portal</span>
           </motion.div>
 
-          <div className="nav-links">
+          <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button 
+              className="theme-toggle" 
+              onClick={() => setDarkMode(!darkMode)}
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              style={{
+                background: 'var(--btn-ghost-bg)',
+                border: '1px solid var(--btn-ghost-border)',
+                color: 'var(--text-secondary)',
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                padding: '0'
+              }}
+            >
+              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <motion.button
-  className="nav-link"
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => navigate('/login')}  // ✅ CORRECT - This goes to login
->
-  Login
-</motion.button>
+              className="nav-link"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/login')}
+            >
+              Login
+            </motion.button>
             <motion.button
               className="nav-btn-primary"
               whileHover={{ scale: 1.05 }}

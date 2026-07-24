@@ -65,7 +65,7 @@
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.3s;
-  background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -183,7 +183,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(10, 11, 20, 0.6);
+  background: var(--bg-sidebar);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-glass);
@@ -202,7 +202,7 @@
   display: none;
   background: var(--btn-ghost-bg);
   border: 1px solid var(--btn-ghost-border);
-  color: #fff;
+  color: var(--text-primary);
   padding: 8px;
   border-radius: 12px;
   cursor: pointer;
@@ -211,7 +211,7 @@
 .page-title {
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-header);
   letter-spacing: -0.5px;
   margin: 0;
 }
@@ -274,7 +274,7 @@
 }
 
 .user-name {
-  color: #fff;
+  color: var(--text-primary);
   display: block;
 }
 
